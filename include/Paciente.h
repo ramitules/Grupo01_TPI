@@ -1,5 +1,5 @@
 #pragma once
-#include "fecha.h"
+#include "./Fecha.h"
 
 
 class Paciente{

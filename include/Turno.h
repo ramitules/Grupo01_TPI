@@ -1,6 +1,6 @@
 #pragma once
-#include "fecha.h"
-#include "hora.h"
+#include "./Fecha.h"
+#include "./Hora.h"
 
 
 class Turno{

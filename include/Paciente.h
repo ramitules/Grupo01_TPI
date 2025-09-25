@@ -1,17 +1,11 @@
 #pragma once
 #include "./Fecha.h"
+#include "./Persona.h"
 
 
-class Paciente{
+class Paciente: public Persona{
     private:
-        int _dni;
-        char _nombre[50];
-        char _apellido[50];
-        int _telefono;
-        char _email[110];
         int _codigoObraSocial;
-        Fecha _fechaNacimiento;
-        bool _eliminado;
 
     public:
         Paciente();

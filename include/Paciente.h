@@ -1,6 +1,6 @@
 #pragma once
-#include "./Fecha.h"
-#include "./Persona.h"
+#include "utils/Fecha.h"
+#include "Persona.h"
 
 
 class Paciente: public Persona{

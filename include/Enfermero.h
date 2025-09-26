@@ -1,6 +1,6 @@
 #pragma once
-#include "./Hora.h"
-#include "./Persona.h"
+#include "utils/Hora.h"
+#include "Persona.h"
 
 
 class Enfermero: public Persona{
@@ -13,5 +13,7 @@ class Enfermero: public Persona{
 
     public:
         Enfermero();
-        Enfermero(int dni, const char nombre[], const char apellido[], int telefono, const char email[], int codigoObraSocial, Fecha fechaNacimiento, bool eliminado);
+        // La clase Enfermero tendra un metodo "Cargar" en lugar de un constructor
+        // para no tener tantos argumentos en la funcion
+        void Cargar();
 };

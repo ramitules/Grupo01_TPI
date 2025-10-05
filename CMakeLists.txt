@@ -21,6 +21,12 @@ set(SOURCES
     src/TipoAnalisis.cpp
     src/Turno.cpp
     src/menu/Menu.cpp
+    src/menu/MenuAnalisis.cpp
+    src/menu/MenuEnfermero.cpp
+    src/menu/MenuPaciente.cpp
+    src/menu/MenuPrincipal.cpp
+    src/menu/MenuTipoAnalisis.cpp
+    src/menu/MenuTurno.cpp
     src/utils/Fecha.cpp
     src/utils/Hora.cpp
 )

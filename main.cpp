@@ -1,8 +1,10 @@
 #include <iostream>
+#include "include/menu/MenuPrincipal.h"
 
 
 int main(){
-    std::cout << "Hola mundo" << std::endl;
+    MenuPrincipal menu;
+    menu.buclePrincipal();
     system("pause");
     return 0;
 }

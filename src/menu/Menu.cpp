@@ -2,10 +2,22 @@
 #include <iostream>
 
 
-Menu::Menu(int cantidadOpciones, std::string opciones[], std::string nombreMenu){
+/// @brief Constructor por defecto con todos los parametros necesarios
+/// @param cantidadOpciones se utilizara para crear el vector de opciones.
+/// Notese que la opcion "0. Salir" NO se debe incluir en la cantidad de opciones.
+/// @param nombreMenu nombre que tendra el titulo de este menu
+Menu::Menu(int cantidadOpciones, std::string nombreMenu){
     setCantidadOpciones(cantidadOpciones);
-    setOpcionSeleccionada();
-    setVectorOpciones(opciones);
+    setOpcionSeleccionada(99);
+    setNombreMenu(nombreMenu);
+    setSalir(true);
+    _opciones = nullptr;
+}
+
+Menu::~Menu(){
+    if (_opciones != nullptr) {
+        delete[] _opciones;
+    }
 }
 
 /// @brief ciclo que muestra por pantalla las opciones y le permite al usuario
@@ -20,49 +32,32 @@ void Menu::buclePrincipal(){
         system("cls");
     } while (_opcionSeleccionada != 0);
 
-    setOpcionSeleccionada();
+    setOpcionSeleccionada(99);
 }
 
-void Menu::setCantidadOpciones(int cantidad){
+void Menu::setSalir(bool salir){ _salir = salir; }
+
+void Menu::setCantidadOpciones(int cantidad = 1){
     _cantidadOpciones = cantidad;
 }
 
-void Menu::setNombreMenu(std::string nombre = "Menu"){
+void Menu::setNombreMenu(std::string nombre){
     _nombreMenu = nombre;
 }
 
-void Menu::setOpcionSeleccionada(int opcion = 99){
+void Menu::setOpcionSeleccionada(int opcion){
     _opcionSeleccionada = opcion;
 }
 
 std::string Menu::getNombreMenu(){ return _nombreMenu; }
 
-void Menu::ejecutarOpcion(){
-    switch (_opcionSeleccionada) {
-        case 1:
-            break;
-
-        case 2:
-            break;
-
-        case 3:
-            break;
-
-        case 0:
-            return;
-
-        default:
-            std::cout << "Intente nuevamente\n";
-            break;
-    }
-}
 
 /// @brief bucle para seleccionar una opcion. No permite salida hasta que
 /// se encuentre dentro de los parametros
 void Menu::seleccionarOpcion(){
     int opcion = 99;
 
-    while (opcion < 0 && opcion > _cantidadOpciones){
+    while (opcion < 0 || opcion > _cantidadOpciones){
         std::cout << "Seleccione una opcion: ";
         std::cin >> opcion;
     }
@@ -70,10 +65,14 @@ void Menu::seleccionarOpcion(){
     setOpcionSeleccionada(opcion);
 }
 
+/// @brief Cada submenu tendra su propia logica
+void Menu::ejecutarOpcion(){};
+
+
 /// @brief Recorre las opciones y las muestra por pantalla, una debajo de la otra
-/// estilo "x. opcion". Finaliza con "0. Salir".
+/// estilo "x. opcion"
 void Menu::mostrarOpciones(){
-    std::cout << getNombreMenu << "\n";
+    std::cout << getNombreMenu() << "\n";
     std::cout << "==============================\n";
 
     for (int i = 1; i < _cantidadOpciones + 1; i++) {
@@ -81,7 +80,12 @@ void Menu::mostrarOpciones(){
     }
 
     std::cout << "------------------------------\n";
-    std::cout << "0. Salir\n";
+
+    if (_salir) {
+        std::cout << "0. Salir\n";
+    } else {
+        std::cout << "0. Volver\n";
+    }
 }
 
 /// @brief Se utiliza memoria dinamica para crear vector de strings.
@@ -89,14 +93,23 @@ void Menu::mostrarOpciones(){
 /// permanecera nulo.
 /// @param opciones vector de opciones. Solo se leera y asignara la cantidad
 /// propuesta en "cantidadOpciones".
-void Menu::setVectorOpciones(std::string opciones[]){
+void Menu::setVectorOpciones(std::string* opciones){
+    // Chequear que no haya nada en el atributo "_opciones"
+    if (_opciones != nullptr) {
+        delete[] _opciones;
+    }
+
     // Solicitar memoria para vector de strings
     std::string *vOpciones = new std::string[_cantidadOpciones];
 
     if (vOpciones != nullptr) {
         // Se le puede asignar valores
         for (int i=0; i < _cantidadOpciones; i++) {
-            vOpciones[i] = opciones[i];
+            if (opciones == nullptr) {
+                vOpciones[i] = "";
+            } else {
+                vOpciones[i] = opciones[i];
+            }
         }
     } else {
         // Dejar puntero nulo

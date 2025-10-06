@@ -10,4 +10,17 @@ class Fecha{
     public:
         Fecha();
         Fecha(int dia, int mes, int anio);
+
+        //GETTERS
+        int getDia();
+        int getMes();
+        int getAnio();
+
+        //SETTERS
+        void setDia(int dia);
+        void setMes(int mes);
+        void setAnio(int anio);
+
+        void mostrarFecha();
+        
 };

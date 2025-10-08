@@ -10,28 +10,24 @@ TipoAnalisis::TipoAnalisis(int id, const char nombreAnalisis[], float precio){};
 
 
 //SETERS 
-void TipoAnalisis::set_nombreAnalisis(const char nombreAnalisis[]){
-        strcpy(_nombreAnalisis, nombreAnalisis);
-
+void TipoAnalisis::setNombreAnalisis(const char nombreAnalisis[]){
+    strcpy(_nombreAnalisis, nombreAnalisis);
 };
 
-
-void TipoAnalisis::set_precio(float precio){
+void TipoAnalisis::setPrecio(float precio){
     _precio = precio;
-    
 };
 
 
 //GETERS
-
-int TipoAnalisis::get_id(){
+int TipoAnalisis::getID(){
     return _id;
 };
 
-const char* TipoAnalisis::get_nombreAnalisis(){
+const char* TipoAnalisis::getNombreAnalisis(){
     return _nombreAnalisis;
 };
 
-float TipoAnalisis::get_precio(){
+float TipoAnalisis::getPrecio(){
     return _precio;
 };

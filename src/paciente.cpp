@@ -1,6 +1,6 @@
 #include "Paciente.h"
-using namespace std;
 #include <iostream>
+
 
 Paciente::Paciente(){};
 
@@ -8,17 +8,16 @@ Paciente::Paciente(int dni, const char nombre[], const char apellido[], int tele
 
 
 //SETTERS
-void Paciente::set_codigObraSocial(int codigoObraSocial){
+void Paciente::setCodigoObraSocial(int codigoObraSocial){
     _codigoObraSocial = codigoObraSocial;
 }
 
 //GETTERS
-int Paciente::get_codigoObraSocial(){
+int Paciente::getCodigoObraSocial(){
     return _codigoObraSocial;
 }
 
 void Paciente::mostrarDatosPaciente(){
     mostrarDatosPersona();
-    cout<<"codigo Obra Social:  "<<_codigoObraSocial<<endl;
-    
+    std::cout<<"codigo Obra Social:  "<<_codigoObraSocial<<std::endl;
 }

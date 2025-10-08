@@ -17,28 +17,22 @@ class Persona{
         Persona(int dni, const char nombre[], const char apellido[], int telefono, const char email[], Fecha fechaNacimiento, bool eliminado);
 
         //SETTERS
-        void set_dni(int dni);
-        void set_nombre(const char nombre[]);
-        void set_apellido(const char apellido[]);
-        void set_telefono(int telefono);
-        void set_email(const char email[]);
-        void set_fechaNacimiento(Fecha fechaNacimiento);
-        void set_eliminado(bool eliminado);
+        void setDNI(int dni);
+        void setNombre(const char nombre[]);
+        void setApellido(const char apellido[]);
+        void setTelefono(int telefono);
+        void setEmail(const char email[]);
+        void setFechaNacimiento(Fecha fechaNacimiento);
+        void setEliminado(bool eliminado);
 
         //GETTERS
-        int get_dni();
-        const char* get_nombre();   
-        const char* get_apellido();
-        int get_telefono();
-        const char* get_email();
-        Fecha get_fechaNacimiento();
-        bool get_eliminado();
-
+        int getDNI();
+        const char* getNombre();   
+        const char* getApellido();
+        int getTelefono();
+        const char* getEmail();
+        Fecha getFechaNacimiento();
+        bool getEliminado();
 
         void mostrarDatosPersona();
-
-
     };
-
-
-

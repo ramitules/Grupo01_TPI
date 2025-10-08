@@ -1,6 +1,6 @@
 #include "utils/Fecha.h"
 #include <iostream>
-using namespace std;
+
 
 Fecha::Fecha(){};
 
@@ -27,5 +27,5 @@ void Fecha::setAnio(int anio){
     _anio = anio;
 }
 void Fecha::mostrarFecha(){
-    cout<<_dia<<"/"<<_mes<<"/"<<_anio<<endl;
+    std::cout<<_dia<<"/"<<_mes<<"/"<<_anio<<std::endl;
 }

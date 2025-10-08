@@ -9,18 +9,13 @@ class Paciente: public Persona{
 
     public:
         Paciente();
-   
         Paciente(int dni, const char nombre[], const char apellido[], int telefono, const char email[], int codigoObraSocial, Fecha fechaNacimiento, bool eliminado);
 
+        //SETTERS
+        void setCodigoObraSocial(int codigoObraSocial);
 
+        //GETTERS
+        int getCodigoObraSocial();
 
-
-//SETTERS
-void set_codigObraSocial(int codigoObraSocial);
-
-//GETTERS
-int get_codigoObraSocial();
-
-
-void mostrarDatosPaciente();
+        void mostrarDatosPaciente();
 };

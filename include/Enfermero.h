@@ -17,27 +17,19 @@ class Enfermero: public Persona{
         // para no tener tantos argumentos en la funcion
         void Cargar();
 
-
         //SETTERS
-        void set_habilitado(bool habilitado);
-        void set_horarioAtencion(Hora horarioAtencion);
-        void set_horasDisponible(int horasDisponible);
-        void set_acumuladoHoras(int acumuladoHoras);
-        void set_sueldoHora(float sueldoHora);
-
+        void setHabilitado(bool habilitado);
+        void setHorarioAtencion(Hora horarioAtencion);
+        void setHorasDisponibles(int horasDisponible);
+        void setAcumuladoHoras(int acumuladoHoras);
+        void setSueldoHora(float sueldoHora);
 
         //GETTERS
-        bool get_habilitado();
-        Hora get_horarioAtencion();
-        int get_horasDisponible();
-        int get_acumuladoHoras();
-        float get_sueldoHora();
-        
-        
+        bool getHabilitado();
+        Hora getHorarioAtencion();
+        int getHorasDisponibles();
+        int getAcumuladoHoras();
+        float getSueldoHora();
         
         void mostrarDatosEnfermero();
-
-
-
-
     };

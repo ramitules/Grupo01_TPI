@@ -1,7 +1,7 @@
 #include "Persona.h"
 #include <cstring>
 #include <iostream>
-using namespace std;
+
 
 Persona::Persona(){};
 
@@ -9,57 +9,70 @@ Persona::Persona(int dni, const char nombre[], const char apellido[], int telefo
 
 
 //SETTERS 
-void Persona::set_dni(int dni){
+void Persona::setDNI(int dni){
     _dni = dni;
 };
-void Persona::set_nombre(const char nombre[]){
+
+void Persona::setNombre(const char nombre[]){
     strcpy(_nombre, nombre);
 };
-void Persona::set_apellido(const char apellido[]){
+
+void Persona::setApellido(const char apellido[]){
     strcpy(_apellido, apellido);
 };
-void Persona::set_telefono(int telefono){
+
+void Persona::setTelefono(int telefono){
     _telefono = telefono;
 };
-void Persona::set_email(const char email[]){
+
+void Persona::setEmail(const char email[]){
     strcpy(_email, email);
 };
-void Persona::set_fechaNacimiento(Fecha fechaNacimiento){
+
+void Persona::setFechaNacimiento(Fecha fechaNacimiento){
     _fechaNacimiento = fechaNacimiento;
 }
-void Persona::set_eliminado(bool eliminado){
+
+void Persona::setEliminado(bool eliminado){
     _eliminado = eliminado;
 };
 
 //GETTERS
-int Persona::get_dni(){
+int Persona::getDNI(){
     return _dni;
 };
-const char* Persona::get_nombre(){
+
+const char* Persona::getNombre(){
     return _nombre;
 };
-const char* Persona::get_apellido(){
+
+const char* Persona::getApellido(){
     return _apellido;
 };
-int Persona::get_telefono(){
+
+int Persona::getTelefono(){
     return _telefono;
 };
-const char* Persona::get_email(){
+
+const char* Persona::getEmail(){
     return _email;
 };
-Fecha Persona::get_fechaNacimiento(){
+
+Fecha Persona::getFechaNacimiento(){
     return _fechaNacimiento;
 };
-bool Persona::get_eliminado(){
+
+bool Persona::getEliminado(){
     return _eliminado;
 };
+
 void Persona::mostrarDatosPersona(){
-    cout << "DNI: " << _dni << endl;
-    cout << "Nombre: " << _nombre << endl;
-    cout << "Apellido: " << _apellido << endl;
-    cout << "Telefono: " << _telefono << endl;
-    cout << "Email: " << _email << endl;
-    cout << "Fecha de Nacimiento: " << _fechaNacimiento.get_dia() << "/" << _fechaNacimiento.get_mes() << "/" << _fechaNacimiento.get_anio() << endl;
-    cout << "Eliminado: " << (_eliminado ? "Si" : "No") << endl;
+    std::cout << "DNI: " << _dni << std::endl;
+    std::cout << "Nombre: " << _nombre << std::endl;
+    std::cout << "Apellido: " << _apellido << std::endl;
+    std::cout << "Telefono: " << _telefono << std::endl;
+    std::cout << "Email: " << _email << std::endl;
+    std::cout << "Fecha de Nacimiento: " << _fechaNacimiento.getDia() << "/" << _fechaNacimiento.getMes() << "/" << _fechaNacimiento.getAnio() << std::endl;
+    std::cout << "Eliminado: " << (_eliminado ? "Si" : "No") << std::endl;
 };
 

@@ -1,6 +1,5 @@
 #include "Analisis.h"
 #include <iostream>
-using namespace std;
 
 
 Analisis::Analisis(){};
@@ -33,9 +32,9 @@ void Analisis::setDniPaciente(int dniPaciente){
 }
 
 void Analisis::mostrarAnalisis(){
-    cout<<"ID Analisis: "<<_id<<endl;
-    cout<<"ID Tipo Analisis: "<<_idTipoAnalisis<<endl;
-    cout<<"Sala: "<<_sala<<endl;
-    cout<<"DNI Paciente: "<<_dniPaciente<<endl;
+    std::cout<<"ID Analisis: "<<_id<<std::endl;
+    std::cout<<"ID Tipo Analisis: "<<_idTipoAnalisis<<std::endl;
+    std::cout<<"Sala: "<<_sala<<std::endl;
+    std::cout<<"DNI Paciente: "<<_dniPaciente<<std::endl;
 
 }

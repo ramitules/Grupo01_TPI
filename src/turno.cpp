@@ -59,6 +59,8 @@ float Turno::getImporte(){
 void Turno::mostrarTurno(){
     std::cout << "DNI Paciente: " << _dniPaciente << std::endl;
     std::cout << "ID Analisis: " << _idAnalisis << std::endl;
-    std::cout << "Fecha de Atencion: " << _fechaAtencion << std::endl;
-    std::cout << "Hora de Atencion: " << _horaAtencion << std::endl;
+    std::cout << "Fecha de Atencion: ";
+    _fechaAtencion.mostrarFecha();
+    std::cout << "Hora de Atencion: ";
+    _horaAtencion.mostrarhora();
 }

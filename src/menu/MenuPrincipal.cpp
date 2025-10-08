@@ -4,6 +4,9 @@
 #include "menu/MenuTurno.h"
 #include "menu/MenuTipoAnalisis.h"
 #include "menu/MenuPaciente.h"
+#include "menu/listados/MenuListados.h"
+#include "menu/consultas/MenuConsultas.h"
+#include "menu/informes/MenuInformes.h"
 #include <iostream>
 
 
@@ -41,6 +44,15 @@ void MenuPrincipal::ejecutarOpcion(){
         menu.buclePrincipal();
     } else if (_opcionSeleccionada == 5) {
         MenuEnfermero menu;
+        menu.buclePrincipal();
+    } else if (_opcionSeleccionada == 6) {
+        MenuListados menu;
+        menu.buclePrincipal();
+    }  else if (_opcionSeleccionada == 7) {
+        MenuConsultas menu;
+        menu.buclePrincipal();
+    }  else if (_opcionSeleccionada == 8) {
+        MenuInformes menu;
         menu.buclePrincipal();
     } else {
         std::cout << "Intente nuevamente\n";

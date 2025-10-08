@@ -24,8 +24,9 @@ class Menu{
         std::string getNombreMenu();
 
         void seleccionarOpcion();
-        void mostrarOpciones();
-        // Se aplica polimorfismo para tener diferentes comportamientos en
+        // Polimorfismo para tener diferentes vistas del menu
+        virtual void mostrarOpciones();
+        // Polimorfismo para tener diferentes comportamientos en
         // el metodo que ejecuta una opcion segun que objeto lo use
         virtual void ejecutarOpcion();
         void buclePrincipal();

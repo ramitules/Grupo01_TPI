@@ -32,6 +32,5 @@ class Turno{
         Hora getHoraAtencion();
         float getImporte();
 
-        //mostrar turno
         void mostrarTurno();
     };

@@ -20,6 +20,7 @@ set(SOURCES
     src/Secuencia.cpp
     src/TipoAnalisis.cpp
     src/Turno.cpp
+    src/ObraSocial.cpp
     src/menu/Menu.cpp
     src/menu/MenuAnalisis.cpp
     src/menu/MenuEnfermero.cpp

@@ -9,12 +9,12 @@ class TipoAnalisis{
 
     public:
         TipoAnalisis();
-        TipoAnalisis(const char nombreAnalisis[], float precio);
         TipoAnalisis(int id, const char nombreAnalisis[], float precio);
 
         // SETTERS
         void setNombreAnalisis(const char nombreAnalisis[]);
         void setPrecio(float precio);
+        void setID(int id);
 
         // GETTERS
         int getID();

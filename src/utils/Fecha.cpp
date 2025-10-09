@@ -2,9 +2,13 @@
 #include <iostream>
 
 
-Fecha::Fecha(){};
+Fecha::Fecha(): _dia(1), _mes(1), _anio(2000) {};
 
-Fecha::Fecha(int dia, int mes, int anio){};
+Fecha::Fecha(int dia, int mes, int anio){
+    setDia(dia);
+    setMes(mes);
+    setAnio(anio);
+};
 
 //GETTERS
 int Fecha::getDia(){

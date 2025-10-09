@@ -3,9 +3,17 @@
 #include <iostream>
 
 
-Persona::Persona(){};
+Persona::Persona(): _dni(0), _nombre("sin nombre"), _apellido("sin apellido"), _email("sin email"), _fechaNacimiento(Fecha()), _eliminado(false) {};
 
-Persona::Persona(int dni, const char nombre[], const char apellido[], int telefono, const char email[], Fecha fechaNacimiento, bool eliminado){};
+Persona::Persona(int dni, const char nombre[], const char apellido[], int telefono, const char email[], Fecha fechaNacimiento, bool eliminado) {
+    setDNI(dni);
+    setNombre(nombre);
+    setApellido(apellido);
+    setTelefono(telefono);
+    setEmail(email);
+    setFechaNacimiento(fechaNacimiento);
+    setEliminado(eliminado);
+};
 
 
 //SETTERS 

@@ -2,9 +2,7 @@
 #include <iostream>
 
 
-Enfermero::Enfermero(){}
-
-void Enfermero::Cargar(){}
+Enfermero::Enfermero(): Persona::Persona(), _habilitado(false), _horarioAtencion(Hora()), _horasDisponible(0), _acumuladoHoras(0), _sueldoHora(0.0f){}
 
 //SETTERS
 void Enfermero::setHabilitado(bool habilitado){
@@ -47,4 +45,15 @@ int Enfermero::getAcumuladoHoras(){
 
 float Enfermero::getSueldoHora(){
     return _sueldoHora;
+}
+
+void Enfermero::mostrarDatosEnfermero(){
+    Persona::mostrarDatosPersona();
+    std::cout << "Habilitado: " << (_habilitado ? "Si" : "No") << std::endl;
+    std::cout << "Horario de atencion: ";
+    _horarioAtencion.mostrarhora();
+    std::cout << std::endl;
+    std::cout << "Horas disponibles: " << _horasDisponible << std::endl;
+    std::cout << "Acumulado de horas trabajadas: " << _acumuladoHoras << std::endl;
+    std::cout << "Sueldo por hora: $" << _sueldoHora << std::endl;
 }

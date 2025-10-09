@@ -8,10 +8,17 @@ class Secuencia{
         // Nombre del objeto al que pertenece la secuencia (ejemplo: "Turno")
         char _objeto[50];
         // Último ID utilizado en la secuencia
-        int _id_actual;
+        int _idActual;
 
     public:
         Secuencia();
-        Secuencia(const char objeto[], int id_actual);
-        Secuencia(int id, const char objeto[], int id_actual);
+        Secuencia(int id, const char objeto[], int idActual);
+
+        int getId();
+        const char* getObjeto();
+        int getIdActual();
+
+        void setId(int id);
+        void setObjeto(const char objeto[]);
+        void setIdActual(int idActual);
 };

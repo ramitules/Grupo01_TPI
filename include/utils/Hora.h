@@ -11,15 +11,15 @@ class Hora{
         Hora();
         Hora(int hora, int minuto, int segundo);
 
-    //SETTERS
-    void setHora(int hora);
-    void setMinuto(int minuto);
-    void setSegundo(int segundo);
-    
-    //GETTERS
-    int getHora();
-    int getMinuto();
-    int getSegundo();
+        //SETTERS
+        void setHora(int hora);
+        void setMinuto(int minuto);
+        void setSegundo(int segundo);
+        
+        //GETTERS
+        int getHora();
+        int getMinuto();
+        int getSegundo();
 
-    void mostrarhora();
+        void mostrarhora();
 };

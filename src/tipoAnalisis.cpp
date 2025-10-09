@@ -1,15 +1,20 @@
 #include "TipoAnalisis.h"
 #include <cstring>
 
-TipoAnalisis::TipoAnalisis(){};
+TipoAnalisis::TipoAnalisis(): _id(0), _nombreAnalisis(""), _precio(0.0f) {};
 
-TipoAnalisis::TipoAnalisis(const char nombreAnalisis[], float precio){};
-
-TipoAnalisis::TipoAnalisis(int id, const char nombreAnalisis[], float precio){};
-
+TipoAnalisis::TipoAnalisis(int id, const char nombreAnalisis[], float precio){
+    setID(id);
+    setNombreAnalisis(nombreAnalisis);
+    setPrecio(precio);
+}
 
 
 //SETERS 
+void TipoAnalisis::setID(int id){
+    _id = id;
+};
+
 void TipoAnalisis::setNombreAnalisis(const char nombreAnalisis[]){
     strcpy(_nombreAnalisis, nombreAnalisis);
 };

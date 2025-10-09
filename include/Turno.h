@@ -14,10 +14,10 @@ class Turno{
 
     public:
         Turno();
-        Turno(int dniPaciente, int idAnalisis, Fecha fechaAtencion, Hora horaAtencion, float importe);
         Turno(int id, int dniPaciente, int idAnalisis, Fecha fechaAtencion, Hora horaAtencion, float importe);
 
         // SETTERS
+        void setID(int id);
         void setDniPaciente(int dniPaciente);
         void setIdAnalisis(int idAnalisis);
         void setFechaAtencion(Fecha fechaAtencion);

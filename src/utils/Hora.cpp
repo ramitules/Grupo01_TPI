@@ -2,37 +2,26 @@
 #include <iostream>
 
 
-Hora::Hora(){};
+Hora::Hora(): _hora(0), _minuto(0), _segundo(0) {};
 
-Hora::Hora(int hora, int minuto, int segundo){};
+Hora::Hora(int hora, int minuto, int segundo) {
+    setHora(hora);
+    setMinuto(minuto);
+    setSegundo(segundo);
+};
 
 
 //SETTERS
 void Hora::setHora(int hora){
-    while (hora < 0 || hora > 23)
-    {   
-        std::cout<<" Formato de hora invalido ingrese uno correcto "<< std::endl;
-        std::cin>>hora;
-    }
-     _hora = hora;
+    _hora = hora;
 }
 
 void Hora::setMinuto(int minuto){
-    while (minuto < 0 || minuto > 59)
-    {   
-        std::cout<<" Formato de minuto invalido ingrese uno correcto "<< std::endl;
-        std::cin>>minuto;
-    }
-     _minuto = minuto;
+    _minuto = minuto;
 }
 
 void Hora::setSegundo(int segundo){
-    while (segundo < 0 || segundo > 59)
-    {   
-        std::cout<<" Formato de segundo invalido ingrese uno correcto "<< std::endl;
-        std::cin>>segundo;
-    }
-     _segundo = segundo;
+    _segundo = segundo;
 }
 
 //GETTERS

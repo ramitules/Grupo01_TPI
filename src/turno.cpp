@@ -2,13 +2,22 @@
 #include <iostream>
 
 
-Turno::Turno(){};
+Turno::Turno(): _id(0), _dniPaciente(0), _idAnalisis(0), _fechaAtencion(), _horaAtencion(), _importe(0.0f) {};
 
-Turno::Turno(int dniPaciente, int idAnalisis, Fecha fechaAtencion, Hora horaAtencion, float importe){};
-
-Turno::Turno(int id, int dniPaciente, int idAnalisis, Fecha fechaAtencion, Hora horaAtencion, float importe){};
+Turno::Turno(int id, int dniPaciente, int idAnalisis, Fecha fechaAtencion, Hora horaAtencion, float importe){
+    setID(id);
+    setDniPaciente(dniPaciente);
+    setIdAnalisis(idAnalisis);
+    setFechaAtencion(fechaAtencion);
+    setHoraAtencion(horaAtencion);
+    setImporte(importe);
+};
 
 // SETTERS
+void Turno::setID(int id){
+    _id = id;
+};
+
 void Turno::setDniPaciente(int dniPaciente){
     _dniPaciente = dniPaciente;
 };

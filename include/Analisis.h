@@ -10,9 +10,7 @@ class Analisis {
 
     public:
         Analisis();
-        Analisis(int idTipoAnalisis, int sala, int dniPaciente);
         Analisis(int id, int idTipoAnalisis, int sala, int dniPaciente);
-
 
         //GETTERS
         int getId();
@@ -21,10 +19,8 @@ class Analisis {
         int getDniPaciente();
 
         //SETTERS
-        //void setId(int id);
-        //void setIdTipoAnalisis(int idTipoAnalisis);
-        // son autoincrementales?? 
-
+        void setId(int id);
+        void setIdTipoAnalisis(int idTipoAnalisis);
         void setSala(int sala);
         void setDniPaciente(int dniPaciente);
 

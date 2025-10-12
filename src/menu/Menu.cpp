@@ -1,4 +1,5 @@
 #include "menu/Menu.h"
+#include "utils/rlutil.h"
 #include <iostream>
 
 
@@ -18,12 +19,12 @@ Menu::Menu(int cantidadOpciones, std::string nombreMenu){
 /// seleccionar la deseada. Antes de salir, deja "opcionSeleccionada" en 99.
 void Menu::buclePrincipal(){
     do{
-        system("cls");
+        rlutil::cls();
         mostrarOpciones();
         seleccionarOpcion();
-        system("cls");
+        rlutil::cls();
         ejecutarOpcion();
-        system("cls");
+        rlutil::cls();
     } while (_opcionSeleccionada != 0);
 
     setOpcionSeleccionada(99);

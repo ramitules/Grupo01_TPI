@@ -13,13 +13,13 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 # Lista de .cpp
 set(SOURCES
     main.cpp
-    src/Analisis.cpp
+    src/analisis.cpp
     src/Enfermero.cpp
-    src/Paciente.cpp
+    src/paciente.cpp
     src/Persona.cpp
     src/Secuencia.cpp
-    src/TipoAnalisis.cpp
-    src/Turno.cpp
+    src/tipoAnalisis.cpp
+    src/turno.cpp
     src/ObraSocial.cpp
     src/menu/Menu.cpp
     src/menu/MenuAnalisis.cpp

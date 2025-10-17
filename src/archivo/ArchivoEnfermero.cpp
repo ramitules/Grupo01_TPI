@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-ArchivoEnfermero::ArchivoEnfermero(): Archivo("enfermero.dat", "ruta/enfermero") {};
+ArchivoEnfermero::ArchivoEnfermero(): Archivo("enfermero.dat", "base_de_datos") {};
 
 bool ArchivoEnfermero::guardar(Enfermero enfermero){
     FILE *p;

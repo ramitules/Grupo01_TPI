@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-ArchivoObraSocial::ArchivoObraSocial(): Archivo("obraSocial.dat", "database") {};
+ArchivoObraSocial::ArchivoObraSocial(): Archivo("obraSocial.dat", "base_de_datos") {};
 
 bool ArchivoObraSocial::guardar(ObraSocial obraSocial){
     FILE *p;

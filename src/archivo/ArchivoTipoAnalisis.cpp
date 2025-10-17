@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-ArchivoTipoAnalisis::ArchivoTipoAnalisis(): Archivo("tipoAnalisis.dat", "database") {};
+ArchivoTipoAnalisis::ArchivoTipoAnalisis(): Archivo("tipoAnalisis.dat", "base_de_datos") {};
 
 bool ArchivoTipoAnalisis::guardar(TipoAnalisis tipoAnalisis){
     FILE *p;

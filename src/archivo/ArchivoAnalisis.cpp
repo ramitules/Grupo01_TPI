@@ -2,7 +2,8 @@
 #include <iostream>
 
 
-ArchivoAnalisis::ArchivoAnalisis(): Archivo("analisis.dat", "database") {};
+ArchivoAnalisis::ArchivoAnalisis(): Archivo("analisis.dat", "base_de_datos") {
+};
 
 bool ArchivoAnalisis::guardar(Analisis analisis){
     FILE *p;

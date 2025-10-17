@@ -1,5 +1,4 @@
 #include "utils/ManagerFecha.h"
-#include <iostream>
 
 ManagerFecha::ManagerFecha(){};
 

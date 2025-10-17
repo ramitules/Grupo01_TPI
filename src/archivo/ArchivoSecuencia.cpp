@@ -1,8 +1,9 @@
 #include "archivo/ArchivoSecuencia.h"
 #include <iostream>
+#include <cstring>
 
 
-ArchivoSecuencia::ArchivoSecuencia(): Archivo("secuencia.dat", "database") {};
+ArchivoSecuencia::ArchivoSecuencia(): Archivo("secuencia.dat", "base_de_datos") {};
 
 bool ArchivoSecuencia::guardar(Secuencia secuencia){
     FILE *p;
@@ -97,16 +98,16 @@ Secuencia* ArchivoSecuencia::leerTodos(){
         return nullptr;
     }
 
-    const int cantidad = this->cantidadRegistros();
+    const int CANTIDAD = this->cantidadRegistros();
 
-    if (cantidad == 0){
+    if (CANTIDAD == 0){
         fclose(p);
         return nullptr;
     }
 
-    Secuencia* aux = new Secuencia[cantidad];
+    Secuencia* aux = new Secuencia[CANTIDAD];
 
-    fread(aux, sizeof(Secuencia), cantidad, p);
+    fread(aux, sizeof(Secuencia), CANTIDAD, p);
 
     fclose(p);
 

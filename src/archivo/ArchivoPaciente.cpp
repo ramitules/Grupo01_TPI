@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-ArchivoPaciente::ArchivoPaciente(): Archivo("paciente.dat", "database") {};
+ArchivoPaciente::ArchivoPaciente(): Archivo("paciente.dat", "base_de_datos") {};
 
 bool ArchivoPaciente::guardar(Paciente paciente){
     FILE *p;

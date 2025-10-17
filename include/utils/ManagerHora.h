@@ -1,5 +1,6 @@
 #pragma once
 #include "utils/Hora.h"
+#include <iostream>
 
 
 class ManagerHora{

@@ -16,6 +16,6 @@ class ArchivoSecuencia: public Archivo {
         bool guardar(Secuencia secuencia);
         bool modificar(Secuencia secuencia, int pos);
         bool eliminar(int pos);
-
+        
         int cantidadRegistros();
 };

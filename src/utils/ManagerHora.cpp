@@ -1,5 +1,5 @@
 #include "utils/ManagerHora.h"
-#include <iostream>
+
 
 ManagerHora::ManagerHora(){};
 

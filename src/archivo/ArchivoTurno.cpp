@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-ArchivoTurno::ArchivoTurno(): Archivo("turno.dat", "database") {};
+ArchivoTurno::ArchivoTurno(): Archivo("turno.dat", "base_de_datos") {};
 
 bool ArchivoTurno::guardar(Turno turno){
     FILE *p;

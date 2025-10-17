@@ -1,4 +1,6 @@
 #include "Turno.h"
+#include "archivo/ArchivoAnalisis.h"
+#include "archivo/ArchivoPaciente.h"
 #include <iostream>
 
 
@@ -64,12 +66,26 @@ float Turno::getImporte(){
     return _importe;
 };
 
+Paciente Turno::getPaciente(){
+    ArchivoPaciente repoPaciente;
 
-void Turno::mostrarTurno(){
-    std::cout << "DNI Paciente: " << _dniPaciente << std::endl;
-    std::cout << "ID Analisis: " << _idAnalisis << std::endl;
-    std::cout << "Fecha de Atencion: ";
-    _fechaAtencion.mostrarFecha();
-    std::cout << "Hora de Atencion: ";
-    _horaAtencion.mostrarhora();
-}
+    int pos = repoPaciente.getPos(this->getDniPaciente());
+
+    if (pos == -1) {
+        return Paciente();
+    }
+
+    return repoPaciente.leer(pos);
+};
+
+Analisis Turno::getAnalisis(){
+    ArchivoAnalisis repoAnalisis;
+
+    int pos = repoAnalisis.getPos(this->getIdAnalisis());
+
+    if (pos == -1) {
+        return Analisis();
+    }
+
+    return repoAnalisis.leer(pos);
+};

@@ -2,8 +2,13 @@
 #include <cstring>
 
 
-
 Secuencia::Secuencia(): _id(1), _objeto("ejemplo"), _idActual(0){};
+
+Secuencia::Secuencia(const char* objeto){
+    setId(1);
+    setObjeto(objeto);
+    setIdActual(0);
+};
 
 Secuencia::Secuencia(int id, const char objeto[], int idActual){
     setId(id);

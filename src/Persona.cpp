@@ -73,14 +73,3 @@ Fecha Persona::getFechaNacimiento(){
 bool Persona::getEliminado(){
     return _eliminado;
 };
-
-void Persona::mostrarDatosPersona(){
-    std::cout << "DNI: " << _dni << std::endl;
-    std::cout << "Nombre: " << _nombre << std::endl;
-    std::cout << "Apellido: " << _apellido << std::endl;
-    std::cout << "Telefono: " << _telefono << std::endl;
-    std::cout << "Email: " << _email << std::endl;
-    std::cout << "Fecha de Nacimiento: " << _fechaNacimiento.getDia() << "/" << _fechaNacimiento.getMes() << "/" << _fechaNacimiento.getAnio() << std::endl;
-    std::cout << "Eliminado: " << (_eliminado ? "Si" : "No") << std::endl;
-};
-

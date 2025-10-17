@@ -1,4 +1,6 @@
 #pragma once
+#include "TipoAnalisis.h"
+#include "Paciente.h"
 
 
 class Analisis {
@@ -17,12 +19,12 @@ class Analisis {
         int getIdTipoAnalisis();
         int getSala();
         int getDniPaciente();
+        TipoAnalisis getTipoAnalisis();
+        Paciente getPaciente();
 
         //SETTERS
         void setId(int id);
         void setIdTipoAnalisis(int idTipoAnalisis);
         void setSala(int sala);
         void setDniPaciente(int dniPaciente);
-
-        void mostrarAnalisis();
 };

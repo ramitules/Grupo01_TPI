@@ -36,7 +36,3 @@ int Hora::getMinuto(){
 int Hora::getSegundo(){
     return _segundo;
 }
-
-void Hora::mostrarhora(){
-    std::cout<<_hora<<":"<<_minuto<<":"<<_segundo<<std::endl;   
-}

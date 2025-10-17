@@ -1,6 +1,7 @@
 #pragma once
 #include "utils/Fecha.h"
 #include "Persona.h"
+#include "ObraSocial.h"
 
 
 class Paciente: public Persona{
@@ -9,13 +10,12 @@ class Paciente: public Persona{
 
     public:
         Paciente();
-        Paciente(int dni, const char nombre[], const char apellido[], int telefono, const char email[], int codigoObraSocial, Fecha fechaNacimiento, bool eliminado);
+        Paciente(Persona persona, int codigoObraSocial);
 
         //SETTERS
         void setCodigoObraSocial(int codigoObraSocial);
 
         //GETTERS
         int getCodigoObraSocial();
-
-        void mostrarDatosPaciente();
+        ObraSocial getObraSocial();
 };

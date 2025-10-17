@@ -33,6 +33,4 @@ class Persona{
         const char* getEmail();
         Fecha getFechaNacimiento();
         bool getEliminado();
-
-        void mostrarDatosPersona();
     };

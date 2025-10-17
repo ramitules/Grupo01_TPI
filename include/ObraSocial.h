@@ -26,6 +26,4 @@ class ObraSocial{
         const char* getNombreContacto();
         int getTelefono();
         const char* getEmail();
-
-        void mostrarDatosObraSocial();
 };

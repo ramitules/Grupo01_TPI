@@ -1,5 +1,7 @@
 #include "Analisis.h"
 #include <iostream>
+#include "archivo/ArchivoTipoAnalisis.h"
+#include "archivo/ArchivoPaciente.h"
 
 
 Analisis::Analisis(): _id(0), _idTipoAnalisis(0), _sala(0), _dniPaciente(0){};
@@ -15,14 +17,41 @@ Analisis::Analisis(int id, int idTipoAnalisis, int sala, int dniPaciente){
 int Analisis::getId(){
     return _id;
 }
+
 int Analisis::getIdTipoAnalisis(){
     return _idTipoAnalisis;
 }
+
 int Analisis::getSala(){
     return _sala;
 }
+
 int Analisis::getDniPaciente(){
     return _dniPaciente;
+}
+
+TipoAnalisis Analisis::getTipoAnalisis(){
+    ArchivoTipoAnalisis repoTipoAnalisis;
+
+    int pos = repoTipoAnalisis.getPos(this->getDniPaciente());
+
+    if (pos == -1) {
+        return TipoAnalisis();
+    }
+
+    return repoTipoAnalisis.leer(pos);
+}
+
+Paciente Analisis::getPaciente() {
+    ArchivoPaciente repoPaciente;
+
+    int pos = repoPaciente.getPos(this->getDniPaciente());
+
+    if (pos == -1) {
+        return Paciente();
+    }
+
+    return repoPaciente.leer(pos);
 }
 
 //SETTERS
@@ -39,11 +68,4 @@ void Analisis::setId(int id) {
 
 void Analisis::setIdTipoAnalisis(int idTipoAnalisis) {
     _idTipoAnalisis = idTipoAnalisis;
-}
-
-void Analisis::mostrarAnalisis(){
-    std::cout<<"ID Analisis: "<<_id<<std::endl;
-    std::cout<<"ID Tipo Analisis: "<<_idTipoAnalisis<<std::endl;
-    std::cout<<"Sala: "<<_sala<<std::endl;
-    std::cout<<"DNI Paciente: "<<_dniPaciente<<std::endl;
 }

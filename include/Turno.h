@@ -1,6 +1,8 @@
 #pragma once
 #include "utils/Fecha.h"
 #include "utils/Hora.h"
+#include "Paciente.h"
+#include "Analisis.h"
 
 
 class Turno{
@@ -28,9 +30,9 @@ class Turno{
         int getID();
         int getDniPaciente();
         int getIdAnalisis();
+        float getImporte();
         Fecha getFechaAtencion();
         Hora getHoraAtencion();
-        float getImporte();
-
-        void mostrarTurno();
+        Paciente getPaciente();
+        Analisis getAnalisis();
     };

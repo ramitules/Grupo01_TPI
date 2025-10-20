@@ -1,18 +1,19 @@
 #include "Paciente.h"
+#include "archivo/ArchivoObraSocial.h"
 #include <iostream>
 
 
 Paciente::Paciente(): Persona::Persona(), _codigoObraSocial(1){};
 
-Paciente::Paciente(int dni, const char nombre[], const char apellido[], int telefono, const char email[], int codigoObraSocial, Fecha fechaNacimiento, bool eliminado){
-    setDNI(dni);
-    setNombre(nombre);
-    setApellido(apellido);
-    setTelefono(telefono);
-    setEmail(email);
+Paciente::Paciente(Persona persona, int codigoObraSocial){
+    setDNI(persona.getDNI());
+    setNombre(persona.getNombre());
+    setApellido(persona.getApellido());
+    setTelefono(persona.getTelefono());
+    setEmail(persona.getEmail());
+    setFechaNacimiento(persona.getFechaNacimiento());
+    setEliminado(persona.getEliminado());
     setCodigoObraSocial(codigoObraSocial);
-    setFechaNacimiento(fechaNacimiento);
-    setEliminado(eliminado);
 };
 
 
@@ -26,7 +27,14 @@ int Paciente::getCodigoObraSocial(){
     return _codigoObraSocial;
 }
 
-void Paciente::mostrarDatosPaciente(){
-    Persona::mostrarDatosPersona();
-    std::cout<<"codigo Obra Social:  "<<_codigoObraSocial<<std::endl;
+ObraSocial Paciente::getObraSocial(){
+    ArchivoObraSocial repoObraSocial;
+
+    int pos = repoObraSocial.getPos(this->getCodigoObraSocial());
+
+    if (pos == -1) {
+        return ObraSocial();
+    }
+
+    return repoObraSocial.leer(pos);
 }

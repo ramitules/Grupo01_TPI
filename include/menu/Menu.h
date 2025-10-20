@@ -9,15 +9,15 @@ class Menu{
         // Indica si la opcion "0" es para salir. False = "Volver"
         bool _salir;
         std::string _nombreMenu;
-        std::string* _opciones;
+        std::string _opciones[10];
 
     public:
         Menu(int cantidadOpciones, std::string nombreMenu);
-        virtual ~Menu();
         
         void setNombreMenu(std::string nombre);
         void setCantidadOpciones(int cantidad);
         void setVectorOpciones(std::string* opciones);
+        void setVectorOpciones();
         void setOpcionSeleccionada(int opcion);
         void setSalir(bool salir);
 

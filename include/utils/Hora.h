@@ -20,6 +20,4 @@ class Hora{
         int getHora();
         int getMinuto();
         int getSegundo();
-
-        void mostrarhora();
 };

@@ -6,9 +6,9 @@
 
 class ArchivoAnalisis: public Archivo {
     public:
-        ArchivoAnalisis(std::string nombreArchivo, std::string rutaArchivo);
+        ArchivoAnalisis();
         
-        int buscarID(int id);
+        int getPos(int id);
 
         Analisis leer(int pos);
         Analisis* leerTodos();

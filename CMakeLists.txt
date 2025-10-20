@@ -13,14 +13,30 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 # Lista de .cpp
 set(SOURCES
     main.cpp
-    src/Analisis.cpp
+    src/analisis.cpp
     src/Enfermero.cpp
-    src/Paciente.cpp
+    src/paciente.cpp
     src/Persona.cpp
     src/Secuencia.cpp
-    src/TipoAnalisis.cpp
-    src/Turno.cpp
+    src/tipoAnalisis.cpp
+    src/turno.cpp
     src/ObraSocial.cpp
+    src/archivo/Archivo.cpp
+    src/archivo/ArchivoAnalisis.cpp
+    src/archivo/ArchivoEnfermero.cpp
+    src/archivo/ArchivoObraSocial.cpp
+    src/archivo/ArchivoPaciente.cpp
+    src/archivo/ArchivoSecuencia.cpp
+    src/archivo/ArchivoTipoAnalisis.cpp
+    src/archivo/ArchivoTurno.cpp
+    src/manager/ManagerAnalisis.cpp
+    src/manager/ManagerEnfermero.cpp
+    src/manager/ManagerObraSocial.cpp
+    src/manager/ManagerPaciente.cpp
+    src/manager/ManagerPersona.cpp
+    src/manager/ManagerSecuencia.cpp
+    src/manager/ManagerTipoAnalisis.cpp
+    src/manager/ManagerTurno.cpp
     src/menu/Menu.cpp
     src/menu/MenuAnalisis.cpp
     src/menu/MenuEnfermero.cpp
@@ -40,6 +56,8 @@ set(SOURCES
     src/menu/informes/MenuInformes.cpp
     src/utils/Fecha.cpp
     src/utils/Hora.cpp
+    src/utils/ManagerFecha.cpp
+    src/utils/ManagerHora.cpp
 )
 
 # Crear ejecutable

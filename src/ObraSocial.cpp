@@ -56,11 +56,3 @@ int ObraSocial::getTelefono(){
 const char* ObraSocial::getEmail(){
     return _email;
 }
-
-void ObraSocial::mostrarDatosObraSocial(){
-    std::cout << "ID: " << _id << '\n';
-    std::cout << "Nombre: " << _nombre << '\n';
-    std::cout << "Nombre de Contacto: " << _nombreContacto << '\n';
-    std::cout << "Telefono: " << _telefono << '\n';
-    std::cout << "Email: " << _email << '\n';
-}

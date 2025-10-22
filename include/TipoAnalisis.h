@@ -6,6 +6,7 @@ class TipoAnalisis{
         int _id;
         char _nombreAnalisis[255];
         float _precio;
+        bool _eliminado;
 
     public:
         TipoAnalisis();
@@ -15,9 +16,11 @@ class TipoAnalisis{
         void setNombreAnalisis(const char nombreAnalisis[]);
         void setPrecio(float precio);
         void setID(int id);
+        void setEliminado(bool eliminado);
 
         // GETTERS
         int getID();
         const char* getNombreAnalisis();
         float getPrecio();
+        bool getEliminado();
 };

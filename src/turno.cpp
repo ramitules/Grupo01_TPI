@@ -40,6 +40,10 @@ void Turno::setImporte(float importe){
     _importe = importe;
 };
 
+void Turno::setEliminado(bool eliminado) {
+    _eliminado = eliminado;
+}
+
 
 // GETTERS
 int Turno::getID(){
@@ -88,4 +92,8 @@ Analisis Turno::getAnalisis(){
     }
 
     return repoAnalisis.leer(pos);
+};
+
+bool Turno::getEliminado() {
+    return _eliminado;
 };

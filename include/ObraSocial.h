@@ -8,6 +8,7 @@ class ObraSocial{
         char _nombreContacto[50];
         int _telefono;
         char _email[110];
+        bool _eliminado;
         
     public:
         ObraSocial();
@@ -19,6 +20,7 @@ class ObraSocial{
         void setNombreContacto(const char nombreContacto[]);
         void setTelefono(int telefono);
         void setEmail(const char email[]);
+        void setEliminado(bool eliminado);
 
         //GETTERS
         int getID();
@@ -26,4 +28,5 @@ class ObraSocial{
         const char* getNombreContacto();
         int getTelefono();
         const char* getEmail();
+        bool getEliminado();
 };

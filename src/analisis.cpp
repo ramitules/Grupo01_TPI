@@ -54,6 +54,10 @@ Paciente Analisis::getPaciente() {
     return repoPaciente.leer(pos);
 }
 
+bool TipoAnalisis::getEliminado() {
+    return _eliminado;
+}
+
 //SETTERS
 void Analisis::setSala(int sala){
     _sala = sala;
@@ -68,4 +72,8 @@ void Analisis::setId(int id) {
 
 void Analisis::setIdTipoAnalisis(int idTipoAnalisis) {
     _idTipoAnalisis = idTipoAnalisis;
+}
+
+void Analisis::setEliminado(bool eliminado) {
+    _eliminado = eliminado;
 }

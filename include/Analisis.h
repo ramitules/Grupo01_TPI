@@ -9,6 +9,7 @@ class Analisis {
         int _idTipoAnalisis;
         int _sala;
         int _dniPaciente;
+        bool _eliminado;
 
     public:
         Analisis();
@@ -21,10 +22,12 @@ class Analisis {
         int getDniPaciente();
         TipoAnalisis getTipoAnalisis();
         Paciente getPaciente();
+        bool getEliminado();
 
         //SETTERS
         void setId(int id);
         void setIdTipoAnalisis(int idTipoAnalisis);
         void setSala(int sala);
         void setDniPaciente(int dniPaciente);
+        void setEliminado(bool eliminado);
 };

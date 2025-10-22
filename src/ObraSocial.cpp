@@ -36,6 +36,10 @@ void ObraSocial::setEmail(const char email[]){
     _email[sizeof(_email) - 1] = '\0'; // Asegura la terminación nula
 }
 
+void ObraSocial::setEliminado(bool eliminado) {
+    _eliminado = eliminado;
+}
+
 //GETTERS
 int ObraSocial::getID(){
     return _id;
@@ -55,4 +59,8 @@ int ObraSocial::getTelefono(){
 
 const char* ObraSocial::getEmail(){
     return _email;
+}
+
+bool ObraSocial::getEliminado() {
+    return _eliminado;
 }

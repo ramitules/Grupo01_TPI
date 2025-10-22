@@ -23,6 +23,10 @@ void TipoAnalisis::setPrecio(float precio){
     _precio = precio;
 };
 
+void TipoAnalisis::setEliminado(bool eliminado) {
+    _eliminado = eliminado;
+}
+
 
 //GETERS
 int TipoAnalisis::getID(){
@@ -36,3 +40,7 @@ const char* TipoAnalisis::getNombreAnalisis(){
 float TipoAnalisis::getPrecio(){
     return _precio;
 };
+
+bool TipoAnalisis::getEliminado() {
+    return _eliminado;
+}

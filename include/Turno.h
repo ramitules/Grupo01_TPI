@@ -13,6 +13,7 @@ class Turno{
         Fecha _fechaAtencion;
         Hora _horaAtencion;
         float _importe;
+        bool _eliminado;
 
     public:
         Turno();
@@ -25,6 +26,7 @@ class Turno{
         void setFechaAtencion(Fecha fechaAtencion);
         void setHoraAtencion(Hora horaAtencion);
         void setImporte(float importe);
+        void setEliminado(bool eliminado);
 
         // GETTERS
         int getID();
@@ -35,4 +37,5 @@ class Turno{
         Hora getHoraAtencion();
         Paciente getPaciente();
         Analisis getAnalisis();
+        bool getEliminado();
     };

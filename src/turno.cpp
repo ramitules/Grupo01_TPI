@@ -4,12 +4,11 @@
 #include <iostream>
 
 
-Turno::Turno(): _id(0), _dniPaciente(0), _idAnalisis(0), _fechaAtencion(), _horaAtencion(), _importe(0.0f) {};
+Turno::Turno(): _id(0), _dniPaciente(0), _fechaAtencion(), _horaAtencion(), _importe(0.0f) {};
 
-Turno::Turno(int id, int dniPaciente, int idAnalisis, Fecha fechaAtencion, Hora horaAtencion, float importe){
+Turno::Turno(int id, int dniPaciente, Fecha fechaAtencion, Hora horaAtencion, float importe){
     setID(id);
     setDniPaciente(dniPaciente);
-    setIdAnalisis(idAnalisis);
     setFechaAtencion(fechaAtencion);
     setHoraAtencion(horaAtencion);
     setImporte(importe);
@@ -22,10 +21,6 @@ void Turno::setID(int id){
 
 void Turno::setDniPaciente(int dniPaciente){
     _dniPaciente = dniPaciente;
-};
-
-void Turno::setIdAnalisis(int idAnalisis){
-    _idAnalisis = idAnalisis;
 };
 
 void Turno::setFechaAtencion(Fecha fechaAtencion){
@@ -54,10 +49,6 @@ int Turno::getDniPaciente(){
     return _dniPaciente;
 };
 
-int Turno::getIdAnalisis(){
-    return _idAnalisis;
-};
-
 Fecha Turno::getFechaAtencion(){
     return _fechaAtencion;
 };
@@ -80,18 +71,6 @@ Paciente Turno::getPaciente(){
     }
 
     return repoPaciente.leer(pos);
-};
-
-Analisis Turno::getAnalisis(){
-    ArchivoAnalisis repoAnalisis;
-
-    int pos = repoAnalisis.getPos(this->getIdAnalisis());
-
-    if (pos == -1) {
-        return Analisis();
-    }
-
-    return repoAnalisis.leer(pos);
 };
 
 bool Turno::getEliminado() {

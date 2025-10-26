@@ -14,4 +14,6 @@ class ManagerPaciente{
         void mostrarTodos();
         bool eliminar(Paciente paciente);
         bool actualizar(Paciente paciente);
+
+        ArchivoPaciente getRepositorio();
 };

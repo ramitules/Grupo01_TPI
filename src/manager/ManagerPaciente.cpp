@@ -97,3 +97,7 @@ bool ManagerPaciente::eliminar(Paciente paciente){
         _repo.eliminar(_repo.getPos(paciente.getDNI()));
     }
 }
+
+ArchivoPaciente ManagerPaciente::getRepositorio(){
+    return _repo;
+}

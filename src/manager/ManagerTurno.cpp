@@ -1,10 +1,9 @@
 #include "manager/ManagerSecuencia.h"
-#include "manager/ManagerAnalisis.h"
+#include "manager/ManagerPaciente.h"
 #include "manager/ManagerTurno.h"
 #include "utils/ManagerFecha.h"
 #include "utils/ManagerHora.h"
-#include "archivo/ArchivoPaciente.h"
-#include "archivo/ArchivoAnalisis.h"
+#include "Paciente.h"
 
 
 ManagerTurno::ManagerTurno(){};
@@ -12,24 +11,21 @@ ManagerTurno::ManagerTurno(){};
 bool ManagerTurno::cargar(){
     std::cin.ignore(100, '\n');
 
-    ArchivoPaciente repoPacientes;
-    ArchivoAnalisis repoAnalisis;
-
+    ManagerPaciente mPaciente;
     ManagerFecha mFecha;
     ManagerHora mHora;
-    ManagerAnalisis mAnalisis;
     ManagerSecuencia mSecuencia;
 
     Secuencia sec = mSecuencia.cargar("Turno");
 
     int proximoID = sec.getIdActual() + 1;
     int dniPaciente;
-    int idAnalisis = 0;
+    bool pacienteExiste = false;
     Fecha fechaAtencion;
     Hora horaAtencion;
-    float importe = 0.0f;
     char opc = 'n';
 
+    // Carga de paciente. Comienza con DNI
     while (true) {
         std::cout << "Ingrese el DNI del paciente: ";
         std::cin >> dniPaciente;
@@ -41,17 +37,34 @@ bool ManagerTurno::cargar(){
         std::cout << "Intente nuevamente. Asegurese que sea un numero de 8 digitos.\n";
     }
 
-    std::cout << "Desea cargar el analisis ahora? s/n: ";
+    // Chequear si el paciente ya existe en la base de datos
+    const int CANT_PACIENTES = mPaciente.getRepositorio().cantidadRegistros();
+
+    for (int i = 0; i < CANT_PACIENTES; i ++) {
+        if (mPaciente.getRepositorio().leer(i).getDNI() == dniPaciente) {
+            pacienteExiste = true;
+        }
+    }
+
+    // Dar la posibilidad de cargar todos los datos del paciente si no existe
+    if (!pacienteExiste) {
+        std::cout << "Desea cargar los datos del paciente ahora? s/n: ";
+        std::cin >> opc;
+
+        if (opc == 's') {
+            mPaciente.cargar();
+        } else {
+            Paciente paciente;
+            paciente.setDNI(dniPaciente);
+            mPaciente.getRepositorio().guardar(paciente);
+        }
+    }
+
+    std::cout << "El paciente se atendera ahora? s/n: ";
     std::cin >> opc;
 
     if (opc == 's') {
-        if (mAnalisis.cargar()) {
-            std::cout << "Analisis cargado correctamente.\n";
-            idAnalisis = repoAnalisis.leer(repoAnalisis.cantidadRegistros() - 1).getId();
-        } else {
-            std::cout << "No se pudo cargar el analisis. Saliendo de la carga de turno.\n";
-            return false;
-        }
+        // PENDIENTE
     }
 
     std::cin.ignore(100, '\n');
@@ -61,27 +74,7 @@ bool ManagerTurno::cargar(){
 
     opc = 'n';
 
-    if (idAnalisis != 0) {
-        std::cout << "El turno tendra el mismo importe que el precio del analisis? s/n: ";
-        std::cin >> opc;
-
-        if (opc == 's') {
-            importe = repoAnalisis.leer(repoAnalisis.getPos(idAnalisis)).getTipoAnalisis().getPrecio();
-        }
-    } else {
-        while (true) {
-            std::cout << "Ingrese el importe del turno: ";
-            std::cin >> importe;
-
-            if (importe > 0) {
-                break;
-            }
-
-            std::cout << "Intente nuevamente. El importe debe ser mayor a 0.\n";
-        }
-    }
-
-    Turno turno(proximoID, dniPaciente, idAnalisis, fechaAtencion, horaAtencion, importe);
+    Turno turno(proximoID, dniPaciente, fechaAtencion, horaAtencion, 0.0f);
 
     if (_repo.guardar(turno)) {
         std::cout << "El turno se ha guardado correctamente.\n";
@@ -94,21 +87,12 @@ bool ManagerTurno::cargar(){
 
 void ManagerTurno::mostrar(Turno turno){
     Paciente auxP = turno.getPaciente();
-    Analisis auxA = turno.getAnalisis();
 
     ManagerFecha mFecha;
     ManagerHora mHora;
 
     std::cout << "ID: " << turno.getID() << "\n";
     std::cout << "Paciente: " << auxP.getNombre() << " " << auxP.getApellido() << ", con DNI " << auxP.getDNI() << "\n";
-
-    if (auxA.getId() != 0) {
-        TipoAnalisis auxTA = auxA.getTipoAnalisis();
-        std::cout << "Tipo de analsis: " << auxTA.getID() << " - " << auxTA.getNombreAnalisis() << "\n";
-    } else {
-        std::cout << "Tipo de analisis: 0 - No asignado\n";
-    }
-
     std::cout << "Fecha de atencion: ";
     std::cout << mFecha.mostrar(turno.getFechaAtencion()) << "\n";
     std::cout << "Hora de atencion: ";
@@ -141,4 +125,10 @@ bool ManagerTurno::eliminar(Turno turno){
             return false;
         }
     }
+
+    return true;
+}
+
+ArchivoTurno ManagerTurno::getRepositorio(){
+    return _repo;
 }

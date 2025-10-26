@@ -14,4 +14,6 @@ class ManagerTurno{
         void mostrarTodos();
         bool eliminar(Turno turno);
         bool actualizar(Turno turno);
+
+        ArchivoTurno getRepositorio();
 };

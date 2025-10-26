@@ -1,8 +1,16 @@
 #include "utils/Fecha.h"
 #include <iostream>
+#include <ctime>
 
 
-Fecha::Fecha(): _dia(1), _mes(1), _anio(2000) {};
+Fecha::Fecha(){
+    time_t timestamp = time(nullptr);
+    struct tm datetime = *localtime(&timestamp);
+
+    setAnio(datetime.tm_year + 1900);  // tm_year devuelve los años que pasaron desde "epoch", o sea desde el 1900
+    setMes(datetime.tm_mon + 1);
+    setDia(datetime.tm_mday);
+};
 
 Fecha::Fecha(int dia, int mes, int anio){
     setDia(dia);

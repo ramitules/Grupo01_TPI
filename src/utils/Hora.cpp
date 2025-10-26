@@ -2,7 +2,14 @@
 #include <iostream>
 
 
-Hora::Hora(): _hora(0), _minuto(0), _segundo(0) {};
+Hora::Hora(){
+    time_t timestamp = time(nullptr);
+    struct tm datetime = *localtime(&timestamp);
+
+    setHora(datetime.tm_hour);
+    setMinuto(datetime.tm_min);
+    setSegundo(0);
+};
 
 Hora::Hora(int hora, int minuto, int segundo) {
     setHora(hora);

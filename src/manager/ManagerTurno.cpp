@@ -60,19 +60,19 @@ bool ManagerTurno::cargar(){
         }
     }
 
+    opc = 'n';
+
     std::cout << "El paciente se atendera ahora? s/n: ";
     std::cin >> opc;
 
     if (opc == 's') {
-        // PENDIENTE
+        // PENDIENTE DE PROTOCOLO
     }
 
     std::cin.ignore(100, '\n');
 
     fechaAtencion = mFecha.cargar();
     horaAtencion = mHora.cargar();
-
-    opc = 'n';
 
     Turno turno(proximoID, dniPaciente, fechaAtencion, horaAtencion, 0.0f);
 
@@ -103,11 +103,79 @@ void ManagerTurno::mostrar(Turno turno){
 void ManagerTurno::mostrarTodos(){
     for(int i=0; i<_repo.cantidadRegistros(); i++){
         this->mostrar(_repo.leer(i));
+        std::cout << "------------------------\n";
     }
 }
 
 bool ManagerTurno::actualizar(Turno turno){
-    // PENDIENTE
+    std::cin.ignore(100, '\n');
+
+    ManagerFecha mFecha;
+    ManagerHora mHora;
+
+    int dniPaciente;
+    float importe = 0.0f;
+    char opc = 'n';
+
+    // Carga de paciente. Comienza con DNI
+    while (true) {
+        std::cout << "Ingrese el DNI del paciente (0 para dejarlo como estaba): ";
+        std::cin >> dniPaciente;
+
+        if (dniPaciente == 0) {
+            dniPaciente = turno.getDniPaciente();
+            break;
+        }
+
+        if (dniPaciente > 10000000 && dniPaciente < 99999999) {
+            break;
+        }
+
+        std::cout << "Intente nuevamente. Asegurese que sea un numero de 8 digitos.\n";
+    }
+
+    turno.setDniPaciente(dniPaciente);
+
+    std::cin.ignore(100, '\n');
+
+    std::cout << "La fecha sera la misma? s/n: ";
+    std::cin >> opc;
+
+    if (opc != 's') {
+        turno.setFechaAtencion(mFecha.cargar());
+    }
+    
+    std::cout << "La hora sera la misma? s/n: ";
+    std::cin >> opc;
+    
+    if (opc != 's') {
+        turno.setHoraAtencion(mHora.cargar());
+    }
+
+    std::cout << "El importe sera el mismo? s/n: ";
+    std::cin >> opc;
+    
+    if (opc != 's') {
+        while (true) {
+            std::cout << "Ingrese un importe: $";
+            std::cin >> importe;
+
+            if (importe >= 0) {
+                turno.setImporte(importe);
+                break;
+            }
+
+            std::cout << "No se permiten importes negativos. Intente nuevamente.\n";
+        }
+    }
+
+    if (_repo.modificar(turno, _repo.getPos(turno.getID()))) {
+        std::cout << "El turno se ha modificado correctamente.\n";
+        return true;
+    }
+
+    std::cout << "Ocurrio un error al intentar modificar el turno.\n";
+    return false;
 }
 
 bool ManagerTurno::eliminar(Turno turno){

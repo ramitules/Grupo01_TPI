@@ -1,7 +1,7 @@
 #pragma once
 #include "utils/Fecha.h"
 #include "utils/Hora.h"
-#include "Analisis.h"
+#include "Paciente.h"
 
 
 class Turno{

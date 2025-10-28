@@ -1,11 +1,9 @@
-#include "archivo/ArchivoAnalisis.h"
-#include <iostream>
+#include "archivo/ArchivoAnalisisProtocolo.h"
 
-
-ArchivoAnalisis::ArchivoAnalisis(): Archivo("analisis.dat", "base_de_datos") {
+ArchivoAnalisisProtocolo::ArchivoAnalisisProtocolo(): Archivo("archivoAnalisisProtocolo.dat", "base_de_datos") {
 };
 
-bool ArchivoAnalisis::guardar(Analisis analisis){
+bool ArchivoAnalisisProtocolo::guardar(AnalisisProtocolo analisisProtocolo){
     FILE *p;
 
     p = fopen(this->getRutaCompleta().c_str(), "ab");
@@ -14,14 +12,14 @@ bool ArchivoAnalisis::guardar(Analisis analisis){
         return false;
     }
 
-    bool ok = fwrite(&analisis, sizeof(Analisis), 1, p);
+    bool ok = fwrite(&analisisProtocolo, sizeof(AnalisisProtocolo), 1, p);
 
     fclose(p);
 
     return ok;
 }
 
-bool ArchivoAnalisis::modificar(Analisis analisis, int pos){
+bool ArchivoAnalisisProtocolo::modificar(AnalisisProtocolo analisisProtocolo, int pos){
     FILE *p;
 
     p = fopen(this->getRutaCompleta().c_str(), "rb+");
@@ -30,17 +28,17 @@ bool ArchivoAnalisis::modificar(Analisis analisis, int pos){
         return false;
     }
 
-    fseek(p, pos * sizeof(Analisis), SEEK_SET);
+    fseek(p, pos * sizeof(AnalisisProtocolo), SEEK_SET);
 
-    bool ok = fwrite(&analisis, sizeof(Analisis), 1, p);
+    bool ok = fwrite(&analisisProtocolo, sizeof(AnalisisProtocolo), 1, p);
 
     fclose(p);
 
     return ok;
 }
 
-bool ArchivoAnalisis::eliminar(int pos){
-    Analisis* aux = this->leerTodos();
+bool ArchivoAnalisisProtocolo::eliminar(int pos){
+    AnalisisProtocolo* aux = this->leerTodos();
 
     if (aux == nullptr){
         return false;
@@ -59,7 +57,7 @@ bool ArchivoAnalisis::eliminar(int pos){
 
     for (int i = 0; i < CANTIDAD; i++){
         if (i != pos){
-            fwrite(&aux[i], sizeof(Analisis), 1, p);
+            fwrite(&aux[i], sizeof(AnalisisProtocolo), 1, p);
         }
     }
 
@@ -68,8 +66,8 @@ bool ArchivoAnalisis::eliminar(int pos){
     return true;
 }
 
-Analisis ArchivoAnalisis::leer(int pos){
-    Analisis aux;
+AnalisisProtocolo ArchivoAnalisisProtocolo::leer(int pos){
+    AnalisisProtocolo aux;
 
     FILE *p;
 
@@ -79,17 +77,17 @@ Analisis ArchivoAnalisis::leer(int pos){
         return aux;
     }
 
-    fseek(p, pos * sizeof(Analisis), SEEK_SET);
+    fseek(p, pos * sizeof(AnalisisProtocolo), SEEK_SET);
 
-    fread(&aux, sizeof(Analisis), 1, p);
+    fread(&aux, sizeof(AnalisisProtocolo), 1, p);
 
     fclose(p);
 
     return aux;
 }
 
-/// @return Vector de Analisis. NULL si no hay registros o no se pudo abrir el archivo.
-Analisis* ArchivoAnalisis::leerTodos(){
+/// @return Vector de AnalisisProtocolo. NULL si no hay registros o no se pudo abrir el archivo.
+AnalisisProtocolo* ArchivoAnalisisProtocolo::leerTodos(){
     FILE *p;
 
     p = fopen(this->getRutaCompleta().c_str(), "rb");
@@ -105,16 +103,16 @@ Analisis* ArchivoAnalisis::leerTodos(){
         return nullptr;
     }
 
-    Analisis* aux = new Analisis[cantidad];
+    AnalisisProtocolo* aux = new AnalisisProtocolo[cantidad];
 
-    fread(aux, sizeof(Analisis), cantidad, p);
+    fread(aux, sizeof(AnalisisProtocolo), cantidad, p);
 
     fclose(p);
 
     return aux;
 }
 
-int ArchivoAnalisis::cantidadRegistros(){
+int ArchivoAnalisisProtocolo::cantidadRegistros(){
     FILE *p;
 
     p = fopen(this->getRutaCompleta().c_str(), "rb");
@@ -129,14 +127,14 @@ int ArchivoAnalisis::cantidadRegistros(){
 
     fclose(p);
 
-    return BYTES / sizeof(Analisis);
+    return BYTES / sizeof(AnalisisProtocolo);
 }
 
-int ArchivoAnalisis::getPos(int id){
+int ArchivoAnalisisProtocolo::getPos(int id){
     FILE *pFile;
-    Analisis registro;
+    AnalisisProtocolo registro;
 
-    const int tamanioAnalisis = sizeof(Analisis);
+    const int tamanioAnalisisProtocolo = sizeof(AnalisisProtocolo);
     int pos = -1;
 
     pFile = fopen(this->getRutaCompleta().c_str(), "rb");
@@ -145,9 +143,9 @@ int ArchivoAnalisis::getPos(int id){
         return -1;  
     }
     
-    while(fread(&registro, tamanioAnalisis, 1, pFile)) {
+    while(fread(&registro, tamanioAnalisisProtocolo, 1, pFile)) {
         if (registro.getId() == id) {
-            pos = ftell(pFile) / tamanioAnalisis - 1;
+            pos = ftell(pFile) / tamanioAnalisisProtocolo - 1;
             break;
         }
     }

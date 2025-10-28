@@ -22,7 +22,7 @@ set(SOURCES
         src/turno.cpp
     src/ObraSocial.cpp
     src/archivo/Archivo.cpp
-    src/archivo/ArchivoAnalisis.cpp
+        src/archivo/ArchivoProtocolo.cpp
     src/archivo/ArchivoEnfermero.cpp
     src/archivo/ArchivoObraSocial.cpp
     src/archivo/ArchivoPaciente.cpp

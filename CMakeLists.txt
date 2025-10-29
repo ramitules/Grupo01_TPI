@@ -29,7 +29,7 @@ set(SOURCES
     src/archivo/ArchivoSecuencia.cpp
     src/archivo/ArchivoTipoAnalisis.cpp
     src/archivo/ArchivoTurno.cpp
-    src/manager/ManagerAnalisis.cpp
+        src/manager/ManagerProtocolo.cpp
     src/manager/ManagerEnfermero.cpp
     src/manager/ManagerObraSocial.cpp
     src/manager/ManagerPaciente.cpp

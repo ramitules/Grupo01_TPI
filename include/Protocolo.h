@@ -1,4 +1,8 @@
 #pragma once
+#include "Enfermero.h"
+#include "Turno.h"
+#include "archivo/ArchivoEnfermero.h"
+#include "archivo/ArchivoTurno.h"
 #include <cstring>
 
 class Protocolo{
@@ -20,6 +24,8 @@ class Protocolo{
         int getDniEnfermero();
         int getSala();
         const char* getObservaciones();
+        Enfermero getEnfermero();
+        Turno getTurno();
         bool getEliminado();
 
         //SETTERS

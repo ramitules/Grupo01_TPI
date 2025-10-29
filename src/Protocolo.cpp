@@ -32,6 +32,30 @@ const char* Protocolo::getObservaciones(){
     return _observaciones;
 }
 
+Enfermero Protocolo::getEnfermero() {
+    ArchivoEnfermero repoEnfermero;
+
+    int pos = repoEnfermero.getPos(this->getDniEnfermero());
+
+    if (pos == -1) {
+        return Enfermero();
+    }
+
+    return repoEnfermero.leer(pos);
+}
+
+Turno Protocolo::getTurno() {
+    ArchivoTurno repoTurno;
+
+    int pos = repoTurno.getPos(this->getIdTurno());
+
+    if (pos == -1) {
+        return Turno();
+    }
+
+    return repoTurno.leer(pos);
+}
+
 bool Protocolo::getEliminado() {
     return _eliminado;
 }

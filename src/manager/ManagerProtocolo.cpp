@@ -7,7 +7,7 @@
 
 ManagerProtocolo::ManagerProtocolo(){};
 
-bool ManagerProtocolo::cargar(){
+bool ManagerProtocolo::cargar(int idTurno){
     std::cin.ignore(100, '\n');
 
     ArchivoTurno repoTurno;
@@ -19,7 +19,6 @@ bool ManagerProtocolo::cargar(){
     Secuencia sec = managerSecuencia.cargar("Protocolo");
 
     int proximoID = sec.getIdActual() + 1;
-    int idTurno = 0;
     int dniEnfermero = 0;
     int sala = 0;
     char observaciones[255]{};

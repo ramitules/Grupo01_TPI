@@ -10,7 +10,7 @@ class ManagerProtocolo{
     public:
         ManagerProtocolo();
 
-        bool cargar();
+        bool cargar(int idTurno);
         void mostrar(Protocolo protocolo);
         void mostrarTodos();
         bool eliminar(Protocolo protocolo);

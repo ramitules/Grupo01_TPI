@@ -1,19 +1,19 @@
-#include "menu/MenuAnalisis.h"
+#include "menu/MenuProtocolo.h"
 #include <iostream>
 
 
-MenuAnalisis::MenuAnalisis(): Menu(3, "Menu Analisis"){
+MenuProtocolo::MenuProtocolo(): Menu(3, "Menu Protocolo"){
     std::string opciones[3] = {
-        "Crear nuevo analisis",
-        "Modificar analisis",
-        "Eliminar analisis"
+        "Crear nuevo protocolo",
+        "Modificar protocolo",
+        "Eliminar protocolo"
     };
 
     setVectorOpciones(opciones);
     setSalir(false);
 }
 
-void MenuAnalisis::ejecutarOpcion(){
+void MenuProtocolo::ejecutarOpcion(){
     switch (_opcionSeleccionada) {
         case 0:
             return;

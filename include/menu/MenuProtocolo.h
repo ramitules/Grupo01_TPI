@@ -2,9 +2,9 @@
 #include "Menu.h"
 
 
-class MenuAnalisis: public Menu {
+class MenuProtocolo: public Menu {
     public:
-        MenuAnalisis();
+        MenuProtocolo();
 
         void ejecutarOpcion() override;
 };

@@ -1,5 +1,6 @@
 #include "manager/ManagerSecuencia.h"
 #include "manager/ManagerPaciente.h"
+#include "manager/ManagerProtocolo.h"
 #include "manager/ManagerTurno.h"
 #include "utils/ManagerFecha.h"
 #include "utils/ManagerHora.h"
@@ -66,7 +67,8 @@ bool ManagerTurno::cargar(){
     std::cin >> opc;
 
     if (opc == 's') {
-        // PENDIENTE DE PROTOCOLO
+        ManagerProtocolo mProtocolo;
+        mProtocolo.cargar(proximoID);
     }
 
     std::cin.ignore(100, '\n');
@@ -185,6 +187,12 @@ bool ManagerTurno::eliminar(Turno turno){
     std::cin >> opc;
 
     if (opc == 's') {
+        // ELIMINACION LOGICA
+        turno.setEliminado(true);
+        _repo.modificar(turno, _repo.getPos(turno.getID()));
+
+        // ELIMINACION FISICA
+        /*
         if (_repo.eliminar(_repo.getPos(turno.getID()))){
             std::cout << "El turno se ha eliminado correctamente.\n";
             return true;
@@ -192,6 +200,7 @@ bool ManagerTurno::eliminar(Turno turno){
             std::cout << "Ocurrio un error al intentar eliminar el turno.\n";
             return false;
         }
+        */
     }
 
     return true;

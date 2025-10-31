@@ -1,9 +1,10 @@
 #include "menu/MenuPrincipal.h"
-#include "menu/MenuAnalisis.h"
+#include "menu/MenuProtocolo.h"
 #include "menu/MenuEnfermero.h"
 #include "menu/MenuTurno.h"
 #include "menu/MenuTipoAnalisis.h"
 #include "menu/MenuPaciente.h"
+#include "menu/MenuObraSocial.h"
 #include "menu/listados/MenuListados.h"
 #include "menu/consultas/MenuConsultas.h"
 #include "menu/informes/MenuInformes.h"
@@ -11,12 +12,13 @@
 
 
 MenuPrincipal::MenuPrincipal(): Menu(8, "Menu Principal"){
-    std::string opciones[8] = {
+    std::string opciones[9] = {
         "Turnos",
         "Pacientes",
-        "Analisis",
+        "Protocolos",
         "Tipos de analisis",
         "Enfermeros",
+        "Obras sociales",
         "Modulo LISTADOS",
         "Modulo CONSULTAS",
         "Modulo INFORMES"
@@ -37,7 +39,7 @@ void MenuPrincipal::ejecutarOpcion(){
         MenuPaciente menu;
         menu.buclePrincipal();
     } else if (_opcionSeleccionada == 3) {
-        MenuAnalisis menu;
+        MenuProtocolo menu;
         menu.buclePrincipal();
     } else if (_opcionSeleccionada == 4) {
         MenuTipoAnalisis menu;
@@ -46,12 +48,15 @@ void MenuPrincipal::ejecutarOpcion(){
         MenuEnfermero menu;
         menu.buclePrincipal();
     } else if (_opcionSeleccionada == 6) {
+        MenuObraSocial menu;
+        menu.buclePrincipal();
+    } else if (_opcionSeleccionada == 7) {
         MenuListados menu;
         menu.buclePrincipal();
-    }  else if (_opcionSeleccionada == 7) {
+    }  else if (_opcionSeleccionada == 8) {
         MenuConsultas menu;
         menu.buclePrincipal();
-    }  else if (_opcionSeleccionada == 8) {
+    }  else if (_opcionSeleccionada == 9) {
         MenuInformes menu;
         menu.buclePrincipal();
     } else {

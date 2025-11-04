@@ -1,14 +1,24 @@
 #include "utils/ManagerHora.h"
+#include <ctime>
 
 
 ManagerHora::ManagerHora(){};
 
 Hora ManagerHora::cargar(){
-    int hora, minuto, segundo;
+    // Para valores por defecto
+    time_t timestamp = time(nullptr);
+    struct tm datetime = *localtime(&timestamp);
 
+    int hora, minuto, segundo;
+    
     while (true) {
-        std::cout << "Hora (0-23): ";
+        std::cout << "Hora (0-23 | -1 para hora actual): ";
         std::cin >> hora;
+
+        if (hora == -1) {
+            hora = datetime.tm_hour;
+            break;
+        }
 
         if (hora >= 0 && hora < 24){
             break;
@@ -18,8 +28,12 @@ Hora ManagerHora::cargar(){
     }
 
     while (true) {
-        std::cout << "Minuto (0-59): ";
+        std::cout << "Minuto (0-59 | -1 para minutos actuales): ";
         std::cin >> minuto;
+
+        if (minuto == -1) {
+            minuto = datetime.tm_min;
+        }
 
         if (minuto >= 0 && minuto < 60){
             break;
@@ -29,9 +43,17 @@ Hora ManagerHora::cargar(){
     }
 
     // Segundo es opcional
-    std::cout << "Segundo (0-59, opcional): ";
+    std::cout << "Segundo (0-59 | -1 para segundos actuales): ";
     std::cin >> segundo;
 
+    if (segundo == -1) {
+        segundo = datetime.tm_sec;
+    } else if (segundo < -1) {
+        segundo = 0;
+    } else if (segundo > 59) {
+        segundo = 59;
+    }
+    
     Hora h(hora, minuto, segundo);
     return h;
 }

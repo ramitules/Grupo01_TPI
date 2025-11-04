@@ -22,3 +22,11 @@ void Archivo::setRutaArchivo(std::string rutaArchivo) {
 std::string Archivo::getRutaCompleta(){
     return this->getRutaArchivo() + "/" + this->getNombreArchivo();
 }
+
+bool Archivo::existeRuta(){
+    struct stat buffer;
+    
+    // stat() intenta obtener información sobre el archivo/directorio.
+    // Retorna 0 si tiene éxito, -1 si falla (no existe).
+    return stat(this->getRutaArchivo().c_str(), &buffer) == 0;
+}

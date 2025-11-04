@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <sys/stat.h>
 
 
 class Archivo{
@@ -16,4 +17,8 @@ class Archivo{
 
         void setNombreArchivo(std::string nombreArchivo);
         void setRutaArchivo(std::string rutaArchivo);
+
+        // Chequea si existe el directorio donde se guardara la base de datos.
+        // No necesita un nombre de archivo.
+        bool existeRuta();
 };

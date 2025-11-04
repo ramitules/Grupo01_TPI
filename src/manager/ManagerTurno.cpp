@@ -4,6 +4,7 @@
 #include "manager/ManagerTurno.h"
 #include "utils/ManagerFecha.h"
 #include "utils/ManagerHora.h"
+#include "utils/rlutil.h"
 #include "Paciente.h"
 
 
@@ -79,11 +80,13 @@ bool ManagerTurno::cargar(){
     Turno turno(proximoID, dniPaciente, fechaAtencion, horaAtencion, 0.0f);
 
     if (_repo.guardar(turno)) {
-        std::cout << "El turno se ha guardado correctamente.\n";
+        std::cout << "El turno se ha guardado correctamente. Presione ENTER para continuar\n";
+        rlutil::getkey();
         return true;
     }
 
-    std::cout << "Ocurrio un error al intentar guardar el turno.\n";
+    std::cout << "Ocurrio un error al intentar guardar el turno. Presione ENTER para continuar\n";
+    rlutil::getkey();
     return false;
 }
 
@@ -172,11 +175,13 @@ bool ManagerTurno::actualizar(Turno turno){
     }
 
     if (_repo.modificar(turno, _repo.getPos(turno.getID()))) {
-        std::cout << "El turno se ha modificado correctamente.\n";
+        std::cout << "El turno se ha modificado correctamente. Presione ENTER para continuar.\n";
+        rlutil::getkey();
         return true;
     }
 
-    std::cout << "Ocurrio un error al intentar modificar el turno.\n";
+    std::cout << "Ocurrio un error al intentar modificar el turno. Presione ENTER para continuar.\n";
+    rlutil::getkey();
     return false;
 }
 
@@ -189,7 +194,11 @@ bool ManagerTurno::eliminar(Turno turno){
     if (opc == 's') {
         // ELIMINACION LOGICA
         turno.setEliminado(true);
-        _repo.modificar(turno, _repo.getPos(turno.getID()));
+        if (_repo.modificar(turno, _repo.getPos(turno.getID()))) {
+            std::cout << "El turno se ha eliminado correctamente. Presione ENTER para continuar.\n";
+            rlutil::getkey();
+            return true;
+        };
 
         // ELIMINACION FISICA
         /*
@@ -201,9 +210,11 @@ bool ManagerTurno::eliminar(Turno turno){
             return false;
         }
         */
+        std::cout << "Ocurrio un error al intentar eliminar el turno. Presione ENTER para continuar.\n";
+        rlutil::getkey();
+        return false;
     }
-
-    return true;
+    
 }
 
 ArchivoTurno ManagerTurno::getRepositorio(){

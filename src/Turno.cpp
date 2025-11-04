@@ -1,5 +1,4 @@
 #include "Turno.h"
-#include "archivo/ArchivoProtocolo.h"
 #include "archivo/ArchivoPaciente.h"
 #include <iostream>
 

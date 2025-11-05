@@ -1,11 +1,11 @@
 #include "menu/listados/ListadosTurnos.h"
+#include "manager/ManagerTurno.h"
 #include <iostream>
 
 
-ListadosTurnos::ListadosTurnos(): Menu(2, "Menu Listados"){
-    std::string opciones[2] = {
-        "Ordenados por fecha",
-        "Agrupados por paciente"
+ListadosTurnos::ListadosTurnos(): Menu(1, "Menu Listados"){
+    std::string opciones[1] = {
+        "Ordenados por fecha"
     };
 
     setVectorOpciones(opciones);
@@ -16,6 +16,14 @@ void ListadosTurnos::ejecutarOpcion(){
     if (_opcionSeleccionada == 0) {
         return;
     }
+
+    if (_opcionSeleccionada == 1) {
+        ManagerTurno mTurno;
+        mTurno.ordenadosFecha();
+        return;
+    }
+
+    std::cout << "Opcion fuera de rango. Intente nuevamente.\n";
 }
 
 void ListadosTurnos::mostrarOpciones(){

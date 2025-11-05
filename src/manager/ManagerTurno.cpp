@@ -108,7 +108,73 @@ void ManagerTurno::mostrar(Turno turno){
 void ManagerTurno::mostrarTodos(){
     for(int i=0; i<_repo.cantidadRegistros(); i++){
         this->mostrar(_repo.leer(i));
-        std::cout << "------------------------\n";
+        std::cout << "----------------------------\n";
+    }
+}
+
+void ManagerTurno::ordenadosFecha(){
+    int CANTIDAD = _repo.cantidadRegistros();
+    Turno *turnos = _repo.leerTodos();
+    Turno aux;
+
+    // Ordenar
+    for (int i=0; i<CANTIDAD; i++) {
+        for (int j=i+1; j<CANTIDAD; j++) {
+            if (turnos[i].getFechaAtencion() > turnos[j].getFechaAtencion()) {
+                aux = turnos[i];
+                turnos[i] = turnos[j];
+                turnos[j] = aux;
+            } else if (turnos[i].getFechaAtencion() == turnos[j].getFechaAtencion()) {
+                // Corroborar hora si la fecha es la misma
+                if (turnos[i].getHoraAtencion() > turnos[j].getHoraAtencion()) {
+                    aux = turnos[i];
+                    turnos[i] = turnos[j];
+                    turnos[j] = aux;
+                }
+            }
+        }
+    }
+
+    // Mostrar
+    for (int i=0; i<CANTIDAD; i++) {
+        mostrar(turnos[i]);
+        std::cout << "----------------------------\n";
+    }
+}
+
+void ManagerTurno::agrupadosPaciente(){
+    int CANTIDAD = _repo.cantidadRegistros();
+    bool indicesVisitados[CANTIDAD] = {false};
+    Turno *turnos = _repo.leerTodos();
+    Paciente auxPaciente;
+
+    std::string separador = "";
+    for (int i=0; i<rlutil::tcols(); i++) {
+        separador += "-";
+    }
+
+    for (int i=0; i<CANTIDAD; i++) {
+        // Saltear turnos ya mostrados
+        if (indicesVisitados[i]) {
+            continue;
+        }
+
+        auxPaciente = turnos[i].getPaciente();
+        std::cout << "-- Turnos del paciente " << auxPaciente.getNombre() << ' ' << auxPaciente.getApellido() << " --";
+       
+        for (int j=0; j<CANTIDAD; j++) {
+            if (indicesVisitados[j]) {
+                continue;
+            }
+            
+            if (turnos[j].getDniPaciente() == auxPaciente.getDNI()) {
+                mostrar(turnos[j]);
+                std::cout << "\n\n";
+                indicesVisitados[j] = true;
+            }
+        }
+
+        std::cout << separador << '\n\n';
     }
 }
 

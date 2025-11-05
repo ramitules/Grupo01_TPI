@@ -15,5 +15,10 @@ class ManagerTurno{
         bool eliminar(Turno turno);
         bool actualizar(Turno turno);
 
+        // Ordena todos los turnos existentes y los muestra por pantalla
+        void ordenadosFecha();
+        // Ordena los pacientes alfabeticamente y agrupa sus turnos, mostrandolos por pantalla
+        void agrupadosPaciente();
+        
         ArchivoTurno getRepositorio();
 };

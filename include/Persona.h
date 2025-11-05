@@ -33,4 +33,8 @@ class Persona{
         const char* getEmail();
         Fecha getFechaNacimiento();
         bool getEliminado();
+
+        // Sobrecarga de operadores
+        bool operator==(const Persona &otro);
+        bool operator!=(const Persona &otro);
     };

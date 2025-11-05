@@ -73,3 +73,19 @@ Fecha Persona::getFechaNacimiento(){
 bool Persona::getEliminado(){
     return _eliminado;
 };
+
+bool Persona::operator==(const Persona &otro){
+    if (_dni != otro._dni) { return false; }
+    if (_nombre != otro._nombre) { return false; }
+    if (_apellido != otro._apellido) { return false; }
+    if (_telefono != otro._telefono) { return false; }
+    if (_email != otro._email) { return false; }
+    if (_fechaNacimiento != otro._fechaNacimiento) { return false; }
+    if (_eliminado != otro._eliminado) { return false; }
+    
+    return true;
+};
+
+bool Persona::operator!=(const Persona &otro){
+    return !(*this == otro);
+};

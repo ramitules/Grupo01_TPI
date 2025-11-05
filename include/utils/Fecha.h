@@ -23,6 +23,7 @@ class Fecha{
 
         // Sobrecarga de operadores
         bool operator==(const Fecha &otro);
+        bool operator!=(const Fecha &otro);
         bool operator<(const Fecha &otro);
         bool operator>(const Fecha &otro);
 };

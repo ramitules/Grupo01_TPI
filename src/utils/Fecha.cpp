@@ -48,6 +48,10 @@ bool Fecha::operator==(const Fecha &otro){
     return (_dia == otro._dia && _mes == otro._mes && _anio == otro._anio);
 }
 
+bool Fecha::operator!=(const Fecha &otro){
+    return (_dia != otro._dia || _mes != otro._mes || _anio != otro._anio);
+}
+
 bool Fecha::operator<(const Fecha &otro){
     if (_anio < otro._anio) { return true; }
 

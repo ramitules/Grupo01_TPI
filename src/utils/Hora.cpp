@@ -48,6 +48,10 @@ bool Hora::operator==(const Hora &otro){
     return (_hora == otro._hora && _minuto == otro._minuto && _hora == otro._hora);
 }
 
+bool Hora::operator!=(const Hora &otro){
+    return (_hora != otro._hora || _minuto != otro._minuto || _hora != otro._hora);
+}
+
 bool Hora::operator<(const Hora &otro){
     if (_hora < otro._hora) { return true; }
 

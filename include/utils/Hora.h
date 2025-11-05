@@ -23,6 +23,7 @@ class Hora{
 
         // Sobrecarga de operadores
         bool operator==(const Hora &otro);
+        bool operator!=(const Hora &otro);
         bool operator<(const Hora &otro);
         bool operator>(const Hora &otro);
 };

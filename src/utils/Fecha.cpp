@@ -43,3 +43,27 @@ void Fecha::setMes(int mes){
 void Fecha::setAnio(int anio){
     _anio = anio;
 }
+
+bool Fecha::operator==(const Fecha &otro){
+    return (_dia == otro._dia && _mes == otro._mes && _anio == otro._anio);
+}
+
+bool Fecha::operator<(const Fecha &otro){
+    if (_anio < otro._anio) { return true; }
+
+    if (_anio == otro._anio && _mes < otro._mes) { return true; }
+
+    if (_anio == otro._anio && _mes == otro._mes && _dia < otro._dia) { return true; }
+
+    return false;
+}
+
+bool Fecha::operator>(const Fecha &otro){
+    if (_anio > otro._anio) { return true; }
+
+    if (_anio == otro._anio && _mes > otro._mes) { return true; }
+
+    if (_anio == otro._anio && _mes == otro._mes && _dia > otro._dia) { return true; }
+
+    return false;
+}

@@ -20,4 +20,9 @@ class Fecha{
         void setDia(int dia);
         void setMes(int mes);
         void setAnio(int anio);
+
+        // Sobrecarga de operadores
+        bool operator==(const Fecha &otro);
+        bool operator<(const Fecha &otro);
+        bool operator>(const Fecha &otro);
 };

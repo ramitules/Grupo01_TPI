@@ -20,4 +20,9 @@ class Hora{
         int getHora();
         int getMinuto();
         int getSegundo();
+
+        // Sobrecarga de operadores
+        bool operator==(const Hora &otro);
+        bool operator<(const Hora &otro);
+        bool operator>(const Hora &otro);
 };

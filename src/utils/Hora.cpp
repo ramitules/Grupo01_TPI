@@ -43,3 +43,27 @@ int Hora::getMinuto(){
 int Hora::getSegundo(){
     return _segundo;
 }
+
+bool Hora::operator==(const Hora &otro){
+    return (_hora == otro._hora && _minuto == otro._minuto && _hora == otro._hora);
+}
+
+bool Hora::operator<(const Hora &otro){
+    if (_hora < otro._hora) { return true; }
+
+    if (_hora == otro._hora && _minuto < otro._minuto) { return true; }
+
+    if (_hora == otro._hora && _minuto == otro._minuto && _segundo < otro._segundo) { return true; }
+
+    return false;
+}
+
+bool Hora::operator>(const Hora &otro){
+    if (_hora > otro._hora) { return true; }
+
+    if (_hora == otro._hora && _minuto > otro._minuto) { return true; }
+
+    if (_hora == otro._hora && _minuto == otro._minuto && _segundo > otro._segundo) { return true; }
+
+    return false;
+}

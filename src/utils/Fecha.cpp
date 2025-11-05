@@ -44,6 +44,27 @@ void Fecha::setAnio(int anio){
     _anio = anio;
 }
 
+int Fecha::diasEnElMes() {
+    switch (_mes) {
+        case 4: // Abril
+        case 6: // Junio
+        case 9: // Septiembre
+        case 11: // Noviembre
+            // Todos estos tienen 30 dias
+            return 30; 
+        case 2: // Febrero
+            // Depende del anio bisiesto
+            return esBisiesto() ? 29 : 28;
+        default:
+            // Los demas meses tienen 31 dias
+            return 31;
+    }
+}
+
+bool Fecha::esBisiesto() {
+    return (_anio % 4 == 0 && _anio % 100 != 0) || (_anio % 400 == 0);
+}
+
 bool Fecha::operator==(const Fecha &otro){
     return (_dia == otro._dia && _mes == otro._mes && _anio == otro._anio);
 }
@@ -71,3 +92,26 @@ bool Fecha::operator>(const Fecha &otro){
 
     return false;
 }
+
+Fecha& Fecha::operator++(){
+    const int LIMITDIAS = diasEnElMes();
+
+    // 1. Comprobar si es el ultimo dia del mes
+    if (getDia() < LIMITDIAS) {
+        setDia(getDia() + 1);
+    } else {
+        // Es el ultimo dia del mes
+        setDia(1);
+
+        // 2. Comprobar si es el ultimo mes del anio (Diciembre)
+        if (getMes() == 12) {
+            // Ultimo mes, avanzamos al 1 de Enero del anio siguiente
+            setMes(1);
+            setAnio(getAnio() + 1);
+        } else {
+            setMes(getMes() + 1);
+        }
+    }
+
+    return *this;  // Referencia a la fecha ya modificada
+};

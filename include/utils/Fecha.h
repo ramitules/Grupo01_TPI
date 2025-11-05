@@ -26,4 +26,9 @@ class Fecha{
         bool operator!=(const Fecha &otro);
         bool operator<(const Fecha &otro);
         bool operator>(const Fecha &otro);
+        Fecha& operator++();
+
+        // Otros
+        int diasEnElMes();
+        bool esBisiesto();
 };

@@ -88,6 +88,7 @@ Turno ArchivoTurno::leer(int pos){
 }
 
 /// @return Vector de Turno. NULL si no hay registros o no se pudo abrir el archivo.
+/// Se crea con memoria dinamica. Recordar eliminar!
 Turno* ArchivoTurno::leerTodos(){
     FILE *p;
 

@@ -167,7 +167,7 @@ void ManagerTurno::ordenadosFecha(){
 
 void ManagerTurno::agrupadosPaciente(){
     const int CANTIDAD = _repo.cantidadRegistros();
-    bool indicesVisitados[CANTIDAD] = {false};
+    bool* indicesVisitados = new bool[CANTIDAD] {false};
     Turno *turnos = _repo.leerTodos();
     Paciente auxPaciente;
 
@@ -200,10 +200,11 @@ void ManagerTurno::agrupadosPaciente(){
             }
         }
 
-        std::cout << separador() << '\n\n';
+        std::cout << separador() << "\n\n";
     }
 
     delete[] turnos;
+    delete[] indicesVisitados;
 
     std::cout << "Presione ENTER para continuar";
     rlutil::getkey();
@@ -213,7 +214,7 @@ void ManagerTurno::busquedaFecha(){
     std::cin.ignore(100, '\n');
 
     const int CANTIDAD = _repo.cantidadRegistros();
-    bool indicesVisitados[CANTIDAD] = {false};
+    bool* indicesVisitados = new bool[CANTIDAD] {false};
     Turno *turnos = _repo.leerTodos();
 
     ManagerFecha mFecha;
@@ -284,6 +285,7 @@ void ManagerTurno::busquedaFecha(){
         delete[] fechasElegidas;
     }
     delete[] turnos;
+    delete[] indicesVisitados;
 
     std::cout << "Presione ENTER para continuar";
     rlutil::getkey();

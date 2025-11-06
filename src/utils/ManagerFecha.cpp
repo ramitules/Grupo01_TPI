@@ -63,3 +63,19 @@ Fecha ManagerFecha::cargar(){
 std::string ManagerFecha::mostrar(Fecha fecha){
     return std::to_string(fecha.getDia()) + "/" + std::to_string(fecha.getMes()) + "/" + std::to_string(fecha.getAnio());
 }
+
+// Devuelve un vector con todas las fechas incluyendo "desde".
+// El vector se crea con memoria dinamica. Recordar eliminarlo!
+Fecha* ManagerFecha::rangoFechas(Fecha desde, const int DIAS){
+    // Crear un vector dinámico para almacenar las fechas en el rango.
+    Fecha* fechas = new Fecha[DIAS];
+    Fecha fechaAux = desde;
+
+    // Crear vector de fechas basandose en la fecha anterior y sumandole un dia
+    for (int i=0; i<DIAS; i++) {
+        fechas[i] = fechaAux;
+        ++fechaAux;
+    }
+
+    return fechas;
+}

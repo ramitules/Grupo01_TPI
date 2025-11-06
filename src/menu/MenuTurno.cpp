@@ -34,10 +34,19 @@ void MenuTurno::ejecutarOpcion(){
     int opcionSecundaria = 0;
     int posTurno = -1;
 
-    std::cout << "Si conoce el ID del turno, ingreselo a continuacion (0 para listar todos): ";
+    std::cout << "Si conoce el ID del turno, ingreselo a continuacion (0 = listar todos | -1 = salir): ";
     std::cin >> opcionSecundaria;
 
-    if (opcionSecundaria > 0) {
+    if (opcionSecundaria < 0) {
+        return;
+    }
+
+    if (opcionSecundaria == 0) {
+        // Mostrar todos los turnos por pantalla
+        // Esto sirve para modificacion y eliminacion por igual
+        mTurno.mostrarTodos();
+    } else if (opcionSecundaria > 0){
+        // Con un ID especifico, no se permite intentar nuevamente (sin ciclo while)
         posTurno = (mTurno.getRepositorio().getPos(opcionSecundaria));
 
         if (posTurno == -1) {
@@ -45,10 +54,6 @@ void MenuTurno::ejecutarOpcion(){
             return;
         }
     }
-
-    // Mostrar todos los turnos por pantalla
-    // Esto sirve para modificacion y eliminacion por igual
-    mTurno.mostrarTodos();
 
     while (true) {
         std::cout << "Ingrese el ID del turno, o 0 para cancelar: ";

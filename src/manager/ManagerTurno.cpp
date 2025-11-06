@@ -5,6 +5,7 @@
 #include "utils/ManagerFecha.h"
 #include "utils/ManagerHora.h"
 #include "utils/rlutil.h"
+#include "utils/funcFrontend.h"
 #include "Paciente.h"
 
 
@@ -106,19 +107,30 @@ void ManagerTurno::mostrar(Turno turno){
 }
 
 void ManagerTurno::mostrarTodos(){
+    Turno auxTurno;
     for(int i=0; i<_repo.cantidadRegistros(); i++){
-        this->mostrar(_repo.leer(i));
-        std::cout << "----------------------------\n";
+        auxTurno = _repo.leer(i);
+        
+        if (auxTurno.getEliminado()) {
+            continue;
+        }
+
+        mostrar(auxTurno);
+        std::cout << separadorParcial();
     }
 }
 
 void ManagerTurno::ordenadosFecha(){
-    int CANTIDAD = _repo.cantidadRegistros();
+    const int CANTIDAD = _repo.cantidadRegistros();
     Turno *turnos = _repo.leerTodos();
     Turno aux;
 
     // Ordenar
     for (int i=0; i<CANTIDAD; i++) {
+        if (turnos[i].getEliminado()) {
+            continue;
+        }
+
         for (int j=i+1; j<CANTIDAD; j++) {
             if (turnos[i].getFechaAtencion() > turnos[j].getFechaAtencion()) {
                 aux = turnos[i];
@@ -137,21 +149,27 @@ void ManagerTurno::ordenadosFecha(){
 
     // Mostrar
     for (int i=0; i<CANTIDAD; i++) {
+        if (turnos[i].getEliminado()) {
+            continue;
+        }
+
         mostrar(turnos[i]);
-        std::cout << "----------------------------\n";
+        std::cout << separadorParcial();
     }
+
+    std::cout << separador();
+
+    delete[] turnos;
+
+    std::cout << "Presione ENTER para continuar";
+    rlutil::getkey();
 }
 
 void ManagerTurno::agrupadosPaciente(){
-    int CANTIDAD = _repo.cantidadRegistros();
+    const int CANTIDAD = _repo.cantidadRegistros();
     bool indicesVisitados[CANTIDAD] = {false};
     Turno *turnos = _repo.leerTodos();
     Paciente auxPaciente;
-
-    std::string separador = "";
-    for (int i=0; i<rlutil::tcols(); i++) {
-        separador += "-";
-    }
 
     for (int i=0; i<CANTIDAD; i++) {
         // Saltear turnos ya mostrados
@@ -159,23 +177,214 @@ void ManagerTurno::agrupadosPaciente(){
             continue;
         }
 
+        if (turnos[i].getEliminado()) {
+            indicesVisitados[i] = true;
+            continue;
+        }
+
         auxPaciente = turnos[i].getPaciente();
         std::cout << "-- Turnos del paciente " << auxPaciente.getNombre() << ' ' << auxPaciente.getApellido() << " --";
        
         for (int j=0; j<CANTIDAD; j++) {
+            if (turnos[i].getEliminado()) {
+                continue;
+            }
             if (indicesVisitados[j]) {
                 continue;
             }
-            
+
             if (turnos[j].getDniPaciente() == auxPaciente.getDNI()) {
                 mostrar(turnos[j]);
-                std::cout << "\n\n";
+                std::cout << separadorParcial();
                 indicesVisitados[j] = true;
             }
         }
 
-        std::cout << separador << '\n\n';
+        std::cout << separador() << '\n\n';
     }
+
+    delete[] turnos;
+
+    std::cout << "Presione ENTER para continuar";
+    rlutil::getkey();
+}
+
+void ManagerTurno::busquedaFecha(){
+    std::cin.ignore(100, '\n');
+
+    const int CANTIDAD = _repo.cantidadRegistros();
+    bool indicesVisitados[CANTIDAD] = {false};
+    Turno *turnos = _repo.leerTodos();
+
+    ManagerFecha mFecha;
+    int dias = 0;
+
+    std::cout << "-- Ingreso de rango de fechas --";
+    std::cout << "DESDE\n";
+    Fecha desde = mFecha.cargar();
+    
+    while (true) {
+        std::cout << "Cantidad de dias (1 = solo la fecha ingresada): \n";
+        std::cin >> dias;
+
+        if (dias > 0 && dias < 366) {
+            break;
+        }
+
+        if (dias > 365) {
+            std::cout << "No se permiten busquedas superiores a 365 dias. Intente nuevamente\n";
+        }
+
+        if (dias < 1) {
+            std::cout << "No se permiten dias negativos. Intente nuevamente\n";
+        }
+    }
+
+    buscando();
+    
+    bool mostrarLeyenda = true;
+
+    if (dias == 1) {
+        for (int i=0; i<CANTIDAD; i++) {
+            if (turnos[i].getEliminado()) {
+                continue;
+            }
+
+            if (turnos[i].getFechaAtencion() == desde) {
+                if (mostrarLeyenda) {
+                    mostrarLeyenda = false;
+                    std::cout << "-- Se encontraron los siguientes turnos en la fecha provista --\n";
+                }
+
+                mostrar(turnos[i]);
+                std::cout << "\n\n";
+            }
+        }
+    } else {
+        Fecha* fechasElegidas = mFecha.rangoFechas(desde, dias);
+
+        for (int i=0; i<CANTIDAD; i++) {
+            if (turnos[i].getEliminado()) {
+                continue;
+            }
+            
+            for (int j=0; j<dias; j++) {
+                if (turnos[i].getFechaAtencion() == fechasElegidas[j]) {
+                    if (mostrarLeyenda) {
+                        mostrarLeyenda = false;
+                        std::cout << "-- Se encontraron los siguientes turnos en el rango de fechas provisto --\n";
+                    }
+
+                    mostrar(turnos[i]);
+                    std::cout << "\n\n";
+                }
+            }
+        }
+
+        delete[] fechasElegidas;
+    }
+    delete[] turnos;
+
+    std::cout << "Presione ENTER para continuar";
+    rlutil::getkey();
+}
+
+void ManagerTurno::busquedaPaciente(){
+    std::cin.ignore(100, '\n');
+
+    const int CANTIDAD = _repo.cantidadRegistros();
+
+    bool* indices = new bool[CANTIDAD];
+    for (int i = 0; i < CANTIDAD; i ++) { indices[i] = false; }
+
+    Turno *turnos = _repo.leerTodos();
+    ManagerPaciente mPaciente;
+    
+    // Busqueda personalizada por DNI o por nombre
+    int opc = 0;
+
+    std::cout << "Como desea buscar el paciente?\n";
+    std::cout << "1. Por DNI\n";
+    std::cout << "2. Por nombre completo\n";
+
+    do{
+        std::cout << "Opcion: ";
+        std::cin >> opc;
+    } while (opc != 1 && opc != 2);
+
+    std::cin.ignore(100, '\n');
+
+    // Para una leyenda posterior en caso de no existir
+    bool encontrado = false;
+
+    if (opc == 1) {
+        // Busqueda por DNI
+        int dni = 0;
+
+        std::cout << "Ingrese el DNI del paciente: ";
+        std::cin >> dni;
+
+        buscando();
+
+        for (int i = 0; i < CANTIDAD; i ++) {
+            if (turnos[i].getEliminado()) {
+                continue;
+            }
+            if (turnos[i].getDniPaciente() == dni) {
+                encontrado = true;
+                indices[i] = true;
+            }
+        }
+    }
+
+    if (opc == 2) {
+        // Busqueda por nombre completo
+        std::string nombreCompleto;
+        std::string nombreIngresado;
+        Paciente auxPaciente;
+        
+        std::cout << "Ingrese el nombre y apellido del paciente, separados por espacio: ";
+        std::getline(std::cin, nombreIngresado);
+
+        buscando();
+        
+        for (int i = 0; i < CANTIDAD; i ++) {
+            if (turnos[i].getEliminado()) {
+                continue;
+            }
+
+            auxPaciente = turnos[i].getPaciente();
+
+            nombreCompleto = "";
+            nombreCompleto.append(auxPaciente.getNombre());
+            nombreCompleto.append(" ");
+            nombreCompleto.append(auxPaciente.getApellido());
+
+            if (nombreCompleto.compare(nombreIngresado) == 0) {
+                encontrado = true;
+                indices[i] = true;
+            }
+        }
+    }
+
+    if (encontrado) {
+        std::cout << "-- Se encontraron los siguientes turnos para el paciente seleccionado --\n";
+        
+        for (int i = 0; i < CANTIDAD; i ++) {
+            if (indices[i]) {
+                mPaciente.mostrar(turnos[i].getPaciente());
+                std::cout << separadorParcial();
+            }
+        }
+    } else {
+        std::cout << "No se ha encontrado el paciente en la base de datos de turnos\n";
+    }
+
+    std::cout << "Presione ENTER para continuar";
+    rlutil::getkey();
+
+    delete[] turnos;
+    delete[] indices;
 }
 
 bool ManagerTurno::actualizar(Turno turno){

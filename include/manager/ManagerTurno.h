@@ -19,6 +19,10 @@ class ManagerTurno{
         void ordenadosFecha();
         // Ordena los pacientes alfabeticamente y agrupa sus turnos, mostrandolos por pantalla
         void agrupadosPaciente();
+        // Busca turnos pidiendo un rango de fechas
+        void busquedaFecha();
+        // Busca turnos pidiendo los datos de un paciente
+        void busquedaPaciente();
         
         ArchivoTurno getRepositorio();
 };

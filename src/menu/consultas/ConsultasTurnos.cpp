@@ -1,12 +1,12 @@
 #include "menu/consultas/ConsultasTurnos.h"
+#include "manager/ManagerTurno.h"
 #include <iostream>
 
 
-ConsultasTurnos::ConsultasTurnos(): Menu(3, "Menu Consultas"){
-    std::string opciones[3] = {
+ConsultasTurnos::ConsultasTurnos(): Menu(2, "Menu Consultas"){
+    std::string opciones[2] = {
         "Busqueda por fecha",
-        "Busqueda por paciente",
-        "Busqueda por tipo de analisis"
+        "Busqueda por paciente"
     };
 
     setVectorOpciones(opciones);
@@ -17,6 +17,20 @@ void ConsultasTurnos::ejecutarOpcion(){
     if (_opcionSeleccionada == 0) {
         return;
     }
+
+    ManagerTurno mTurno;
+
+    if (_opcionSeleccionada == 1) {
+        mTurno.busquedaFecha();
+        return;
+    }
+
+    if (_opcionSeleccionada == 2) {
+        mTurno.busquedaPaciente();
+        return;
+    }
+
+    std::cout << "Opcion fuera de rango. Intente nuevamente.\n";
 }
 
 void ConsultasTurnos::mostrarOpciones(){

@@ -6,7 +6,7 @@
 
 MenuTipoAnalisis::MenuTipoAnalisis(): Menu(3, "Menu Tipos de Analisis"){
     std::string opciones[3] = {
-        "Crear nuevo tipo de analisis",
+        "Agregar nuevo tipo de analisis",
         "Modificar tipo de analisis",
         "Eliminar tipo de analisis"
     };
@@ -17,7 +17,6 @@ MenuTipoAnalisis::MenuTipoAnalisis(): Menu(3, "Menu Tipos de Analisis"){
 
 void MenuTipoAnalisis::ejecutarOpcion(){
     ManagerTipoAnalisis mTipoAnalisis;
-    TipoAnalisis  AuxTipoAnalisis;
 
     switch (_opcionSeleccionada) {
         case 0:

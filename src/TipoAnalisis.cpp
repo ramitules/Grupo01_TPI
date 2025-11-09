@@ -1,14 +1,14 @@
 #include "TipoAnalisis.h"
 #include <cstring>
 
-TipoAnalisis::TipoAnalisis(): _id(0), _nombreAnalisis(""), _precio(0.0f) {};
+TipoAnalisis::TipoAnalisis(): _id(0), _nombreAnalisis(""), _tiempoResultado(0), _precio(0.0f) {};
 
-TipoAnalisis::TipoAnalisis(int id, const char nombreAnalisis[], float precio){
+TipoAnalisis::TipoAnalisis(int id, const char nombreAnalisis[], int tiempoResultado, float precio){
     setID(id);
     setNombreAnalisis(nombreAnalisis);
+    setTiempoResultado(tiempoResultado);
     setPrecio(precio);
 }
-
 
 //SETERS 
 void TipoAnalisis::setID(int id){
@@ -18,6 +18,10 @@ void TipoAnalisis::setID(int id){
 void TipoAnalisis::setNombreAnalisis(const char nombreAnalisis[]){
     strcpy(_nombreAnalisis, nombreAnalisis);
 };
+
+void TipoAnalisis::setTiempoResultado(int tiempoResultado) {
+    _tiempoResultado = tiempoResultado;
+}
 
 void TipoAnalisis::setPrecio(float precio){
     _precio = precio;
@@ -40,6 +44,11 @@ const char* TipoAnalisis::getNombreAnalisis(){
 float TipoAnalisis::getPrecio(){
     return _precio;
 };
+
+int TipoAnalisis::getTiempoResultado() {
+    return _tiempoResultado;
+}
+
 
 bool TipoAnalisis::getEliminado() {
     return _eliminado;

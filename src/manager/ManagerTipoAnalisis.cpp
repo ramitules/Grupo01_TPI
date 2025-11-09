@@ -12,6 +12,7 @@ bool ManagerTipoAnalisis::cargar(){
     int proximoID = sec.getIdActual() + 1;
     std::string nombre;
     float precio = 0.0f;
+    int tiempoResultado = 0;
 
     std::cout << "Ingrese el nombre del tipo de analisis: ";
     std::getline(std::cin, nombre);
@@ -21,7 +22,15 @@ bool ManagerTipoAnalisis::cargar(){
         return false;
     }
 
-    std::cout << "Ingrese el precio del tipo de analisis: ";
+    std::cout << "Ingrese el tiempo estimado del resultado (dias): ";
+    std::cin >> tiempoResultado;
+
+    if (tiempoResultado <= 0) {
+        std::cout << "No se puede continuar, plazo minimo de 1 dia.\n";
+        return false;
+    }
+
+    std::cout << "Ingrese el precio del tipo de analisis ($): ";
     std::cin >> precio;
     
     if (precio <= 0) {
@@ -29,7 +38,7 @@ bool ManagerTipoAnalisis::cargar(){
         return false;
     }
 
-    TipoAnalisis tipoAnalisis(proximoID, nombre.c_str(), precio);
+    TipoAnalisis tipoAnalisis(proximoID, nombre.c_str(), tiempoResultado, precio);
 
     if (_repo.guardar(tipoAnalisis)) {
         std::cout << "El tipo de analisis se ha guardado correctamente.\n";

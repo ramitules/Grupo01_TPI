@@ -1,5 +1,6 @@
 #include "manager/ManagerPersona.h"
 #include "utils/ManagerFecha.h"
+#include "utils/rlutil.h"
 #include <iostream>
 #include <limits>
 
@@ -68,6 +69,101 @@ Persona ManagerPersona::cargar(){
 
     return persona;
 };
+
+void ManagerPersona::actualizar(Persona& persona){
+    std::string nombre = persona.getNombre();
+    std::string apellido = persona.getApellido();
+    std::string email = persona.getEmail();
+    int telefono = persona.getTelefono();
+    Fecha fechaNacimiento = persona.getFechaNacimiento();
+    char opc = 'n';
+
+    ManagerFecha fecha;
+    
+    std::cin.ignore(100, '\n');
+
+    std::cout << "El nombre es el mismo? s/n: ";
+    std::cin >> opc;
+
+    if (opc != 's') {
+        std::cout << "Ingrese el nombre: ";
+        std::getline(std::cin, nombre);
+
+        if (nombre == "" || nombre == " ") {
+            nombre = "Sin nombre";
+        }
+
+        persona.setNombre(nombre.c_str());
+    }
+    
+    std::cout << "El apellido es el mismo? s/n: ";
+    std::cin >> opc;
+
+    if (opc != 's') {
+        std::cout << "Ingrese el apellido: ";
+        std::getline(std::cin, apellido);
+        
+        if (apellido == "" || apellido == " ") {
+            apellido = "Sin apellido";
+        }
+
+        persona.setApellido(apellido.c_str());
+    }
+
+    std::cout << "El email es el mismo? s/n: ";
+    std::cin >> opc;
+
+    if (opc != 's') {
+        std::cout << "Ingrese el email: ";
+        std::getline(std::cin, email);
+        
+        if (email == "" || email == " ") {
+            email = "Sin email";
+        }
+
+        persona.setEmail(email.c_str());
+    }
+
+    std::cout << "El telefono es el mismo? s/n: ";
+    std::cin >> opc;
+
+    if (opc != 's'){
+        std::cout << "Ingrese el telefono: ";
+        std::cin >> telefono;
+
+        if (telefono < 1000000000 || telefono > 1600000000) {
+            std::cout << "Numero invalido. Se conserva el telefono anterior.\n";
+        } else {
+            persona.setTelefono(telefono);
+        }
+    }
+
+    std::cout << "La fecha de nacimiento es la misma? s/n: ";
+    std::cin >> opc;
+
+    if (opc != 's') {
+        persona.setFechaNacimiento(fecha.cargar());
+    }
+
+    // Dejar limpio el buffer por las dudas
+    std::cin.ignore(100, '\n');
+};
+
+bool ManagerPersona::eliminar(Persona& persona){
+    char opc;
+
+    std::cout << "Seguro que desea eliminar a esta persona? s/n: ";
+    std::cin >> opc;
+
+    if (opc == 's') {
+        // ELIMINACION LOGICA
+        // Como no tenemos repositorio, simplemente retornamos un booleano con
+        // la respuesta del usuario y seteamos el objeto.
+        persona.setEliminado(true);
+        return true;
+    }
+    return false;
+}
 
 void ManagerPersona::mostrar(Persona persona){
     ManagerFecha mf;

@@ -11,7 +11,9 @@ class ManagerObraSocial{
 
         bool cargar();
         void mostrar(ObraSocial obraSocial);
-        void mostrarTodos();
+        void mostrarTodos(bool claveValor = false);
         bool eliminar(ObraSocial obraSocial);
         bool actualizar(ObraSocial obraSocial);
+
+        ArchivoObraSocial getRepositorio();
 };

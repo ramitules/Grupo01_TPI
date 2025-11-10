@@ -1,5 +1,6 @@
 #include "manager/ManagerObraSocial.h"
 #include "manager/ManagerSecuencia.h"
+#include "utils/funcFrontend.h"
 
 ManagerObraSocial::ManagerObraSocial(){};
 
@@ -68,9 +69,23 @@ void ManagerObraSocial::mostrar(ObraSocial obraSocial){
     std::cout << "Email: " << obraSocial.getEmail() << "\n";
 }
 
-void ManagerObraSocial::mostrarTodos(){
+void ManagerObraSocial::mostrarTodos(bool claveValor){
+    ObraSocial aux;
+
     for(int i=0; i<_repo.cantidadRegistros(); i++){
-        this->mostrar(_repo.leer(i));
+        aux = _repo.leer(i);
+
+        if (aux.getEliminado()) {
+            continue;
+        }
+
+        if (claveValor) {
+            std::cout << aux.getID() << ". " << aux.getNombre() << '\n';
+        }
+        
+        mostrar(aux);
+
+        std::cout << separadorParcial();
     }
 }
 
@@ -96,4 +111,8 @@ bool ManagerObraSocial::eliminar(ObraSocial obraSocial){
 
     std::cout << "Operacion cancelada.\n";
     return false;
+}
+
+ArchivoObraSocial ManagerObraSocial::getRepositorio(){
+    return _repo;
 }

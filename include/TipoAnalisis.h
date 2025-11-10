@@ -18,7 +18,6 @@ class TipoAnalisis{
         void setNombreAnalisis(const char nombreAnalisis[]);
         void setTiempoResultado(int tiempoResultado);
         void setPrecio(float precio);
-
         void setEliminado(bool eliminado);
 
         // GETTERS

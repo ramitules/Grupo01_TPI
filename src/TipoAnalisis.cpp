@@ -1,7 +1,7 @@
 #include "TipoAnalisis.h"
 #include <cstring>
 
-TipoAnalisis::TipoAnalisis(): _id(0), _nombreAnalisis(""), _tiempoResultado(0), _precio(0.0f) {};
+TipoAnalisis::TipoAnalisis(): _id(0), _nombreAnalisis(""), _tiempoResultado(0), _precio(0.0f), _eliminado(false) {};
 
 TipoAnalisis::TipoAnalisis(int id, const char nombreAnalisis[], int tiempoResultado, float precio){
     setID(id);
@@ -48,7 +48,6 @@ float TipoAnalisis::getPrecio(){
 int TipoAnalisis::getTiempoResultado() {
     return _tiempoResultado;
 }
-
 
 bool TipoAnalisis::getEliminado() {
     return _eliminado;

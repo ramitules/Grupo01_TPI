@@ -3,6 +3,39 @@
 
 ManagerTipoAnalisis::ManagerTipoAnalisis(){};
 
+void ManagerTipoAnalisis::mostrar(TipoAnalisis tipoAnalisis){
+    for(int i=0; i<_repo.cantidadRegistros(); i++){
+        this->mostrar(_repo.leer(i));
+    }
+
+    std::cout << "ID: " << tipoAnalisis.getID() << "\n";
+    std::cout << "Nombre del analisis: " << tipoAnalisis.getNombreAnalisis() << "\n";
+    std::cout << "Tiempo para el resultado: " << tipoAnalisis.getTiempoResultado() << "dias\n";
+    std::cout << "Precio: $" << tipoAnalisis.getPrecio() << "\n";
+}
+
+void ManagerTipoAnalisis::mostrarTodos(){
+    TipoAnalisis regTipoAnalisis;
+    std::cout << "ManagerTipoAnalisis::mostrarTodos - ejecuta";
+
+    int cantidadTipoAnalisis = _repo.cantidadRegistros();
+
+    for(int i=0; i<cantidadTipoAnalisis; i++){
+        regTipoAnalisis = _repo.leer(i);
+
+        if (regTipoAnalisis.getEliminado()==false) {
+            std::cout << "ID: " << regTipoAnalisis.getID() << "\n";
+            std::cout << "Nombre del analisis: " << regTipoAnalisis.getNombreAnalisis() << "\n";
+            std::cout << "Tiempo para el resultado: " << regTipoAnalisis.getTiempoResultado() << "dias\n";
+            std::cout << "Precio: $" << regTipoAnalisis.getPrecio() << "\n";
+        }
+    }
+
+    //Relojear Manager Obra Social         std::cout << separadorParcial();
+
+    system("pause");
+}
+
 bool ManagerTipoAnalisis::cargar(){
     std::cin.ignore(100, '\n');
 
@@ -16,6 +49,8 @@ bool ManagerTipoAnalisis::cargar(){
 
     std::cout << "Ingrese el nombre del tipo de analisis: ";
     std::getline(std::cin, nombre);
+
+    std::cout << nombre << "\n";
     
     if (nombre == "") {
         std::cout << "No se puede continuar sin un nombre de tipo de analisis.\n";
@@ -49,20 +84,9 @@ bool ManagerTipoAnalisis::cargar(){
     return false;
 }
 
-void ManagerTipoAnalisis::mostrar(TipoAnalisis tipoAnalisis){
-    std::cout << "ID: " << tipoAnalisis.getID() << "\n";
-    std::cout << "Nombre del analisis: " << tipoAnalisis.getNombreAnalisis() << "\n";
-    std::cout << "Precio: $" << tipoAnalisis.getPrecio() << "\n";
-}
-
-void ManagerTipoAnalisis::mostrarTodos(){
-    for(int i=0; i<_repo.cantidadRegistros(); i++){
-        this->mostrar(_repo.leer(i));
-    }
-}
-
 bool ManagerTipoAnalisis::actualizar(TipoAnalisis tipoAnalisis){
     // PENDIENTE
+    return 1;
 }
 
 bool ManagerTipoAnalisis::eliminar(TipoAnalisis tipoAnalisis){

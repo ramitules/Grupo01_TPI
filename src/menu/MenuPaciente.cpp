@@ -1,4 +1,5 @@
 #include "menu/MenuPaciente.h"
+#include "manager/ManagerPaciente.h"
 #include <iostream>
 
 
@@ -14,12 +15,72 @@ MenuPaciente::MenuPaciente(): Menu(3, "Menu Paciente"){
 }
 
 void MenuPaciente::ejecutarOpcion(){
-    switch (_opcionSeleccionada) {
-        case 0:
-            return;
+    if (_opcionSeleccionada == 0) {
+        return;
+    }
 
-        default:
-            std::cout << "Intente nuevamente\n";
+    ManagerPaciente mPaciente;
+
+    if (_opcionSeleccionada == 1) {
+        mPaciente.cargar();
+        return;
+    }
+
+    if (_opcionSeleccionada < 0 || _opcionSeleccionada > _cantidadOpciones) {
+        std::cout << "Opcion fuera de rango. Intente nuevamente.\n";
+        return;
+    }
+
+    int opcionSecundaria = 0;
+    int posPaciente = -1;
+
+    std::cout << "Si conoce el DNI del paciente, ingreselo a continuacion (0 = listar todos | -1 = salir): ";
+    std::cin >> opcionSecundaria;
+
+    if (opcionSecundaria < 0) {
+        return;
+    }
+
+    if (opcionSecundaria == 0) {
+        // Mostrar todos los pacientes por pantalla
+        // Esto sirve para modificacion y eliminacion por igual
+        mPaciente.mostrarTodos();
+    } else if (opcionSecundaria > 0){
+        // Con un ID especifico, no se permite intentar nuevamente (sin ciclo while)
+        posPaciente = (mPaciente.getRepositorio().getPos(opcionSecundaria));
+
+        if (posPaciente == -1) {
+            std::cout << "El paciente no existe.\n";
+            return;
+        }
+    }
+
+    while (true) {
+        std::cout << "Ingrese el DNI del paciente, o 0 para cancelar: ";
+        std::cin >> opcionSecundaria;
+
+        if (opcionSecundaria == 0) {
+            return;
+        }
+
+        posPaciente = (mPaciente.getRepositorio().getPos(opcionSecundaria));
+
+        if (posPaciente != -1) {
             break;
+        }
+
+        std::cout << "El DNI ingresado no existe. Intente nuevamente\n";
+    }
+
+    Paciente paciente = mPaciente.getRepositorio().leer(posPaciente);
+
+    if (_opcionSeleccionada == 2) {
+        mPaciente.actualizar(paciente);
+        return;
+    }
+
+    if (opcionSecundaria == 3) {
+        mPaciente.eliminar(paciente);
+        return;
     }
 }

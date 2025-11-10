@@ -12,8 +12,13 @@ class ManagerPaciente{
         bool cargar();
         void mostrar(Paciente paciente);
         void mostrarTodos();
-        bool eliminar(Paciente paciente);
-        bool actualizar(Paciente paciente);
+        bool eliminar(Paciente& paciente);
+        bool actualizar(Paciente& paciente);
+
+        void ordenadosApellido();
+        void ordenadosDNI();
+        void ordenadosEdad();
+        void ordenadosObraSocial();
 
         ArchivoPaciente getRepositorio();
 };

@@ -21,7 +21,7 @@ bool ManagerTurno::cargar(){
 
     Secuencia sec = mSecuencia.cargar("Turno");
 
-    int proximoID = sec.getIdActual() + 1;
+    int proximoID = sec.getIdActual();
     int dniPaciente;
     bool pacienteExiste = false;
     Fecha fechaAtencion;
@@ -82,11 +82,18 @@ bool ManagerTurno::cargar(){
 
     if (_repo.guardar(turno)) {
         std::cout << "El turno se ha guardado correctamente. Presione ENTER para continuar\n";
+
         rlutil::getkey();
         return true;
     }
 
+    // Si falla, el ID en la secuencia vuelve a su estado anterior (rollback).
+    // Se debe actualizar dicha secuencia.
+    sec.setIdActual(proximoID - 1);
+    mSecuencia.actualizar(sec);
+
     std::cout << "Ocurrio un error al intentar guardar el turno. Presione ENTER para continuar\n";
+    
     rlutil::getkey();
     return false;
 }

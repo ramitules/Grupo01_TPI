@@ -48,6 +48,8 @@ Persona ManagerPersona::cargar(){
         email = "Sin email";
     }
 
+    std::cin.ignore(100, '\n');
+
     while (true) {
         std::cout << "Ingrese el telefono: ";
         std::cin >> telefono;
@@ -58,6 +60,8 @@ Persona ManagerPersona::cargar(){
 
         std::cout << "Intente nuevamente. Asegurese que sea un numero celular de 10 digitos.\n";
     }
+
+    std::cin.ignore(100, '\n');
 
     std::cout << "Ingrese la fecha de nacimiento:\n";
     Fecha fechaNacimiento = fecha.cargar();
@@ -124,6 +128,8 @@ void ManagerPersona::actualizar(Persona& persona){
         persona.setEmail(email.c_str());
     }
 
+    std::cin.ignore(100, '\n');
+
     std::cout << "El telefono es el mismo? s/n: ";
     std::cin >> opc;
 
@@ -137,6 +143,8 @@ void ManagerPersona::actualizar(Persona& persona){
             persona.setTelefono(telefono);
         }
     }
+
+    std::cin.ignore(100, '\n');
 
     std::cout << "La fecha de nacimiento es la misma? s/n: ";
     std::cin >> opc;

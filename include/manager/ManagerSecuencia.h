@@ -18,4 +18,6 @@ class ManagerSecuencia{
         // Devuelve el próximo ID disponible para una secuencia.
         // @return 0 si la secuencia no existe.
         int getNuevoID(Secuencia secuencia);
+
+        ArchivoSecuencia getRepositorio();
 };

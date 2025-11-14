@@ -396,6 +396,85 @@ void ManagerTurno::busquedaPaciente(){
     delete[] indices;
 }
 
+bool ManagerTurno::exportarCSV(Turno turno) {
+    Fecha fechaAux = turno.getFechaAtencion();
+    Hora horaAux = turno.getHoraAtencion();
+
+    std::string fechaStr = std::to_string(fechaAux.getDia()) + '/' + std::to_string(fechaAux.getMes()) + '/' + std::to_string(fechaAux.getAnio());
+    std::string horaStr = std::to_string(horaAux.getHora()) + ':' + std::to_string(horaAux.getMinuto()) + ':' + std::to_string(horaAux.getSegundo());
+    
+    std::string nombreArchivo = "Turno " + std::to_string(turno.getID()) + ".csv";
+    std::string csv = "";
+
+    csv.append(std::to_string(turno.getID()) + ',');
+    csv.append(std::to_string(turno.getDniPaciente()) + ',');
+    csv.append(fechaStr + ',' + horaStr + ',');
+    csv.append(std::to_string(turno.getImporte()) + ',');
+    csv.append(turno.getEliminado() ? "SI" : "NO");
+
+    if (_repo.exportarCSV(csv, nombreArchivo)) {
+        std::cout << "El turno se ha exportado exitosamente al archivo " << nombreArchivo << "\n";
+        std::cout << "Presione ENTER para continuar\n";
+        rlutil::getkey();
+        return true;
+    }
+    
+    std::cout << "El turno no se ha podido exportar. Presione ENTER para continuar\n";
+    rlutil::getkey();
+    return false;
+}
+
+bool ManagerTurno::exportarTodosCSV() {
+    std::string csv = stringTodosCSV();
+
+    if (_repo.exportarCSV(csv, "Turnos.csv")) {
+        std::cout << "Los turnos se han exportado exitosamente al archivo 'Turnos.csv'\n";
+        std::cout << "Presione ENTER para continuar\n";
+        rlutil::getkey();
+        return true;
+    }
+    
+    std::cout << "No se han podido exportar los turnos. Presione ENTER para continuar\n";
+    rlutil::getkey();
+    return false;
+}
+
+std::string ManagerTurno::stringTodosCSV() {
+    Fecha fechaAux;
+    Hora horaAux;
+
+    std::string fechaStr;
+    std::string horaStr;
+    
+    std::string nombreArchivo = "Turnos.csv";
+    std::string csv = "";
+
+    Turno* turnos = _repo.leerTodos();
+    const int CANTIDAD = _repo.cantidadRegistros();
+
+    for (int i = 0; i < CANTIDAD; i ++) {
+        fechaAux = turnos[i].getFechaAtencion();
+        horaAux = turnos[i].getHoraAtencion();
+
+        fechaStr = std::to_string(fechaAux.getDia()) + '/' + std::to_string(fechaAux.getMes()) + '/' + std::to_string(fechaAux.getAnio());
+        horaStr = std::to_string(horaAux.getHora()) + ':' + std::to_string(horaAux.getMinuto()) + ':' + std::to_string(horaAux.getSegundo());
+
+        csv.append(std::to_string(turnos[i].getID()) + ',');
+        csv.append(std::to_string(turnos[i].getDniPaciente()) + ',');
+        csv.append(fechaStr + ',' + horaStr + ',');
+        csv.append(std::to_string(turnos[i].getImporte()) + ',');
+        csv.append(turnos[i].getEliminado() ? "SI" : "NO");
+        
+        csv.append("\n");
+    }
+
+    csv.pop_back(); // Eliminar ultimo salto de linea
+
+    delete[] turnos;
+
+    return csv;
+}
+
 bool ManagerTurno::actualizar(Turno turno){
     std::cin.ignore(100, '\n');
 

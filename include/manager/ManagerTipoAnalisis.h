@@ -9,9 +9,10 @@ class ManagerTipoAnalisis{
     public:
         ManagerTipoAnalisis();
 
+        TipoAnalisis seleccionar();
         bool cargar();
         void mostrar(TipoAnalisis tipoAnalisis);
-        void mostrarTodos();
+        bool mostrarTodos();
         bool eliminar(TipoAnalisis tipoAnalisis);
         bool actualizar(TipoAnalisis tipoAnalisis);
 };

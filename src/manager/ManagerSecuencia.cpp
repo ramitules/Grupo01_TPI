@@ -65,7 +65,6 @@ bool ManagerSecuencia::actualizar(Secuencia secuencia){
 
     if (_repo.modificar(secuencia, pos)){
         std::cout << "Se ha modificado la secuencia correctamente.\n";
-        //secuencia.setIdActual(pos);
         return true;
     };
 
@@ -74,8 +73,6 @@ bool ManagerSecuencia::actualizar(Secuencia secuencia){
     return false;
 }
 
-/* REVISAR
 ArchivoSecuencia ManagerSecuencia::getRepositorio() {
     return _repo;
 }
-*/

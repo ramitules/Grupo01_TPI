@@ -16,7 +16,6 @@ int main(){
         return 0;
     }
 
-
     MenuPrincipal menu;
     menu.buclePrincipal();
     return 0;

@@ -7,6 +7,7 @@
 /// @param cantidadOpciones se utilizara para crear el vector de opciones.
 /// Notese que la opcion "0. Salir" NO se debe incluir en la cantidad de opciones.
 /// @param nombreMenu nombre que tendra el titulo de este menu
+
 Menu::Menu(int cantidadOpciones, std::string nombreMenu){
     setCantidadOpciones(cantidadOpciones);
     setOpcionSeleccionada(99);
@@ -17,6 +18,7 @@ Menu::Menu(int cantidadOpciones, std::string nombreMenu){
 
 /// ciclo que muestra por pantalla las opciones y le permite al usuario
 /// seleccionar la deseada. Antes de salir, deja "opcionSeleccionada" en 99.
+
 void Menu::buclePrincipal(){
     do{
         rlutil::cls();
@@ -54,6 +56,7 @@ std::string Menu::getNombreMenu(){ return _nombreMenu; }
 
 /// bucle para seleccionar una opcion. No permite salida hasta que
 /// se encuentre dentro de los parametros
+
 void Menu::seleccionarOpcion(){
     int opcion = 99;
 
@@ -86,6 +89,7 @@ void Menu::mostrarOpciones(){
     } else {
         std::cout << "0. Volver\n";
     }
+    std::cout << std::endl;
 }
 
 /// Inicializador de vector de opciones

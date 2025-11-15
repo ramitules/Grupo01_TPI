@@ -7,8 +7,9 @@
 MenuTipoAnalisis::MenuTipoAnalisis(): Menu(4, "Menu Tipos de Analisis"){
     std::string opciones[4] = {
         "Mostrar todos",
-        "Agregar",
+        "Cargar",
         "Modificar",
+
         "Eliminar"
     };
 
@@ -25,17 +26,19 @@ void MenuTipoAnalisis::ejecutarOpcion(){
         case 0:
             return;
         case 1:
-            std::cout << getNombreMenu() << "\n";
+            std::cout << getNombreMenu() << ": " << _opciones[0] << "\n";
             std::cout << "==============================\n";
             mTipoAnalisis.mostrarTodos();
+            system("pause");
             break;
         case 2:
-            std::cout << getNombreMenu() << "\n";
+            std::cout << getNombreMenu() << ": " << _opciones[1] << "\n";
             std::cout << "==============================\n";
             mTipoAnalisis.cargar();
+            system("pause");
             break;
         case 3:
-            std::cout << getNombreMenu() << "\n";
+            std::cout << getNombreMenu() << ": " << _opciones[2] << "\n";
             std::cout << "==============================\n";
 
             seleccion = mTipoAnalisis.mostrarTodos();
@@ -44,14 +47,16 @@ void MenuTipoAnalisis::ejecutarOpcion(){
                 tipoAnalisis = mTipoAnalisis.seleccionar();
                 mTipoAnalisis.actualizar(tipoAnalisis);
             }
+            system("pause");
             break;
         case 4:
-            std::cout << getNombreMenu() << "\n";
+            std::cout << getNombreMenu() << ": " << _opciones[3] << "\n";
             std::cout << "==============================\n";
 
             mTipoAnalisis.mostrarTodos();
             tipoAnalisis = mTipoAnalisis.seleccionar();
             mTipoAnalisis.eliminar(tipoAnalisis);
+            system("pause");
             break;
         default:
             std::cout << "Intente nuevamente\n";

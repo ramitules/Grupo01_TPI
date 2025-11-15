@@ -1,4 +1,5 @@
 #include "AnalisisProtocolo.h"
+#include "archivo/ArchivoProtocolo.h"
 #include <cstring>
 
 #include "archivo/ArchivoTipoAnalisis.h"

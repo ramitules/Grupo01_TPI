@@ -1,4 +1,5 @@
 #pragma once
+#include "Protocolo.h"
 #include <cstring>
 
 #include "TipoAnalisis.h"
@@ -17,7 +18,7 @@ class AnalisisProtocolo{
         //GETTERS
         int getIdProtocolo();
         int getIdTipoAnalisis();
-        const char* getResultado();
+        const char* getResultados();
         Protocolo getProtocolo();
         TipoAnalisis getTipoAnalisis();
         bool getEliminado(); //chequear en diagrama

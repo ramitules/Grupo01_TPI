@@ -1,5 +1,6 @@
 #include "manager/ManagerTipoAnalisis.h"
 #include "manager/ManagerSecuencia.h"
+#include <string>
 
 ManagerTipoAnalisis::ManagerTipoAnalisis(){};
 

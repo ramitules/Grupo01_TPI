@@ -39,3 +39,4 @@ void Secuencia::setObjeto(const char objeto[]){
 void Secuencia::setIdActual(int idActual){
     _idActual = idActual;
 };
+

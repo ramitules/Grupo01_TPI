@@ -1,6 +1,9 @@
 #include "manager/ManagerObraSocial.h"
 #include "manager/ManagerSecuencia.h"
 #include "utils/funcFrontend.h"
+#include <iostream>   // <-- agregado
+#include <limits>     // <-- agregado (opcional para ignore seguro)
+#include <string>
 
 ManagerObraSocial::ManagerObraSocial(){};
 
@@ -24,10 +27,10 @@ bool ManagerObraSocial::cargar(){
     }
 
     std::cout << "Ingrese el un nombre de contacto: ";
-    std::getline(std::cin, nombre);
+    std::getline(std::cin, nombreContacto); // <-- corregido: antes usaba 'nombre' por error
     
-    if (nombre == "") {
-        nombre = "Sin contacto";
+    if (nombreContacto == "") {               // <-- corregido: verificar nombreContacto
+        nombreContacto = "Sin contacto";
     }
 
     while (true) {

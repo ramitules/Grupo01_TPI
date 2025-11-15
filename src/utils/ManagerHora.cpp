@@ -1,6 +1,6 @@
 #include "utils/ManagerHora.h"
 #include <ctime>
-
+#include <string>
 
 ManagerHora::ManagerHora(){};
 

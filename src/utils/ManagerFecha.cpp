@@ -1,5 +1,6 @@
 #include "utils/ManagerFecha.h"
 #include <ctime>
+#include <string>
 
 ManagerFecha::ManagerFecha(){};
 

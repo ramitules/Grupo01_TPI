@@ -10,7 +10,7 @@ TipoAnalisis::TipoAnalisis(int id, const char nombreAnalisis[], int tiempoResult
     setPrecio(precio);
 }
 
-//SETERS 
+//SETERS
 void TipoAnalisis::setID(int id){
     _id = id;
 };

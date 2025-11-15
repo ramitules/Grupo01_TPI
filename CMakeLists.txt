@@ -61,6 +61,7 @@ set(SOURCES
     src/utils/ManagerFecha.cpp
     src/utils/ManagerHora.cpp
     src/utils/funcFrontend.cpp
+    src/utils/funcBackend.cpp
 )
 
 # Crear ejecutable

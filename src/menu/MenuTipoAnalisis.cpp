@@ -4,11 +4,12 @@
 #include <iostream>
 
 
-MenuTipoAnalisis::MenuTipoAnalisis(): Menu(3, "Menu Tipos de Analisis"){
-    std::string opciones[3] = {
-        "Agregar nuevo tipo de analisis",
-        "Modificar tipo de analisis",
-        "Eliminar tipo de analisis"
+MenuTipoAnalisis::MenuTipoAnalisis(): Menu(4, "Menu Tipos de Analisis"){
+    std::string opciones[4] = {
+        "Mostrar todos",
+        "Agregar",
+        "Modificar",
+        "Eliminar"
     };
 
     setVectorOpciones(opciones);
@@ -17,23 +18,41 @@ MenuTipoAnalisis::MenuTipoAnalisis(): Menu(3, "Menu Tipos de Analisis"){
 
 void MenuTipoAnalisis::ejecutarOpcion(){
     ManagerTipoAnalisis mTipoAnalisis;
+    TipoAnalisis tipoAnalisis;
+    bool seleccion = false;
 
     switch (_opcionSeleccionada) {
         case 0:
             return;
         case 1:
-            mTipoAnalisis.cargar();
+            std::cout << getNombreMenu() << "\n";
+            std::cout << "==============================\n";
+            mTipoAnalisis.mostrarTodos();
             break;
         case 2:
+            std::cout << getNombreMenu() << "\n";
+            std::cout << "==============================\n";
+            mTipoAnalisis.cargar();
+            break;
+        case 3:
+            std::cout << getNombreMenu() << "\n";
+            std::cout << "==============================\n";
+
+            seleccion = mTipoAnalisis.mostrarTodos();
+
+            if (seleccion) {
+                tipoAnalisis = mTipoAnalisis.seleccionar();
+                mTipoAnalisis.actualizar(tipoAnalisis);
+            }
+            break;
+        case 4:
+            std::cout << getNombreMenu() << "\n";
+            std::cout << "==============================\n";
+
             mTipoAnalisis.mostrarTodos();
-            // mTipoAnalisis.actualizar();
+            tipoAnalisis = mTipoAnalisis.seleccionar();
+            mTipoAnalisis.eliminar(tipoAnalisis);
             break;
-        case 3: {
-            std::cout << "Acá se elimina";
-            break;
-        }
-
-
         default:
             std::cout << "Intente nuevamente\n";
             break;

@@ -1,4 +1,5 @@
 #include "archivo/ArchivoTurno.h"
+#include "utils/rlutil.h"
 #include <iostream>
 
 
@@ -155,4 +156,31 @@ int ArchivoTurno::getPos(int id){
     fclose(pFile);
     
     return pos;
+}
+
+bool ArchivoTurno::exportarCSV(std::string turno, std::string nombreArchivo){
+    std::string cabecera = "ID,DNI Paciente,Fecha atencion,Hora atencion,Importe,Eliminado?\n";
+    
+    FILE *pFile;
+
+    pFile = fopen(nombreArchivo.c_str(), "w");  // Escritura de texto, no binario
+
+    if (pFile == nullptr){
+        return false;
+    }
+
+    if (fprintf(pFile, cabecera.c_str())) {
+        if (fprintf(pFile, turno.c_str())) {
+            fclose(pFile);
+            return true;
+        }
+    }
+
+    fclose(pFile);
+
+    return false;
+}
+
+Turno* ArchivoTurno::desdeCSV(std::string nombreArchivo) {
+    // PENDIENTE
 }

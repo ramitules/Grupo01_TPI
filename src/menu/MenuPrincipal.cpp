@@ -11,7 +11,7 @@
 #include <iostream>
 
 
-MenuPrincipal::MenuPrincipal(): Menu(8, "Menu Principal"){
+MenuPrincipal::MenuPrincipal(): Menu(9, "Menu Principal"){
     std::string opciones[9] = {
         "Turnos",
         "Pacientes",

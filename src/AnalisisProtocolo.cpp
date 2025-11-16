@@ -3,11 +3,12 @@
 
 #include "archivo/ArchivoTipoAnalisis.h"
 
-AnalisisProtocolo::AnalisisProtocolo(): _idProtocolo(0), _idTipoAnalisis(0), _resultados("sin resultados"), _eliminado(0){}; //Chequear Diagrama
+AnalisisProtocolo::AnalisisProtocolo(): _idProtocolo(0), _idTipoAnalisis(0), _precioSolicitud(0), _resultados("sin resultados"), _eliminado(0){}; //Chequear Diagrama
 
-AnalisisProtocolo::AnalisisProtocolo(int idProtocolo, int idTipoAnalisis, const char resultados[]) {
+AnalisisProtocolo::AnalisisProtocolo(int idProtocolo, int idTipoAnalisis, float precioSolicitud, const char resultados[]) {
     setIdProtocolo(idProtocolo);
     setIdTipoAnalisis(idTipoAnalisis);
+    +++
     setResultados(resultados);
 }
 
@@ -18,6 +19,10 @@ int AnalisisProtocolo::getIdProtocolo(){
 
 int AnalisisProtocolo::getIdTipoAnalisis() {
     return _idTipoAnalisis;
+}
+
+float AnalisisProtocolo::getPrecioSolicitud() {
+    return _precioSolicitud;
 }
 
 const char* AnalisisProtocolo::getResultados(){
@@ -60,6 +65,10 @@ void AnalisisProtocolo::setIdProtocolo(int idProtocolo) {
 
 void AnalisisProtocolo::setIdTipoAnalisis(int idTipoAnalisis) {
     _idTipoAnalisis = idTipoAnalisis;
+}
+
+void AnalisisProtocolo::setPrecioSolicitud(float precioSolicitud) {
+    _precioSolicitud = precioSolicitud;
 }
 
 void AnalisisProtocolo::setResultados(const char resultados[]) {

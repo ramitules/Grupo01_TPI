@@ -2,6 +2,7 @@
 #include "TipoAnalisis.h"
 #include "Protocolo.h"
 #include "AnalisisProtocolo.h"
+#include "archivo/ArchivoAnalisisProtocolo.h"
 
 
 ManagerAnalisisProtocolo::ManagerAnalisisProtocolo(){};

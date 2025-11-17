@@ -70,7 +70,8 @@ bool ManagerTurno::cargar(){
 
     if (opc == 's') {
         ManagerProtocolo mProtocolo;
-        mProtocolo.cargar(proximoID);
+        mProtocolo.iniciar(proximoID);
+        //Pendiente agregar lo que sigue
     }
 
     std::cin.ignore(100, '\n');
@@ -548,7 +549,7 @@ bool ManagerTurno::actualizar(Turno turno){
     return false;
 }
 
-bool ManagerTurno::eliminar(Turno turno){
+bool ManagerTurno::eliminar(Turno turno) {
     char opc;
 
     std::cout << "Seguro que desea eliminar el turno? s/n: ";
@@ -577,7 +578,6 @@ bool ManagerTurno::eliminar(Turno turno){
         rlutil::getkey();
         return false;
     }
-    
 }
 
 ArchivoTurno ManagerTurno::getRepositorio(){

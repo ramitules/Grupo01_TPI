@@ -2,14 +2,14 @@
 #include <cstring>
 
 #include "archivo/ArchivoTipoAnalisis.h"
+#include "archivo/ArchivoProtocolo.h"
 
 AnalisisProtocolo::AnalisisProtocolo(): _idProtocolo(0), _idTipoAnalisis(0), _precioSolicitud(0), _resultados("sin resultados"), _eliminado(0){}; //Chequear Diagrama
 
-AnalisisProtocolo::AnalisisProtocolo(int idProtocolo, int idTipoAnalisis, float precioSolicitud, const char resultados[]) {
+AnalisisProtocolo::AnalisisProtocolo(int idProtocolo, int idTipoAnalisis, float precioSolicitud) {
     setIdProtocolo(idProtocolo);
     setIdTipoAnalisis(idTipoAnalisis);
-    +++
-    setResultados(resultados);
+    setPrecioSolicitud(precioSolicitud);
 }
 
 //GETTERS
@@ -25,7 +25,7 @@ float AnalisisProtocolo::getPrecioSolicitud() {
     return _precioSolicitud;
 }
 
-const char* AnalisisProtocolo::getResultados(){
+const char* AnalisisProtocolo::getResultado(){
     return _resultados;
 }
 

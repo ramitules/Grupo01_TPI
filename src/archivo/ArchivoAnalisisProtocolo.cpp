@@ -144,7 +144,7 @@ int ArchivoAnalisisProtocolo::getPos(int id){
     }
     
     while(fread(&registro, tamanioAnalisisProtocolo, 1, pFile)) {
-        if (registro.getId() == id) {
+        if (registro.getIdProtocolo() == id) {
             pos = ftell(pFile) / tamanioAnalisisProtocolo - 1;
             break;
         }

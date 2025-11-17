@@ -1,4 +1,5 @@
 #pragma once
+#include "Protocolo.h"
 #include <cstring>
 
 #include "TipoAnalisis.h"
@@ -13,7 +14,7 @@ class AnalisisProtocolo{
 
     public:
         AnalisisProtocolo();
-        AnalisisProtocolo(int idProtocolo, int idTipoAnalisis,float precioSolicitud ,const char resultados[]);
+        AnalisisProtocolo(int idProtocolo, int idTipoAnalisis,float precioSolicitud);
 
         //GETTERS
         int getIdProtocolo();

@@ -8,8 +8,8 @@ class ManagerTipoAnalisis{
 
     public:
         ManagerTipoAnalisis();
-
-        TipoAnalisis seleccionar();
+        TipoAnalisis seleccionar(int idTipoAnalisis);
+        bool comprobar(int idTipoAnalisis);
         bool cargar();
         void mostrar(TipoAnalisis tipoAnalisis);
         bool mostrarTodos();

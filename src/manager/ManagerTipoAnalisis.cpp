@@ -4,16 +4,32 @@
 
 ManagerTipoAnalisis::ManagerTipoAnalisis(){};
 
-TipoAnalisis ManagerTipoAnalisis::seleccionar() {
-    TipoAnalisis auxTipoAnalisis;
-    int Id;
+TipoAnalisis ManagerTipoAnalisis::seleccionar(int idTipoAnalisis) {
+    TipoAnalisis regTipoAnalisis;
 
-    std::cout << "Ingrese el ID del Tipo de Analisis: ";
-    std::cin.ignore(100, '\n');
-    std::cin >> Id;
+    regTipoAnalisis = _repo.leer(idTipoAnalisis-1);
+    return regTipoAnalisis;
+}
 
-    auxTipoAnalisis = _repo.leer(Id-1);
-    return auxTipoAnalisis;
+bool ManagerTipoAnalisis::comprobar(int idTipoAnalisis) {
+    TipoAnalisis regTipoAnalisis;
+    int cantidadTipoAnalisis = _repo.cantidadRegistros();
+
+    if (cantidadTipoAnalisis <= 0) {
+        std::cout << "\nRegistro vacio: No se pudo encontrar un Tipo de Analisis\n" << std::endl;
+        return false;
+    }
+
+    regTipoAnalisis = _repo.leer(idTipoAnalisis-1);
+
+    if (idTipoAnalisis==regTipoAnalisis.getID() && regTipoAnalisis.getEliminado()!=true) {
+        std::cout << "Tipo de Analisis encontrado";
+        return true;
+    }
+    else {
+        std::cout << "No existe el Tipo de Analisis ingresado\n" << std::endl;
+        return false;
+    }
 }
 
 void ManagerTipoAnalisis::mostrar(TipoAnalisis tipoAnalisis){
@@ -33,7 +49,6 @@ bool ManagerTipoAnalisis::mostrarTodos(){
     }
     else {
         std::cout << "\nRegistro vacio\n" << std::endl;
-        system("pause");
         return false;
     }
 
@@ -55,9 +70,10 @@ bool ManagerTipoAnalisis::mostrarTodos(){
 bool ManagerTipoAnalisis::cargar(){
     ManagerSecuencia mSecuencia;
     Secuencia secuencia = mSecuencia.cargar("TipoAnalisis");
+    int tipoAnalisisID = secuencia.getIdActual();
+
     char opc;
 
-    int tipoAnalisisID = secuencia.getIdActual();
     std::string nombre;
     float precio = 0.0f;
     int tiempoResultado = 0;

@@ -9,7 +9,6 @@ MenuTipoAnalisis::MenuTipoAnalisis(): Menu(4, "Menu Tipos de Analisis"){
         "Mostrar todos",
         "Cargar",
         "Modificar",
-
         "Eliminar"
     };
 
@@ -20,6 +19,8 @@ MenuTipoAnalisis::MenuTipoAnalisis(): Menu(4, "Menu Tipos de Analisis"){
 void MenuTipoAnalisis::ejecutarOpcion(){
     ManagerTipoAnalisis mTipoAnalisis;
     TipoAnalisis tipoAnalisis;
+
+    int idTipoAnalisis;
     bool seleccion = false;
 
     switch (_opcionSeleccionada) {
@@ -41,10 +42,12 @@ void MenuTipoAnalisis::ejecutarOpcion(){
             std::cout << getNombreMenu() << ": " << _opciones[2] << "\n";
             std::cout << "==============================\n";
 
-            seleccion = mTipoAnalisis.mostrarTodos();
+            mTipoAnalisis.mostrarTodos();
+            std::cout << "Ingrese el ID del Tipo de Analisis: ";
+            std::cin >> idTipoAnalisis;
 
-            if (seleccion) {
-                tipoAnalisis = mTipoAnalisis.seleccionar();
+            if (mTipoAnalisis.comprobar(idTipoAnalisis)) {
+                tipoAnalisis = mTipoAnalisis.seleccionar(idTipoAnalisis);
                 mTipoAnalisis.actualizar(tipoAnalisis);
             }
             system("pause");
@@ -54,7 +57,7 @@ void MenuTipoAnalisis::ejecutarOpcion(){
             std::cout << "==============================\n";
 
             mTipoAnalisis.mostrarTodos();
-            tipoAnalisis = mTipoAnalisis.seleccionar();
+            tipoAnalisis = mTipoAnalisis.seleccionar(idTipoAnalisis);
             mTipoAnalisis.eliminar(tipoAnalisis);
             system("pause");
             break;

@@ -12,6 +12,7 @@ class Protocolo{
         int _dniEnfermero;
         int _sala;
         char _observaciones[255];
+        bool _estado;
         bool _eliminado;
 
     public:
@@ -24,6 +25,7 @@ class Protocolo{
         int getDniEnfermero();
         int getSala();
         const char* getObservaciones();
+        bool getEstado();
         Enfermero getEnfermero();
         Turno getTurno();
         bool getEliminado();
@@ -34,5 +36,6 @@ class Protocolo{
         void setDniEnfermero(int dniEnfermero);
         void setSala(int sala);
         void setObservaciones(const char observaciones[]);
+        void setEstado(bool estado);
         void setEliminado(bool eliminado);
 };

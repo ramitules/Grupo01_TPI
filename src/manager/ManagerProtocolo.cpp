@@ -1,70 +1,83 @@
 #include "manager/ManagerProtocolo.h"
-#include "manager/ManagerTurno.h"
+#include "manager/ManagerAnalisisProtocolo.h"
 #include "manager/ManagerTipoAnalisis.h"
+#include "manager/ManagerEnfermero.h"
+#include "manager/ManagerTurno.h"
 #include "manager/ManagerSecuencia.h"
-
+#include "Protocolo.h"
 
 
 ManagerProtocolo::ManagerProtocolo(){};
 
-bool ManagerProtocolo::cargar(int idTurno){
-    std::cin.ignore(100, '\n');
+bool ManagerProtocolo::comprobarProtocolo(int idProtocolo) {
+    Protocolo regProtocolo;
+    int cantidadProtocolo = _repo.cantidadRegistros();
 
-    ArchivoTurno repoTurno;
-    ArchivoEnfermero repoEnfermero;
+    if (cantidadProtocolo <= 0) {
+        std::cout << "\nRegistro vacio: No se pudo encontrar el Protocolo\n" << std::endl;
+        return false;
+    }
 
-    ManagerTipoAnalisis mTipoAnalisis;
-    ManagerSecuencia managerSecuencia;
+    for(int i=0; i<cantidadProtocolo; i++) {
+        regProtocolo = _repo.leer(i);
 
-    Secuencia sec = managerSecuencia.cargar("Protocolo");
-
-    int proximoID = sec.getIdActual() + 1;
-    int dniEnfermero = 0;
-    int sala = 0;
-    char observaciones[255]{};
-    bool opcValida = false;
-
-    std::cout << "ID del Protocolo: " << proximoID << "\n";
-    std::cout << "ID del Turno: ¿?" ; // A corregir
-    std::cout << "Enfermero: ";
-    std::cout << dniEnfermero; // A corregir
-    std::cout << "Sala: ";
-    std::cin >> sala;
-
-    /* PENDIENTE TIPOS DE ANALISIS
-
-    std::cout << "Tipos de analisis disponibles:\n";
-    mTipoAnalisis.mostrarTodos();
-
-    while (true) {
-        std::cout << "------------------------------\n";
-        std::cout << "ID tipo de analisis (0 para cancelar): ";
-        std::cin >> idTipoAnalisis;
-        
-        if (idTipoAnalisis == 0) {
-            return false;
+        if (regProtocolo.getId()==idProtocolo) {
+            return true;
         }
+    }
 
-        for (int i = 0; i < repoTipoAnalisis.cantidadRegistros(); i++) {
-            if (repoTipoAnalisis.leer(i).getID() == idTipoAnalisis) {
-                opcValida = true;
-                break;
-            }
+    std::cout << "No existe el protocolo ingresado\n" << std::endl;
+    return false;
+}
+
+Protocolo ManagerProtocolo::seleccionarProtocolo(int idProtocolo) {
+    Protocolo regProtocolo;
+    int cantidadProtocolo = _repo.cantidadRegistros();
+
+    for(int i=0; i<cantidadProtocolo; i++) {
+        regProtocolo = _repo.leer(i);
+
+        if (regProtocolo.getEstado()!=true && regProtocolo.getId()==idProtocolo) {
+            return regProtocolo;
         }
-        
-        if (opcValida) {
-            break;
-        }
+    }
+}
 
-        std::cout << "Por favor ingrese un tipo de analisis valido\n";
-    } */
+bool ManagerProtocolo::iniciar(int idTurno) {
+    Protocolo protocolo;
+    ArchivoProtocolo repoProtocolo;
 
-    std::cout << "Observaciones: "; // A laburar;
+    ManagerProtocolo mProtocolo;
+    ManagerAnalisisProtocolo mAnalisisProtocolo;
 
-    Protocolo protocolo(proximoID, idTurno, dniEnfermero, sala, observaciones);
+    //Cargo el ID
+    ManagerSecuencia mSecuencia;
+    Secuencia secuencia = mSecuencia.cargar("Protocolo");
+    int idProtocolo = secuencia.getIdActual();
+
+    char opc;
+
+    std::cout << "Se inicia el protocolo del turno " << idTurno << std::endl;
+
+    protocolo.setId(idProtocolo);
+    protocolo.setIdTurno(idTurno);
+
+    std::cout << "Confirmar s/n: ";
+    std::cin >> opc;
+
+    std::cout << "Protocolo\n";
+    std::cout << "Protocolo ID " << protocolo.getId();
+    std::cout << "Protocolo ID Turno" << protocolo.getIdTurno();
+
+    if (opc != 's') {
+        std::cout << "No se inicio el protocolo.\n";
+        return false;
+    }
 
     if (_repo.guardar(protocolo)) {
-        std::cout << "El protocolo se ha guardado correctamente.\n";
+        std::cout << "\nEl protocolo se ha cargado correctamente.\n" << std::endl;
+        secuencia.setIdActual(idProtocolo); //En tipo de Analisis es setIdActal Revisar
+        mSecuencia.actualizar(secuencia);
         return true;
     }
 
@@ -72,25 +85,87 @@ bool ManagerProtocolo::cargar(int idTurno){
     return false;
 }
 
+bool ManagerProtocolo::cargarAnalisis(Protocolo protocolo) {
+    ManagerAnalisisProtocolo mAnalisisProtocolo;
+    ManagerTipoAnalisis mTipoAnalisis;
+
+    mAnalisisProtocolo.cargar(protocolo.getId());
+    return true;
+}
+
+bool ManagerProtocolo::asignar(Protocolo protocolo){
+    ManagerProtocolo mProtocolo;
+    int dniEnfermero;
+    int sala;
+    char opc;
+
+    mProtocolo.mostrar(protocolo);
+
+    std::cout << "Mostrar Enfermeros habilitados\n" ;
+    std::cout << "Ingresar DNI del enfermero elegido: 30123123\n";
+    std::cout << "Asignar enfermero con DNI 30123123 al protocolo\n"; //corregir
+    protocolo.setDniEnfermero(30123123);
+
+    std::cout << "Asignar sala de atencion: ";
+    std::cin >> sala;
+    protocolo.setSala(sala);
+
+    std::cout << "Modificar los datos s/n: ";
+    std::cin >> opc;
+
+    if (opc != 's') {
+        std::cout << "No se modificaron los datos\n";
+        return false;
+    }
+
+    if (_repo.modificar(protocolo, protocolo.getId()-1)) {
+        std::cout << "El protocolo se ha asignado correctamente\n";
+        return true;
+    }
+
+    std::cout << "Ocurrio un error al intentar asignar protocolo.\n";
+    return false;
+}
 
 void ManagerProtocolo::mostrar(Protocolo protocolo){
-    Enfermero auxE = protocolo.getEnfermero();
 
-    std::cout << "ID del Protocolo: " << protocolo.getId() << "\n";
-    std::cout << "Turno: " << protocolo.getIdTurno() << "\n";
-    std::cout << "Enfermero: " << auxE.getNombre() << " " << auxE.getApellido() << "\n";
-    std::cout << "Sala: " << protocolo.getSala() << "\n";
-    std::cout << "Observaciones: " << protocolo.getObservaciones() << "\n";
+    std::cout << "ID\tTurno\tEstado\tSala\tEnfermero\n" << std::endl;
+    std::cout << protocolo.getId() << "\t" ;
+    std::cout << protocolo.getIdTurno() << "\t";
+    std::cout << protocolo.getEstado() << "\t";
+    std::cout << protocolo.getSala() << "\t";
+    std::cout << protocolo.getEnfermero().getNombre() << "\n" <<std::endl;
+    std::cout << "Observaciones: " << protocolo.getObservaciones() << "\n" << std::endl;
 }
 
-void ManagerProtocolo::mostrarTodos(){
-    for(int i=0; i<_repo.cantidadRegistros(); i++){
-        this->mostrar(_repo.leer(i));
+bool ManagerProtocolo::mostrarTodos(){
+    Protocolo regProtocolo;
+
+    int cantidadProtocolo = _repo.cantidadRegistros();
+
+    if (cantidadProtocolo >= 1) {
+        std::cout << "ID\tTurno\tEstado\tSala\tEnfermero" << std::endl; //Observaciones en muestra especifica
     }
-}
+    else {
+        std::cout << "\nRegistro vacio\n" << std::endl;
+        return false;
+    }
 
-bool ManagerProtocolo::actualizar(Protocolo protocolo){
-    // PENDIENTE
+    for(int i=0; i<cantidadProtocolo; i++){
+        regProtocolo = _repo.leer(i);
+
+        if (regProtocolo.getEstado()!=true) {
+
+            std::cout << regProtocolo.getId() << "\t" ;
+            std::cout << regProtocolo.getIdTurno() << "\t";
+            std::cout << regProtocolo.getEstado() << "\t";
+            std::cout << regProtocolo.getSala() << "\t";
+            std::cout << regProtocolo.getEnfermero().getNombre() << "\n";
+        }
+    }
+
+    std::cout << std::endl;
+    return true;
 }
 
 bool ManagerProtocolo::eliminar(Protocolo protocolo){

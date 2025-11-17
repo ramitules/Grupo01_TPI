@@ -1,7 +1,7 @@
 #include "Protocolo.h"
 #include <cstring>
 
-Protocolo::Protocolo(): _id(0), _idTurno(0), _dniEnfermero(0), _sala(0), _observaciones("sin observaciones"), _eliminado(0){};
+Protocolo::Protocolo(): _id(0), _idTurno(0), _dniEnfermero(0), _sala(0), _observaciones("sin observaciones"), _estado(false), _eliminado(false){};
 
 Protocolo::Protocolo(int id, int idTurno, int dniEnfermero, int sala, const char observaciones[]) {
     setId(id);
@@ -30,6 +30,10 @@ int Protocolo::getSala(){
 
 const char* Protocolo::getObservaciones(){
     return _observaciones;
+}
+
+bool Protocolo::getEstado() {
+    return _estado;
 }
 
 Enfermero Protocolo::getEnfermero() {
@@ -80,6 +84,10 @@ void Protocolo::setSala(int sala){
 
 void Protocolo::setObservaciones(const char observaciones[]) {
     strcpy(_observaciones, observaciones);
+}
+
+void Protocolo::setEstado(bool estado) {
+    _estado = estado;
 }
 
 void Protocolo::setEliminado(bool eliminado) {

@@ -1,5 +1,9 @@
 #include "archivo/ArchivoTurno.h"
+#include "utils/ManagerFecha.h"
+#include "utils/ManagerHora.h"
 #include "utils/rlutil.h"
+#include <fstream>
+#include <sstream>
 #include <iostream>
 
 
@@ -182,5 +186,66 @@ bool ArchivoTurno::exportarCSV(std::string turno, std::string nombreArchivo){
 }
 
 Turno* ArchivoTurno::desdeCSV(std::string nombreArchivo) {
-    // PENDIENTE
+    std::ifstream archivo(nombreArchivo);
+    std::string registro;
+    std::string atributos[6];  // Son 6 los atributos de un turno
+
+    if (!archivo.is_open()) {
+        std::cout << "Error: No se pudo abrir el archivo " << nombreArchivo << std::endl;
+        return nullptr;
+    }
+
+    // Leer el archivo registro por registro solo para saber la cantidad
+    int cantidadRegistros = 0;
+    while (std::getline(archivo, registro)) {
+        cantidadRegistros++;
+    }
+
+    // Rebobinar
+    archivo.clear(); // Limpia las banderas de estado (como EOF)
+    archivo.seekg(0, std::ios::beg); // Mueve el cursor al byte 0 (el inicio)
+
+    const int CANTIDAD = cantidadRegistros;
+    Turno* turnos = new Turno[CANTIDAD];
+
+    int contador = 0;
+    int auxID, auxDni;
+    Fecha auxFecha;
+    Hora auxHora;
+    float auxImporte;
+    bool auxElminado;
+
+    while (std::getline(archivo, registro)) {
+        // Crear un stringstream a partir del registro para poder
+        // leer todo el texto con un delimimtador
+        std::stringstream ss(registro);
+
+        for (int i = 0; i < 6; i ++) {
+            std::getline(ss, atributos[i], ',');
+        }
+
+        // Interpretar atributos desde string a lo que corresponda
+        auxID = std::stoi(atributos[0]);
+        auxDni = std::stoi(atributos[1]);
+        auxFecha = Fecha(
+            std::stoi(atributos[2].substr(0, atributos[2].find('/'))),
+            std::stoi(atributos[2].substr(atributos[2].find('/') + 1, atributos[2].rfind('/') - atributos[2].find('/') - 1)),
+            std::stoi(atributos[2].substr(atributos[2].rfind('/') + 1))
+        );
+        auxHora = Hora(
+            std::stoi(atributos[3].substr(0, atributos[3].find(':'))),
+            std::stoi(atributos[3].substr(atributos[3].find(':') + 1, atributos[3].rfind(':') - atributos[3].find(':') - 1)),
+            std::stoi(atributos[3].substr(atributos[3].rfind(':') + 1))
+        );
+        auxImporte = std::stof(atributos[4]);
+        auxElminado = atributos[5] == "SI";
+
+        // Cargar turno
+        turnos[contador] = Turno(auxID, auxDni, auxFecha, auxHora, auxImporte);
+        turnos[contador].setEliminado(auxElminado);
+        contador++;
+    }
+
+    archivo.close();
+    return turnos;
 }

@@ -1,6 +1,7 @@
 #include "utils/ManagerHora.h"
 #include <ctime>
 #include <string>
+#include <sstream>
 
 ManagerHora::ManagerHora(){};
 
@@ -56,6 +57,22 @@ Hora ManagerHora::cargar(){
     
     Hora h(hora, minuto, segundo);
     return h;
+}
+
+Hora ManagerHora::desdeString(std::string& horaStr){
+    // PENDIENTE: Validar formato de hora
+
+    // Formato esperado HH:MM:SS
+    int hora, minuto, segundo = {0};
+    // Se supone que ":"
+    char sep1, sep2;
+
+    // Tratar cadena de caracteres como stream (tipo "cin")
+    std::istringstream iss(horaStr);
+    // Extraccion de datos a traves de iss hacia variables
+    iss >> hora >> sep1 >> minuto >> sep2 >> segundo;
+
+    return Hora(hora, minuto, segundo);
 }
 
 std::string ManagerHora::mostrar(Hora hora){

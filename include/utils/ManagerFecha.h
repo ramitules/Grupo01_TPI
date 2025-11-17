@@ -7,6 +7,7 @@ class ManagerFecha{
     public:
         ManagerFecha();
 
+        Fecha desdeString(std::string& fechaStr);
         Fecha cargar();
         std::string mostrar(Fecha fecha);
 

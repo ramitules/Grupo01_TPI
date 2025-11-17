@@ -1,6 +1,7 @@
 #include "utils/ManagerFecha.h"
 #include <ctime>
 #include <string>
+#include <sstream>
 
 ManagerFecha::ManagerFecha(){};
 
@@ -59,6 +60,22 @@ Fecha ManagerFecha::cargar(){
 
     Fecha fecha(dia, mes, anio);
     return fecha;
+}
+
+Fecha ManagerFecha::desdeString(std::string& fechaStr){
+    // PENDIENTE: Validar formato de fecha
+
+    // Formato esperado: DD/MM/AAAA o DD-MM-AAAA
+    int dia, mes, anio = {0};
+    // Separadores '/' o '-'
+    char sep1, sep2;
+
+    // Tratar cadena de caracteres como stream (tipo "cin")
+    std::istringstream iss(fechaStr);
+    // Extraccion de datos a traves de iss hacia variables
+    iss >> dia >> sep1 >> mes >> sep2 >> anio;
+
+    return Fecha(dia, mes, anio);
 }
 
 std::string ManagerFecha::mostrar(Fecha fecha){

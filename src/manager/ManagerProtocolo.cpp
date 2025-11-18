@@ -1,9 +1,7 @@
 #include "manager/ManagerProtocolo.h"
 #include "manager/ManagerAnalisisProtocolo.h"
-#include "manager/ManagerTipoAnalisis.h"
 #include "manager/ManagerEnfermero.h"
 #include "manager/ManagerTurno.h"
-#include "manager/ManagerSecuencia.h"
 #include "Protocolo.h"
 
 
@@ -51,9 +49,7 @@ bool ManagerProtocolo::iniciar(int idTurno) {
     ManagerAnalisisProtocolo mAnalisisProtocolo;
 
     //Cargo el ID
-    ManagerSecuencia mSecuencia;
-    Secuencia secuencia = mSecuencia.cargar("Protocolo");
-    int idProtocolo = secuencia.getIdActual();
+    int idProtocolo = _repo.cantidadRegistros()+1;
 
     char opc;
 
@@ -76,8 +72,6 @@ bool ManagerProtocolo::iniciar(int idTurno) {
 
     if (_repo.guardar(protocolo)) {
         std::cout << "\nEl protocolo se ha cargado correctamente.\n" << std::endl;
-        secuencia.setIdActual(idProtocolo); //En tipo de Analisis es setIdActal Revisar
-        mSecuencia.actualizar(secuencia);
         return true;
     }
 
@@ -87,7 +81,6 @@ bool ManagerProtocolo::iniciar(int idTurno) {
 
 bool ManagerProtocolo::cargarAnalisis(Protocolo protocolo) {
     ManagerAnalisisProtocolo mAnalisisProtocolo;
-    ManagerTipoAnalisis mTipoAnalisis;
 
     mAnalisisProtocolo.cargar(protocolo.getId());
     return true;

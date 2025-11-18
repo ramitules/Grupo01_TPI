@@ -1,5 +1,4 @@
 #include "manager/ManagerTipoAnalisis.h"
-#include "manager/ManagerSecuencia.h"
 #include <string>
 
 ManagerTipoAnalisis::ManagerTipoAnalisis(){};
@@ -68,9 +67,8 @@ bool ManagerTipoAnalisis::mostrarTodos(){
 }
 
 bool ManagerTipoAnalisis::cargar(){
-    ManagerSecuencia mSecuencia;
-    Secuencia secuencia = mSecuencia.cargar("TipoAnalisis");
-    int tipoAnalisisID = secuencia.getIdActual();
+
+    int tipoAnalisisID = _repo.cantidadRegistros()+1;
 
     char opc;
 
@@ -120,8 +118,6 @@ bool ManagerTipoAnalisis::cargar(){
 
     if (_repo.guardar(tipoAnalisis)) {
         std::cout << "\nEl tipo de analisis se ha cargado correctamente.\n" << std::endl;
-        secuencia.setIdActual(tipoAnalisisID);
-        mSecuencia.actualizar(secuencia);
         return true;
     }
 

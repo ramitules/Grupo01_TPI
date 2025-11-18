@@ -1,4 +1,3 @@
-#include "manager/ManagerSecuencia.h"
 #include "manager/ManagerPaciente.h"
 #include "manager/ManagerProtocolo.h"
 #include "manager/ManagerTurno.h"
@@ -17,11 +16,8 @@ bool ManagerTurno::cargar(){
     ManagerPaciente mPaciente;
     ManagerFecha mFecha;
     ManagerHora mHora;
-    ManagerSecuencia mSecuencia;
 
-    Secuencia sec = mSecuencia.cargar("Turno");
-
-    int proximoID = sec.getIdActual();
+    int proximoID = _repo.cantidadRegistros() + 1;
     int dniPaciente;
     bool pacienteExiste = false;
     Fecha fechaAtencion;
@@ -88,11 +84,6 @@ bool ManagerTurno::cargar(){
         return true;
     }
 
-    // Si falla, el ID en la secuencia vuelve a su estado anterior (rollback).
-    // Se debe actualizar dicha secuencia.
-    sec.setIdActual(proximoID - 1);
-    mSecuencia.actualizar(sec);
-
     std::cout << "Ocurrio un error al intentar guardar el turno. Presione ENTER para continuar\n";
     
     rlutil::getkey();
@@ -116,6 +107,7 @@ void ManagerTurno::mostrar(Turno turno){
 
 void ManagerTurno::mostrarTodos(){
     Turno auxTurno;
+    
     for(int i=0; i<_repo.cantidadRegistros(); i++){
         auxTurno = _repo.leer(i);
         
@@ -160,7 +152,7 @@ void ManagerTurno::ordenadosFecha(){
         if (turnos[i].getEliminado()) {
             continue;
         }
-
+        rlutil::getkey();
         mostrar(turnos[i]);
         std::cout << separadorParcial();
     }
@@ -405,6 +397,7 @@ bool ManagerTurno::exportarCSV(Turno turno) {
     std::string horaStr = std::to_string(horaAux.getHora()) + ':' + std::to_string(horaAux.getMinuto()) + ':' + std::to_string(horaAux.getSegundo());
     
     std::string nombreArchivo = "Turno " + std::to_string(turno.getID()) + ".csv";
+    std::string cabeceras = "ID,DNI Paciente,Fecha atencion,Hora atencion,Importe,Eliminado?\n";
     std::string csv = "";
 
     csv.append(std::to_string(turno.getID()) + ',');
@@ -413,12 +406,12 @@ bool ManagerTurno::exportarCSV(Turno turno) {
     csv.append(std::to_string(turno.getImporte()) + ',');
     csv.append(turno.getEliminado() ? "SI" : "NO");
 
-    if (_repo.exportarCSV(csv, nombreArchivo)) {
+    /*if (_repo.exportarCSV(csv, nombreArchivo, cabeceras)) {
         std::cout << "El turno se ha exportado exitosamente al archivo " << nombreArchivo << "\n";
         std::cout << "Presione ENTER para continuar\n";
         rlutil::getkey();
         return true;
-    }
+    }*/
     
     std::cout << "El turno no se ha podido exportar. Presione ENTER para continuar\n";
     rlutil::getkey();
@@ -427,13 +420,15 @@ bool ManagerTurno::exportarCSV(Turno turno) {
 
 bool ManagerTurno::exportarTodosCSV() {
     std::string csv = stringTodosCSV();
+    std::string cabeceras = "ID,DNI Paciente,Fecha atencion,Hora atencion,Importe,Eliminado?\n";
+    std::string nombreArchivo = "Turnos.csv";
 
-    if (_repo.exportarCSV(csv, "Turnos.csv")) {
+    /*if (_repo.exportarCSV(csv, nombreArchivo, cabeceras)) {
         std::cout << "Los turnos se han exportado exitosamente al archivo 'Turnos.csv'\n";
         std::cout << "Presione ENTER para continuar\n";
         rlutil::getkey();
         return true;
-    }
+    }*/
     
     std::cout << "No se han podido exportar los turnos. Presione ENTER para continuar\n";
     rlutil::getkey();

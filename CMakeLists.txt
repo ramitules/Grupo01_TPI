@@ -17,7 +17,6 @@ set(SOURCES
     src/Enfermero.cpp
     src/paciente.cpp
     src/Persona.cpp
-    src/Secuencia.cpp
     src/tipoAnalisis.cpp
     src/turno.cpp
     src/ObraSocial.cpp
@@ -26,7 +25,6 @@ set(SOURCES
     src/archivo/ArchivoEnfermero.cpp
     src/archivo/ArchivoObraSocial.cpp
     src/archivo/ArchivoPaciente.cpp
-    src/archivo/ArchivoSecuencia.cpp
     src/archivo/ArchivoTipoAnalisis.cpp
     src/archivo/ArchivoTurno.cpp
     src/manager/ManagerProtocolo.cpp
@@ -34,7 +32,6 @@ set(SOURCES
     src/manager/ManagerObraSocial.cpp
     src/manager/ManagerPaciente.cpp
     src/manager/ManagerPersona.cpp
-    src/manager/ManagerSecuencia.cpp
     src/manager/ManagerTipoAnalisis.cpp
     src/manager/ManagerTurno.cpp
     src/menu/Menu.cpp
@@ -62,10 +59,9 @@ set(SOURCES
     src/utils/ManagerHora.cpp
     src/utils/funcFrontend.cpp
     src/utils/funcBackend.cpp
-        include/manager/ManagerAnalisisProtocolo.h
-        src/manager/ManagerAnalisisProtocolo.cpp
-        src/archivo/ArchivoAnalisisProtocolo.cpp
-        src/AnalisisProtocolo.cpp
+    src/manager/ManagerAnalisisProtocolo.cpp
+    src/archivo/ArchivoAnalisisProtocolo.cpp
+    src/AnalisisProtocolo.cpp
 )
 
 # Crear ejecutable

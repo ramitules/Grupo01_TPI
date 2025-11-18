@@ -1,5 +1,4 @@
 #include "manager/ManagerObraSocial.h"
-#include "manager/ManagerSecuencia.h"
 #include "utils/funcFrontend.h"
 #include <iostream>   // <-- agregado
 #include <limits>     // <-- agregado (opcional para ignore seguro)
@@ -10,10 +9,7 @@ ManagerObraSocial::ManagerObraSocial(){};
 bool ManagerObraSocial::cargar(){
     std::cin.ignore(100, '\n');
 
-    ManagerSecuencia mSecuencia;
-    Secuencia sec = mSecuencia.cargar("ObraSocial");
-
-    int proximoID = sec.getIdActual() + 1;
+    int proximoID = _repo.cantidadRegistros() + 1;
     int telefono;
     std::string nombre;
     std::string nombreContacto;

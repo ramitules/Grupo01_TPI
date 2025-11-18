@@ -23,6 +23,8 @@ Secuencia ManagerSecuencia::cargar(std::string objeto){
                 // Sumarle 1 al ultimo ID existente
                 nuevo.setIdActual(nuevo.getIdActual() + 1);
                 break;
+            } else {
+                _repo.guardar(nuevo);
             }
         }
     } else {

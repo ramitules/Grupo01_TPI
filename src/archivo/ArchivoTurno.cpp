@@ -162,29 +162,6 @@ int ArchivoTurno::getPos(int id){
     return pos;
 }
 
-bool ArchivoTurno::exportarCSV(std::string turno, std::string nombreArchivo){
-    std::string cabecera = "ID,DNI Paciente,Fecha atencion,Hora atencion,Importe,Eliminado?\n";
-    
-    FILE *pFile;
-
-    pFile = fopen(nombreArchivo.c_str(), "w");  // Escritura de texto, no binario
-
-    if (pFile == nullptr){
-        return false;
-    }
-
-    if (fprintf(pFile, cabecera.c_str())) {
-        if (fprintf(pFile, turno.c_str())) {
-            fclose(pFile);
-            return true;
-        }
-    }
-
-    fclose(pFile);
-
-    return false;
-}
-
 Turno* ArchivoTurno::desdeCSV(std::string nombreArchivo) {
     std::ifstream archivo(nombreArchivo);
     std::string registro;
@@ -207,6 +184,8 @@ Turno* ArchivoTurno::desdeCSV(std::string nombreArchivo) {
 
     const int CANTIDAD = cantidadRegistros;
     Turno* turnos = new Turno[CANTIDAD];
+    ManagerFecha mFecha;
+    ManagerHora mHora;
 
     int contador = 0;
     int auxID, auxDni;
@@ -227,16 +206,8 @@ Turno* ArchivoTurno::desdeCSV(std::string nombreArchivo) {
         // Interpretar atributos desde string a lo que corresponda
         auxID = std::stoi(atributos[0]);
         auxDni = std::stoi(atributos[1]);
-        auxFecha = Fecha(
-            std::stoi(atributos[2].substr(0, atributos[2].find('/'))),
-            std::stoi(atributos[2].substr(atributos[2].find('/') + 1, atributos[2].rfind('/') - atributos[2].find('/') - 1)),
-            std::stoi(atributos[2].substr(atributos[2].rfind('/') + 1))
-        );
-        auxHora = Hora(
-            std::stoi(atributos[3].substr(0, atributos[3].find(':'))),
-            std::stoi(atributos[3].substr(atributos[3].find(':') + 1, atributos[3].rfind(':') - atributos[3].find(':') - 1)),
-            std::stoi(atributos[3].substr(atributos[3].rfind(':') + 1))
-        );
+        auxFecha = mFecha.desdeString(atributos[2]);
+        auxHora = mHora.desdeString(atributos[3]);
         auxImporte = std::stof(atributos[4]);
         auxElminado = atributos[5] == "SI";
 

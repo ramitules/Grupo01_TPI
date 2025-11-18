@@ -30,3 +30,24 @@ bool Archivo::existeRuta(){
     // Retorna 0 si tiene éxito, -1 si falla (no existe).
     return stat(this->getRutaArchivo().c_str(), &buffer) == 0;
 }
+
+bool exportarCSV(std::string objeto, std::string nombreArchivo, std::string cabeceras){
+    FILE *pFile;
+
+    pFile = fopen(nombreArchivo.c_str(), "w");  // Escritura de texto, no binario
+
+    if (pFile == nullptr){
+        return false;
+    }
+
+    if (fprintf(pFile, cabeceras.c_str())) {  // Escribir texto
+        if (fprintf(pFile, objeto.c_str())) {
+            fclose(pFile);
+            return true;
+        }
+    }
+
+    fclose(pFile);
+
+    return false;
+}

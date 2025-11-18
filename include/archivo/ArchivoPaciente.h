@@ -17,5 +17,10 @@ class ArchivoPaciente: public Archivo {
         bool modificar(Paciente paciente, int pos);
         bool eliminar(int pos);
 
+        /// Similar a leerTodos() solo que lee desde archivo CSV.
+        /// @param nombreArchivo leera desde este nombre de archivo.
+        /// @return vector de pacientes (memoria dinamica, liberar luego)
+        Paciente* desdeCSV(std::string nombreArchivo);
+
         int cantidadRegistros();
 };

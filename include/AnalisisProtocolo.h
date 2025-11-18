@@ -14,7 +14,7 @@ class AnalisisProtocolo{
 
     public:
         AnalisisProtocolo();
-        AnalisisProtocolo(int idProtocolo, int idTipoAnalisis,float precioSolicitud);
+        AnalisisProtocolo(int idProtocolo, int idTipoAnalisis,float precioSolicitud, const char resultados[]);
 
         //GETTERS
         int getIdProtocolo();

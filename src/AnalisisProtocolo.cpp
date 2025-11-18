@@ -6,7 +6,7 @@
 
 AnalisisProtocolo::AnalisisProtocolo(): _idProtocolo(0), _idTipoAnalisis(0), _precioSolicitud(0), _resultados("sin resultados"), _eliminado(0){}; //Chequear Diagrama
 
-AnalisisProtocolo::AnalisisProtocolo(int idProtocolo, int idTipoAnalisis, float precioSolicitud) {
+AnalisisProtocolo::AnalisisProtocolo(int idProtocolo, int idTipoAnalisis, float precioSolicitud, const char resultados[]) {
     setIdProtocolo(idProtocolo);
     setIdTipoAnalisis(idTipoAnalisis);
     setPrecioSolicitud(precioSolicitud);

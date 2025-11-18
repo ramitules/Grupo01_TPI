@@ -62,6 +62,10 @@ set(SOURCES
     src/utils/ManagerHora.cpp
     src/utils/funcFrontend.cpp
     src/utils/funcBackend.cpp
+        include/manager/ManagerAnalisisProtocolo.h
+        src/manager/ManagerAnalisisProtocolo.cpp
+        src/archivo/ArchivoAnalisisProtocolo.cpp
+        src/AnalisisProtocolo.cpp
 )
 
 # Crear ejecutable

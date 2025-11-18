@@ -3,11 +3,12 @@
 #include <iostream>
 
 
-MenuTurno::MenuTurno(): Menu(3, "Menu Turno"){
-    std::string opciones[3] = {
+MenuTurno::MenuTurno(): Menu(4, "Menu Turno"){
+    std::string opciones[4] = {
         "Crear nuevo turno",
         "Modificar turno",
-        "Eliminar turno"
+        "Eliminar turno",
+        "Mostrar todos"
     };
 
     setVectorOpciones(opciones);
@@ -23,6 +24,11 @@ void MenuTurno::ejecutarOpcion(){
 
     if (_opcionSeleccionada == 1) {
         mTurno.cargar();
+        return;
+    }
+
+    if (_opcionSeleccionada == 4) {
+        mTurno.mostrarTodos();
         return;
     }
 

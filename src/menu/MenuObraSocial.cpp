@@ -2,11 +2,12 @@
 #include <iostream>
 
 
-MenuObraSocial::MenuObraSocial(): Menu(3, "Menu Obras Sociales"){
-    std::string opciones[3] = {
+MenuObraSocial::MenuObraSocial(): Menu(4, "Menu Obras Sociales"){
+    std::string opciones[4] = {
         "Ingresar nueva obra social",
         "Modificar obra social",
-        "Eliminar obra social"
+        "Eliminar obra social",
+        "Mostrar todas"
     };
 
     setVectorOpciones(opciones);

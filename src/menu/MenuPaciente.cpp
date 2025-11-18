@@ -3,11 +3,12 @@
 #include <iostream>
 
 
-MenuPaciente::MenuPaciente(): Menu(3, "Menu Paciente"){
-    std::string opciones[3] = {
+MenuPaciente::MenuPaciente(): Menu(4, "Menu Paciente"){
+    std::string opciones[4] = {
         "Crear nuevo paciente",
         "Modificar paciente",
-        "Eliminar paciente"
+        "Eliminar paciente",
+        "Mostrar todos"
     };
 
     setVectorOpciones(opciones);
@@ -23,6 +24,11 @@ void MenuPaciente::ejecutarOpcion(){
 
     if (_opcionSeleccionada == 1) {
         mPaciente.cargar();
+        return;
+    }
+
+    if (_opcionSeleccionada == 4) {
+        mPaciente.mostrarTodos();
         return;
     }
 

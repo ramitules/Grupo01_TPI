@@ -9,9 +9,10 @@ ManagerEnfermero::ManagerEnfermero(){};
 
 bool ManagerEnfermero::comprobar(int dniEnfermero) {
     Enfermero regEnfermero;
-    int cantidadTipoAnalisis = _repo.cantidadRegistros();
+    Persona regPersona;
+    int cantidadEnfermero = _repo.cantidadRegistros();
 
-    if (cantidadTipoAnalisis <= 0) {
+    if (cantidadEnfermero <= 0) {
         std::cout << "\nRegistro vacio.\n\n" << std::endl;
         return false;
     }
@@ -20,10 +21,11 @@ bool ManagerEnfermero::comprobar(int dniEnfermero) {
         return true;
     }
 
-    regEnfermero = _repo.leer(dniEnfermero-1);
+    int posicion = _repo.getPos(dniEnfermero);
+    regEnfermero = _repo.leer(posicion);
 
     if (dniEnfermero==regEnfermero.getDNI() && regEnfermero.getEliminado()!=true) {
-        //std::cout << "Tipo de Analisis encontrado";
+        //std::cout << "Enfermero";
         return true;
     }
     else {
@@ -90,7 +92,7 @@ void ManagerEnfermero::mostrarTodos(){
         regEnfermero = _repo.leer(i);
 
         if (regEnfermero.getEliminado()!=true) {
-            std::cout << i << "\t";
+            std::cout << i+1<< "\t";
             std::cout << regEnfermero.getNombre() << " " << regEnfermero.getApellido() << "\t";
             std::cout << regEnfermero.getDNI() << "\t";
             std::cout << regEnfermero.getHabilitado() << "\n";

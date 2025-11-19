@@ -1,5 +1,6 @@
 #include "utils/funcFrontend.h"
 #include "utils/rlutil.h"
+#include <iostream>
 
 
 void buscando(){
@@ -15,7 +16,7 @@ void buscando(){
 }
 
 
-std::string separador(){
+void separador(){
     std::string separador = "";
 
     for (int i=0; i<rlutil::tcols(); i++) {
@@ -26,7 +27,7 @@ std::string separador(){
 }
 
 
-std::string separadorParcial(){
+void separadorParcial(){
     std::string separador = "";
 
     for (int i=0; i<rlutil::tcols() / 2; i++) {

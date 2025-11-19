@@ -6,8 +6,8 @@
 
 MenuTipoAnalisis::MenuTipoAnalisis(): Menu(4, "Menu Tipos de Analisis"){
     std::string opciones[4] = {
-        "Mostrar todos",
         "Cargar",
+        "Mostrar Todos",
         "Modificar",
         "Eliminar"
     };
@@ -27,38 +27,55 @@ void MenuTipoAnalisis::ejecutarOpcion(){
         case 0:
             return;
         case 1:
-            std::cout << getNombreMenu() << ": " << _opciones[0] << "\n";
+            std::cout << getNombreMenu() << ": " << _opciones[1] << "\n";
             std::cout << "==============================\n";
-            mTipoAnalisis.mostrarTodos();
+
+            mTipoAnalisis.cargar();
             system("pause");
             break;
         case 2:
-            std::cout << getNombreMenu() << ": " << _opciones[1] << "\n";
+            std::cout << getNombreMenu() << ": " << _opciones[0] << "\n";
             std::cout << "==============================\n";
-            mTipoAnalisis.cargar();
+
+            if (mTipoAnalisis.comprobar()) {
+                mTipoAnalisis.mostrarTodos();
+            }
+
             system("pause");
             break;
         case 3:
             std::cout << getNombreMenu() << ": " << _opciones[2] << "\n";
             std::cout << "==============================\n";
 
-            mTipoAnalisis.mostrarTodos();
-            std::cout << "Ingrese el ID del Tipo de Analisis: ";
-            std::cin >> idTipoAnalisis;
+            if (mTipoAnalisis.comprobar()) {
+                mTipoAnalisis.mostrarTodos();
 
-            if (mTipoAnalisis.comprobar(idTipoAnalisis)) {
-                tipoAnalisis = mTipoAnalisis.seleccionar(idTipoAnalisis);
-                mTipoAnalisis.actualizar(tipoAnalisis);
+                std::cout << "Ingrese el ID a modificar: ";
+                std::cin >> idTipoAnalisis;
+
+                if (mTipoAnalisis.comprobar(idTipoAnalisis)) {
+                    tipoAnalisis = mTipoAnalisis.seleccionar(idTipoAnalisis);
+                    mTipoAnalisis.actualizar(tipoAnalisis);
+                }
             }
+
             system("pause");
             break;
         case 4:
             std::cout << getNombreMenu() << ": " << _opciones[3] << "\n";
             std::cout << "==============================\n";
 
-            mTipoAnalisis.mostrarTodos();
-            tipoAnalisis = mTipoAnalisis.seleccionar(idTipoAnalisis);
-            mTipoAnalisis.eliminar(tipoAnalisis);
+            if (mTipoAnalisis.comprobar()) {
+                mTipoAnalisis.mostrarTodos();
+
+                std::cout << "Ingrese el ID a eliminar: ";
+                std::cin >> idTipoAnalisis;
+
+                if (mTipoAnalisis.comprobar(idTipoAnalisis)) {
+                    tipoAnalisis = mTipoAnalisis.seleccionar(idTipoAnalisis);
+                    mTipoAnalisis.eliminar(tipoAnalisis);
+                }
+            }
             system("pause");
             break;
         default:

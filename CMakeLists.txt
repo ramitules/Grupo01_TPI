@@ -20,6 +20,7 @@ set(SOURCES
     src/tipoAnalisis.cpp
     src/turno.cpp
     src/ObraSocial.cpp
+    src/AnalisisProtocolo.cpp
     src/archivo/Archivo.cpp
     src/archivo/ArchivoProtocolo.cpp
     src/archivo/ArchivoEnfermero.cpp
@@ -27,6 +28,15 @@ set(SOURCES
     src/archivo/ArchivoPaciente.cpp
     src/archivo/ArchivoTipoAnalisis.cpp
     src/archivo/ArchivoTurno.cpp
+    src/archivo/ArchivoAnalisisProtocolo.cpp
+    src/csv/CSV.cpp
+    src/csv/CSVAnalisisProtocolo.cpp
+    src/csv/CSVEnfermero.cpp
+    src/csv/CSVObraSocial.cpp
+    src/csv/CSVPaciente.cpp
+    src/csv/CSVProtocolo.cpp
+    src/csv/CSVTipoAnalisis.cpp
+    src/csv/CSVTurno.cpp
     src/manager/ManagerProtocolo.cpp
     src/manager/ManagerEnfermero.cpp
     src/manager/ManagerObraSocial.cpp
@@ -34,6 +44,7 @@ set(SOURCES
     src/manager/ManagerPersona.cpp
     src/manager/ManagerTipoAnalisis.cpp
     src/manager/ManagerTurno.cpp
+    src/manager/ManagerAnalisisProtocolo.cpp
     src/menu/Menu.cpp
     src/menu/MenuAnalisisProtocolo.cpp
     src/menu/MenuObraSocial.cpp
@@ -59,9 +70,6 @@ set(SOURCES
     src/utils/ManagerHora.cpp
     src/utils/funcFrontend.cpp
     src/utils/funcBackend.cpp
-    src/manager/ManagerAnalisisProtocolo.cpp
-    src/archivo/ArchivoAnalisisProtocolo.cpp
-    src/AnalisisProtocolo.cpp
 )
 
 # Crear ejecutable

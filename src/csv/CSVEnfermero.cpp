@@ -15,7 +15,7 @@ void CSVEnfermero::guardar(Enfermero enfermero) {
 
     if (!out.is_open()) {
         std::cout << "No se pudo abrir el archivo en la ruta " << _ruta << "\n. Presione ENTER para salir.";
-        rlutil::getkey();
+        rlutil::anykey();
         exit(0);
     }
 
@@ -42,7 +42,7 @@ void CSVEnfermero::guardarTodos() {
 
     if (!out.is_open()) {
         std::cout << "No se pudo abrir el archivo en la ruta " << _ruta << "\n. Presione ENTER para salir.";
-        rlutil::getkey();
+        rlutil::anykey();
         exit(0);
     }
 
@@ -77,7 +77,7 @@ void CSVEnfermero::guardarTodos() {
 Enfermero CSVEnfermero::leerRegistro(int nroRegistro) {
     if (nroRegistro <= 1) {
         std::cout << "Número de registro inválido. Presione ENTER para salir.";
-        rlutil::getkey();
+        rlutil::anykey();
         exit(0);
     }
 
@@ -86,13 +86,13 @@ Enfermero CSVEnfermero::leerRegistro(int nroRegistro) {
     std::ifstream archivo(_ruta);
     if (!archivo.is_open()) {
         std::cout << "No se pudo abrir el archivo en la ruta " << _ruta << "\n. Presione ENTER para salir.";
-        rlutil::getkey();
+        rlutil::anykey();
         exit(0);
     }
 
     if (archivoVacio()) {
         std::cout << "El archivo está vacío. Presione ENTER para salir.";
-        rlutil::getkey();
+        rlutil::anykey();
         exit(0);
     }
 
@@ -143,7 +143,7 @@ Enfermero* CSVEnfermero::leerTodo() {
     std::ifstream archivo(_ruta);
     if (!archivo.is_open()) {
         std::cout << "No se pudo abrir el archivo en la ruta " << _ruta << "\n. Presione ENTER para salir.";
-        rlutil::getkey();
+        rlutil::anykey();
         exit(0);
     }
 

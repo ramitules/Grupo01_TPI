@@ -12,7 +12,7 @@ int main(){
         std::cout << "                   No se ha encontrado la carpeta 'base_de_datos'.\n";
         std::cout << "No se puede continuar. Por favor, asegurese que la carpeta este creada al lado de su programa.\n\n";
         std::cout << "Presione ENTER para salir";
-        rlutil::getkey();
+        rlutil::anykey();
         return 0;
     }
 

@@ -268,7 +268,7 @@ void restaurarBackup(){
     }
     
     std::cout << "Restauracion completa. Presione ENTER para continuar.\n";
-    rlutil::getkey();
+    rlutil::anykey();
 }
 
 
@@ -327,5 +327,5 @@ void paletaColores(){
 
     rlutil::cls();
     std::cout << "Colores cambiados correctamente. Presione ENTER para volver.\n";
-    rlutil::getkey();
+    rlutil::anykey();
 }

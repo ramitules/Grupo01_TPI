@@ -252,12 +252,12 @@ bool ManagerPaciente::actualizar(Paciente& paciente){
 
     if (_repo.modificar(paciente, _repo.getPos(paciente.getDNI()))) {
         std::cout << "El paciente se ha modificado correctamente. Presione ENTER para continuar.\n";
-        rlutil::getkey();
+        rlutil::anykey();
         return true;
     }
 
     std::cout << "Ocurrio un error al intentar modificar el paciente. Presione ENTER para continuar.\n";
-    rlutil::getkey();
+    rlutil::anykey();
     return false;
 }
 
@@ -269,12 +269,12 @@ bool ManagerPaciente::eliminar(Paciente& paciente){
 
     if (_repo.modificar(paciente, _repo.getPos(paciente.getDNI()))) {
         std::cout << "El paciente se ha eliminado correctamente. Presione ENTER para continuar.\n";
-        rlutil::getkey();
+        rlutil::anykey();
         return true;
     };
 
     std::cout << "Ocurrio un error al intentar eliminar el paciente. Presione ENTER para continuar.\n";
-    rlutil::getkey();
+    rlutil::anykey();
     return false;
 }
 

@@ -15,7 +15,7 @@ void CSVPaciente::guardar(Paciente paciente) {
 
     if (!out.is_open()) {
         std::cout << "No se pudo abrir el archivo en la ruta " << _ruta << "\n. Presione ENTER para salir.";
-        rlutil::getkey();
+        rlutil::anykey();
         exit(0);
     }
 
@@ -41,7 +41,7 @@ void CSVPaciente::guardarTodos() {
 
     if (!out.is_open()) {
         std::cout << "No se pudo abrir el archivo en la ruta " << _ruta << "\n. Presione ENTER para salir.";
-        rlutil::getkey();
+        rlutil::anykey();
         exit(0);
     }
 
@@ -75,7 +75,7 @@ void CSVPaciente::guardarTodos() {
 Paciente CSVPaciente::leerRegistro(int nroRegistro) {
     if (nroRegistro <= 1) {
         std::cout << "Número de registro inválido. Presione ENTER para salir.";
-        rlutil::getkey();
+        rlutil::anykey();
         exit(0);
     }
 
@@ -84,13 +84,13 @@ Paciente CSVPaciente::leerRegistro(int nroRegistro) {
     std::ifstream archivo(_ruta);
     if (!archivo.is_open()) {
         std::cout << "No se pudo abrir el archivo en la ruta " << _ruta << "\n. Presione ENTER para salir.";
-        rlutil::getkey();
+        rlutil::anykey();
         exit(0);
     }
 
     if (archivoVacio()) {
         std::cout << "El archivo está vacío. Presione ENTER para salir.";
-        rlutil::getkey();
+        rlutil::anykey();
         exit(0);
     }
 
@@ -140,7 +140,7 @@ Paciente* CSVPaciente::leerTodo() {
     std::ifstream archivo(_ruta);
     if (!archivo.is_open()) {
         std::cout << "No se pudo abrir el archivo en la ruta " << _ruta << "\n. Presione ENTER para salir.";
-        rlutil::getkey();
+        rlutil::anykey();
         exit(0);
     }
 

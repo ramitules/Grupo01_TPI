@@ -159,12 +159,12 @@ bool ManagerObraSocial::actualizar(ObraSocial obraSocial){
 
     if (_repo.modificar(obraSocial, _repo.getPos(obraSocial.getID()))) {
         std::cout << "La obra social se ha modificado correctamente. Presione ENTER para continuar.\n";
-        rlutil::getkey();
+        rlutil::anykey();
         return true;
     }
 
     std::cout << "Ocurrio un error al intentar modificar la obra social. Presione ENTER para continuar.\n";
-    rlutil::getkey();
+    rlutil::anykey();
     return false;
 }
 
@@ -178,11 +178,11 @@ bool ManagerObraSocial::eliminar(ObraSocial obraSocial){
         obraSocial.setEliminado(true);
         if (_repo.modificar(obraSocial, _repo.getPos(obraSocial.getID()))) {
             std::cout << "La obra social se ha eliminado correctamente. Presione ENTER para continuar.\n";
-            rlutil::getkey();
+            rlutil::anykey();
             return true;
         }
         std::cout << "Ocurrio un error al intentar eliminar la obra social. Presione ENTER para continuar.\n";
-        rlutil::getkey();
+        rlutil::anykey();
         return false;
     }
 

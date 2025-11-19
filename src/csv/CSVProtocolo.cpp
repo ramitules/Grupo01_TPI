@@ -1,7 +1,8 @@
-#include "csv/CSVProtocolo.h"
 #include <fstream>
 #include <sstream>
 #include "utils/rlutil.h"
+#include "csv/CSVProtocolo.h"
+#include "archivo/ArchivoProtocolo.h"
 
 
 CSVProtocolo::CSVProtocolo(const std::string& ruta) : ArchivoCSV(ruta) {}
@@ -34,7 +35,7 @@ void CSVProtocolo::guardar(Protocolo protocolo) {
     out.close();
 }
 
-void CSVProtocolo::guardarTodos(Protocolo* protocolos, int cantidad) {
+void CSVProtocolo::guardarTodos() {
     std::ofstream out(_ruta, std::ios::trunc);
 
     if (!out.is_open()) {
@@ -43,10 +44,14 @@ void CSVProtocolo::guardarTodos(Protocolo* protocolos, int cantidad) {
         exit(0);
     }
 
+    ArchivoProtocolo arProtocolo;
+    const int CANTIDAD = arProtocolo.cantidadRegistros();
+    Protocolo* protocolos = arProtocolo.leerTodos();
+
     // Encabezado
     out << "id,id_turno,dni_enfermero,sala,observaciones,estado,eliminado?\n";
 
-    for (int i = 0; i < cantidad; i++) {
+    for (int i = 0; i < CANTIDAD; i++) {
         out << protocolos[i].getId() << ','
             << protocolos[i].getIdTurno() << ','
             << protocolos[i].getDniEnfermero() << ','
@@ -57,6 +62,7 @@ void CSVProtocolo::guardarTodos(Protocolo* protocolos, int cantidad) {
     }
 
     out.close();
+    delete[] protocolos;
 }
 
 Protocolo CSVProtocolo::leerRegistro(int nroRegistro) {

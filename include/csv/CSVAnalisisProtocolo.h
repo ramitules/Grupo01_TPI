@@ -12,7 +12,7 @@ class CSVAnalisisProtocolo: public ArchivoCSV{
         CSVAnalisisProtocolo(const std::string& ruta);
 
         void guardar(AnalisisProtocolo analisisProtocolo);
-        void guardarTodos(AnalisisProtocolo* analisisProtocolos, int cantidad);
+        void guardarTodos();
         
         AnalisisProtocolo leerRegistro(int nroRegistro);
         AnalisisProtocolo* leerTodo();

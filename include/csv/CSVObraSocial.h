@@ -12,7 +12,7 @@ class CSVObraSocial: public ArchivoCSV{
         CSVObraSocial(const std::string& ruta);
 
         void guardar(ObraSocial obraSocial);
-        void guardarTodos(ObraSocial* obraSocials, int cantidad);
+        void guardarTodos();
         
         ObraSocial leerRegistro(int nroRegistro);
         ObraSocial* leerTodo();

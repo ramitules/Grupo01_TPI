@@ -12,7 +12,7 @@ class CSVProtocolo: public ArchivoCSV{
         CSVProtocolo(const std::string& ruta);
 
         void guardar(Protocolo protocolo);
-        void guardarTodos(Protocolo* protocolos, int cantidad);
+        void guardarTodos();
         
         Protocolo leerRegistro(int nroRegistro);
         Protocolo* leerTodo();

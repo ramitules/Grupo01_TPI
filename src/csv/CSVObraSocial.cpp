@@ -1,7 +1,8 @@
-#include "csv/CSVObraSocial.h"
 #include <fstream>
 #include <sstream>
 #include "utils/rlutil.h"
+#include "csv/CSVObraSocial.h"
+#include "archivo/ArchivoObraSocial.h"
 
 
 CSVObraSocial::CSVObraSocial(const std::string& ruta) : ArchivoCSV(ruta) {}
@@ -33,7 +34,7 @@ void CSVObraSocial::guardar(ObraSocial obraSocial) {
     out.close();
 }
 
-void CSVObraSocial::guardarTodos(ObraSocial* obraSociales, int cantidad) {
+void CSVObraSocial::guardarTodos() {
     std::ofstream out(_ruta, std::ios::trunc);
 
     if (!out.is_open()) {
@@ -42,10 +43,14 @@ void CSVObraSocial::guardarTodos(ObraSocial* obraSociales, int cantidad) {
         exit(0);
     }
 
+    ArchivoObraSocial archivoOS;
+    const int CANTIDAD = archivoOS.cantidadRegistros();
+    ObraSocial* obraSociales = archivoOS.leerTodos();
+
     // Encabezado
     out << "id,nombre,nombre_contacto,telefono,email,eliminado?\n";
 
-    for (int i = 0; i < cantidad; i++) {
+    for (int i = 0; i < CANTIDAD; i++) {
         out << obraSociales[i].getID() << ','
             << obraSociales[i].getNombre() << ','
             << obraSociales[i].getNombreContacto() << ','
@@ -55,6 +60,7 @@ void CSVObraSocial::guardarTodos(ObraSocial* obraSociales, int cantidad) {
     }
 
     out.close();
+    delete[] obraSociales;
 }
 
 ObraSocial CSVObraSocial::leerRegistro(int nroRegistro) {

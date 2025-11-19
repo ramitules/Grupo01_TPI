@@ -1,7 +1,8 @@
-#include "csv/CSVAnalisisProtocolo.h"
 #include <fstream>
 #include <sstream>
 #include "utils/rlutil.h"
+#include "csv/CSVAnalisisProtocolo.h"
+#include "archivo/ArchivoAnalisisProtocolo.h"
 
 CSVAnalisisProtocolo::CSVAnalisisProtocolo(const std::string& ruta) : ArchivoCSV(ruta) {}
 
@@ -31,7 +32,7 @@ void CSVAnalisisProtocolo::guardar(AnalisisProtocolo analisisProtocolo) {
     out.close();
 }
 
-void CSVAnalisisProtocolo::guardarTodos(AnalisisProtocolo* analisisProtocolos, int cantidad) {
+void CSVAnalisisProtocolo::guardarTodos() {
     std::ofstream out(_ruta, std::ios::trunc);
 
     if (!out.is_open()) {
@@ -40,10 +41,15 @@ void CSVAnalisisProtocolo::guardarTodos(AnalisisProtocolo* analisisProtocolos, i
         exit(0);
     }
 
+    ArchivoAnalisisProtocolo archivoAP;
+    
+    const int CANTIDAD = archivoAP.cantidadRegistros();
+    AnalisisProtocolo* analisisProtocolos = archivoAP.leerTodos();
+
     // Encabezado
     out << "id_protocolo,id_tipo_analisis,precio_solicitud,resultados,eliminado?\n";
 
-    for (int i = 0; i < cantidad; i++) {
+    for (int i = 0; i < CANTIDAD; i++) {
         out << analisisProtocolos[i].getIdProtocolo() << ','
             << analisisProtocolos[i].getIdTipoAnalisis() << ','
             << analisisProtocolos[i].getPrecioSolicitud() << ','
@@ -52,6 +58,7 @@ void CSVAnalisisProtocolo::guardarTodos(AnalisisProtocolo* analisisProtocolos, i
     }
 
     out.close();
+    delete[] analisisProtocolos;
 }
 
 AnalisisProtocolo CSVAnalisisProtocolo::leerRegistro(int nroRegistro) {

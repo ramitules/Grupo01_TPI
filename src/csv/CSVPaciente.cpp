@@ -1,7 +1,8 @@
-#include "csv/CSVPaciente.h"
 #include <fstream>
 #include <sstream>
 #include "utils/rlutil.h"
+#include "csv/CSVPaciente.h"
+#include "archivo/ArchivoPaciente.h"
 
 
 CSVPaciente::CSVPaciente(const std::string& ruta) : ArchivoCSV(ruta) {}
@@ -35,7 +36,7 @@ void CSVPaciente::guardar(Paciente paciente) {
     out.close();
 }
 
-void CSVPaciente::guardarTodos(Paciente* pacientes, int cantidad) {
+void CSVPaciente::guardarTodos() {
     std::ofstream out(_ruta, std::ios::trunc);
 
     if (!out.is_open()) {
@@ -44,10 +45,14 @@ void CSVPaciente::guardarTodos(Paciente* pacientes, int cantidad) {
         exit(0);
     }
 
+    ArchivoPaciente arPaciente;
+    Paciente* pacientes = arPaciente.leerTodos();
+    const int CANTIDAD = arPaciente.cantidadRegistros();
+
     // Encabezado
     out << "dni,nombre,apellido,telefono,email,fecha_nacimiento,codigo_obra_social,eliminado?\n";
 
-    for (int i = 0; i < cantidad; i++) {
+    for (int i = 0; i < CANTIDAD; i++) {
         out << pacientes[i].getDNI() << ','
             << pacientes[i].getNombre() << ','
             << pacientes[i].getApellido() << ','
@@ -59,6 +64,7 @@ void CSVPaciente::guardarTodos(Paciente* pacientes, int cantidad) {
     }
 
     out.close();
+    delete[] pacientes;
 }
 
 Paciente CSVPaciente::leerRegistro(int nroRegistro) {

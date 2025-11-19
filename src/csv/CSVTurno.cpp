@@ -1,7 +1,8 @@
-#include "csv/CSVTurno.h"
 #include <fstream>
 #include <sstream>
 #include "utils/rlutil.h"
+#include "csv/CSVTurno.h"
+#include "archivo/ArchivoTurno.h"
 
 
 CSVTurno::CSVTurno(const std::string& ruta) : ArchivoCSV(ruta) {}
@@ -33,7 +34,7 @@ void CSVTurno::guardar(Turno turno) {
     out.close();
 }
 
-void CSVTurno::guardarTodos(Turno* turnos, int cantidad) {
+void CSVTurno::guardarTodos() {
     std::ofstream out(_ruta, std::ios::trunc);
 
     if (!out.is_open()) {
@@ -42,10 +43,14 @@ void CSVTurno::guardarTodos(Turno* turnos, int cantidad) {
         exit(0);
     }
 
+    ArchivoTurno archivoTurno;
+    const int CANTIDAD = archivoTurno.cantidadRegistros();
+    Turno* turnos = archivoTurno.leerTodos();
+
     // Encabezado
     out << "id,dni_paciente,fecha_atencion,hora_atencion,importe,eliminado?\n";
 
-    for (int i = 0; i < cantidad; i++) {
+    for (int i = 0; i < CANTIDAD; i++) {
         out << turnos[i].getID() << ','
             << turnos[i].getDniPaciente() << ','
             << turnos[i].getFechaAtencion().to_str() << ','
@@ -55,6 +60,7 @@ void CSVTurno::guardarTodos(Turno* turnos, int cantidad) {
     }
 
     out.close();
+    delete[] turnos;
 }
 
 Turno CSVTurno::leerRegistro(int nroRegistro) {

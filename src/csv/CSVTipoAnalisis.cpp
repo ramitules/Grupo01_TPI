@@ -1,7 +1,8 @@
-#include "csv/CSVTipoAnalisis.h"
 #include <fstream>
 #include <sstream>
 #include "utils/rlutil.h"
+#include "csv/CSVTipoAnalisis.h"
+#include "archivo/ArchivoTipoAnalisis.h"
 
 
 CSVTipoAnalisis::CSVTipoAnalisis(const std::string& ruta) : ArchivoCSV(ruta) {}
@@ -32,7 +33,7 @@ void CSVTipoAnalisis::guardar(TipoAnalisis tipoAnalisis) {
     out.close();
 }
 
-void CSVTipoAnalisis::guardarTodos(TipoAnalisis* tiposAnalisis, int cantidad) {
+void CSVTipoAnalisis::guardarTodos() {
     std::ofstream out(_ruta, std::ios::trunc);
 
     if (!out.is_open()) {
@@ -40,6 +41,10 @@ void CSVTipoAnalisis::guardarTodos(TipoAnalisis* tiposAnalisis, int cantidad) {
         rlutil::getkey();
         exit(0);
     }
+
+    ArchivoTipoAnalisis arTipoAnalisis;
+    TipoAnalisis* tiposAnalisis = arTipoAnalisis.leerTodos();
+    const int cantidad = arTipoAnalisis.cantidadRegistros();
 
     // Encabezado
     out << "id,nombre_analisis,precio,tiempoResultado,eliminado?\n";
@@ -53,6 +58,7 @@ void CSVTipoAnalisis::guardarTodos(TipoAnalisis* tiposAnalisis, int cantidad) {
     }
 
     out.close();
+    delete[] tiposAnalisis;
 }
 
 TipoAnalisis CSVTipoAnalisis::leerRegistro(int nroRegistro) {

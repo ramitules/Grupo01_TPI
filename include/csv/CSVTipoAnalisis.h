@@ -12,7 +12,7 @@ class CSVTipoAnalisis: public ArchivoCSV{
         CSVTipoAnalisis(const std::string& ruta);
 
         void guardar(TipoAnalisis tipoAnalisis);
-        void guardarTodos(TipoAnalisis* tiposAnalisis, int cantidad);
+        void guardarTodos();
         
         TipoAnalisis leerRegistro(int nroRegistro);
         TipoAnalisis* leerTodo();

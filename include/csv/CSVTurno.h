@@ -12,7 +12,7 @@ class CSVTurno: public ArchivoCSV{
         CSVTurno(const std::string& ruta);
 
         void guardar(Turno turno);
-        void guardarTodos(Turno* turnos, int cantidad);
+        void guardarTodos();
         
         Turno leerRegistro(int nroRegistro);
         Turno* leerTodo();

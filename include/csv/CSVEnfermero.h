@@ -12,7 +12,7 @@ class CSVEnfermero: public ArchivoCSV{
         CSVEnfermero(const std::string& ruta);
 
         void guardar(Enfermero enfermero);
-        void guardarTodos(Enfermero* enfermeros, int cantidad);
+        void guardarTodos();
         
         Enfermero leerRegistro(int nroRegistro);
         Enfermero* leerTodo();

@@ -1,7 +1,8 @@
-#include "csv/CSVEnfermero.h"
 #include <fstream>
 #include <sstream>
 #include "utils/rlutil.h"
+#include "csv/CSVEnfermero.h"
+#include "archivo/ArchivoEnfermero.h"
 
 
 CSVEnfermero::CSVEnfermero(const std::string& ruta) : ArchivoCSV(ruta) {}
@@ -36,7 +37,7 @@ void CSVEnfermero::guardar(Enfermero enfermero) {
     out.close();
 }
 
-void CSVEnfermero::guardarTodos(Enfermero* enfermeros, int cantidad) {
+void CSVEnfermero::guardarTodos() {
     std::ofstream out(_ruta, std::ios::trunc);
 
     if (!out.is_open()) {
@@ -45,10 +46,14 @@ void CSVEnfermero::guardarTodos(Enfermero* enfermeros, int cantidad) {
         exit(0);
     }
 
+    ArchivoEnfermero arEnfermero;
+    const int CANTIDAD = arEnfermero.cantidadRegistros();
+    Enfermero* enfermeros = arEnfermero.leerTodos();
+
     // Encabezado
     out << "dni_enfermero,nombre,apellido,telefono,email,fecha_nacimiento,habilitado?,fecha_ingreso,eliminado?\n";
 
-    for (int i = 0; i < cantidad; i++) {
+    for (int i = 0; i < CANTIDAD; i++) {
         out << enfermeros[i].getDNI() << ','
             << enfermeros[i].getNombre() << ','
             << enfermeros[i].getApellido() << ','
@@ -61,6 +66,7 @@ void CSVEnfermero::guardarTodos(Enfermero* enfermeros, int cantidad) {
     }
 
     out.close();
+    delete[] enfermeros;
 }
 
 Enfermero CSVEnfermero::leerRegistro(int nroRegistro) {

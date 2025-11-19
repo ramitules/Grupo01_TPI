@@ -19,6 +19,22 @@ bool ArchivoProtocolo::guardar(Protocolo protocolo){
     return ok;
 }
 
+bool ArchivoProtocolo::guardarVarios(Protocolo *protocolos, int cantidad) {
+    FILE *p;
+
+    p = fopen(this->getRutaCompleta().c_str(), "ab");
+
+    if (p == nullptr){
+        return false;
+    }
+
+    bool ok = fwrite(protocolos, sizeof(Protocolo), cantidad, p);
+
+    fclose(p);
+
+    return ok;
+}
+
 bool ArchivoProtocolo::modificar(Protocolo protocolo, int pos){
     FILE *p;
 

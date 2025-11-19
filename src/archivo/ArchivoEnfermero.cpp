@@ -1,5 +1,4 @@
 #include "archivo/ArchivoEnfermero.h"
-#include <iostream>
 
 
 ArchivoEnfermero::ArchivoEnfermero(): Archivo("enfermero.dat", "base_de_datos") {};
@@ -14,6 +13,22 @@ bool ArchivoEnfermero::guardar(Enfermero enfermero){
     }
 
     bool ok = fwrite(&enfermero, sizeof(Enfermero), 1, p);
+
+    fclose(p);
+
+    return ok;
+}
+
+bool ArchivoEnfermero::guardarVarios(Enfermero *enfermeros, int cantidad) {
+    FILE *p;
+
+    p = fopen(this->getRutaCompleta().c_str(), "ab");
+
+    if (p == nullptr){
+        return false;
+    }
+
+    bool ok = fwrite(enfermeros, sizeof(Enfermero), cantidad, p);
 
     fclose(p);
 

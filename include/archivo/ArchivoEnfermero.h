@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include "archivo/Archivo.h"
 #include "Enfermero.h"
 
@@ -14,6 +13,7 @@ class ArchivoEnfermero: public Archivo {
         Enfermero* leerTodos();
 
         bool guardar(Enfermero enfermero);
+        bool guardarVarios(Enfermero* enfermeros, int cantidad);
         bool modificar(Enfermero enfermero, int pos);
         bool eliminar(int pos);
 

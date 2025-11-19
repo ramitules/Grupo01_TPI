@@ -1,5 +1,4 @@
 #include "archivo/ArchivoTipoAnalisis.h"
-#include <iostream>
 
 
 ArchivoTipoAnalisis::ArchivoTipoAnalisis(): Archivo("tipoAnalisis.dat", "base_de_datos") {};
@@ -14,6 +13,22 @@ bool ArchivoTipoAnalisis::guardar(TipoAnalisis tipoAnalisis){
     }
 
     bool ok = fwrite(&tipoAnalisis, sizeof(TipoAnalisis), 1, p);
+
+    fclose(p);
+
+    return ok;
+}
+
+bool ArchivoTipoAnalisis::guardarVarios(TipoAnalisis *tiposAnalisis, const int cantidad) {
+    FILE *p;
+
+    p = fopen(this->getRutaCompleta().c_str(), "ab");
+
+    if (p == nullptr){
+        return false;
+    }
+
+    bool ok = fwrite(tiposAnalisis, sizeof(TipoAnalisis), cantidad, p);
 
     fclose(p);
 

@@ -19,6 +19,22 @@ bool ArchivoAnalisisProtocolo::guardar(AnalisisProtocolo analisisProtocolo){
     return ok;
 }
 
+bool ArchivoAnalisisProtocolo::guardarVarios(AnalisisProtocolo *analisisProtocolos, int cantidad) {
+    FILE *p;
+
+    p = fopen(this->getRutaCompleta().c_str(), "ab");
+
+    if (p == nullptr){
+        return false;
+    }
+
+    bool ok = fwrite(analisisProtocolos, sizeof(AnalisisProtocolo), cantidad, p);
+
+    fclose(p);
+
+    return ok;
+}
+
 bool ArchivoAnalisisProtocolo::modificar(AnalisisProtocolo analisisProtocolo, int pos){
     FILE *p;
 

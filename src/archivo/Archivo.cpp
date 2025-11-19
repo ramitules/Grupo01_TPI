@@ -1,4 +1,5 @@
 #include "archivo/Archivo.h"
+#include <sys/stat.h>
 
 
 Archivo::Archivo(std::string nombreArchivo, std::string rutaArchivo): _nombreArchivo(nombreArchivo), _rutaArchivo(rutaArchivo) {};

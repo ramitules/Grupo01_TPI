@@ -1,5 +1,4 @@
 #include "archivo/ArchivoObraSocial.h"
-#include <iostream>
 
 
 ArchivoObraSocial::ArchivoObraSocial(): Archivo("obraSocial.dat", "base_de_datos") {};
@@ -14,6 +13,22 @@ bool ArchivoObraSocial::guardar(ObraSocial obraSocial){
     }
 
     bool ok = fwrite(&obraSocial, sizeof(ObraSocial), 1, p);
+
+    fclose(p);
+
+    return ok;
+}
+
+bool ArchivoObraSocial::guardarVarios(ObraSocial *obrasSociales, int cantidad) {
+    FILE *p;
+
+    p = fopen(this->getRutaCompleta().c_str(), "ab");
+
+    if (p == nullptr){
+        return false;
+    }
+
+    bool ok = fwrite(obrasSociales, sizeof(ObraSocial), cantidad, p);
 
     fclose(p);
 

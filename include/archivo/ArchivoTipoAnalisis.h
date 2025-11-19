@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include "archivo/Archivo.h"
 #include "TipoAnalisis.h"
 
@@ -14,6 +13,7 @@ class ArchivoTipoAnalisis: public Archivo {
         TipoAnalisis* leerTodos();
 
         bool guardar(TipoAnalisis tipoAnalisis);
+        bool guardarVarios(TipoAnalisis* tiposAnalisis, const int cantidad);
         bool modificar(TipoAnalisis tipoAnalisis, int pos);
         bool eliminar(int pos);
 

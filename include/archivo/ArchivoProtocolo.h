@@ -1,6 +1,6 @@
 #pragma once
 #include "archivo/Archivo.h"
-#include "../Protocolo.h"
+#include "Protocolo.h"
 
 
 class ArchivoProtocolo: public Archivo {
@@ -13,6 +13,7 @@ class ArchivoProtocolo: public Archivo {
         Protocolo* leerTodos();
 
         bool guardar(Protocolo protocolo);
+        bool guardarVarios(Protocolo* protocolos, int cantidad);
         bool modificar(Protocolo protocolo, int pos);
         bool eliminar(int pos);
 

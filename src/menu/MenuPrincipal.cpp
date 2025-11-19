@@ -5,14 +5,15 @@
 #include "menu/MenuTipoAnalisis.h"
 #include "menu/MenuPaciente.h"
 #include "menu/MenuObraSocial.h"
+#include "menu/MenuConfiguracion.h"
 #include "menu/listados/MenuListados.h"
 #include "menu/consultas/MenuConsultas.h"
 #include "menu/informes/MenuInformes.h"
 #include <iostream>
 
 
-MenuPrincipal::MenuPrincipal(): Menu(9, "Menu Principal"){
-    std::string opciones[9] = {
+MenuPrincipal::MenuPrincipal(): Menu(10, "Menu Principal"){
+    std::string opciones[10] = {
         "Turnos",
         "Pacientes",
         "Protocolos",
@@ -21,7 +22,8 @@ MenuPrincipal::MenuPrincipal(): Menu(9, "Menu Principal"){
         "Obras sociales",
         "Modulo LISTADOS",
         "Modulo CONSULTAS",
-        "Modulo INFORMES"
+        "Modulo INFORMES",
+        "Configuracion"
     };
 
     setVectorOpciones(opciones);
@@ -58,6 +60,9 @@ void MenuPrincipal::ejecutarOpcion(){
         menu.buclePrincipal();
     }  else if (_opcionSeleccionada == 9) {
         MenuInformes menu;
+        menu.buclePrincipal();
+    } else if (_opcionSeleccionada == 10) {
+        MenuConfiguracion menu;
         menu.buclePrincipal();
     } else {
         std::cout << "Intente nuevamente\n";

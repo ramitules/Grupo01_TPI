@@ -54,6 +54,7 @@ set(SOURCES
     src/menu/MenuProtocolo.cpp
     src/menu/MenuTipoAnalisis.cpp
     src/menu/MenuTurno.cpp
+    src/menu/MenuConfiguracion.cpp
     src/menu/listados/MenuListados.cpp
     src/menu/listados/ListadosAnalisis.cpp
     src/menu/listados/ListadosObrasSociales.cpp

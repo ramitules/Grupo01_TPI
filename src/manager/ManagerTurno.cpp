@@ -116,8 +116,10 @@ void ManagerTurno::mostrarTodos(){
         }
 
         mostrar(auxTurno);
-        std::cout << separadorParcial();
+        separadorParcial();
     }
+
+    separador();
 }
 
 void ManagerTurno::ordenadosFecha(){
@@ -154,10 +156,10 @@ void ManagerTurno::ordenadosFecha(){
         }
         rlutil::getkey();
         mostrar(turnos[i]);
-        std::cout << separadorParcial();
+        separadorParcial();
     }
 
-    std::cout << separador();
+    separador();
 
     delete[] turnos;
 
@@ -195,12 +197,13 @@ void ManagerTurno::agrupadosPaciente(){
 
             if (turnos[j].getDniPaciente() == auxPaciente.getDNI()) {
                 mostrar(turnos[j]);
-                std::cout << separadorParcial();
+                separadorParcial();
                 indicesVisitados[j] = true;
             }
         }
 
-        std::cout << separador() << "\n\n";
+        separador();
+        std::cout << "\n\n";
     }
 
     delete[] turnos;
@@ -375,7 +378,7 @@ void ManagerTurno::busquedaPaciente(){
         for (int i = 0; i < CANTIDAD; i ++) {
             if (indices[i]) {
                 mPaciente.mostrar(turnos[i].getPaciente());
-                std::cout << separadorParcial();
+                separadorParcial();
             }
         }
     } else {
@@ -573,6 +576,9 @@ bool ManagerTurno::eliminar(Turno turno) {
         rlutil::getkey();
         return false;
     }
+
+    std::cout << "Operacion cancelada.\n";
+    return false;
 }
 
 ArchivoTurno ManagerTurno::getRepositorio(){

@@ -29,7 +29,7 @@ bool ManagerPaciente::cargar(){
     mObraSocial.mostrarTodos();
 
     while (true) {
-        std::cout << separadorParcial();
+        separadorParcial();
         std::cout << "Ingrese el codigo de la obra social del paciente (0 para cancelar): ";
         std::cin >> codigoObraSocial;
 
@@ -80,7 +80,7 @@ void ManagerPaciente::mostrarTodos(){
         }
 
         mostrar(aux);
-        std::cout << separadorParcial();
+        separadorParcial();
     }
 }
 
@@ -115,7 +115,7 @@ void ManagerPaciente::ordenadosApellido() {
         }
 
         mostrar(pacientes[i]);
-        std::cout << separadorParcial();
+        separadorParcial();
     }
 }
 
@@ -150,7 +150,7 @@ void ManagerPaciente::ordenadosDNI() {
         }
 
         mostrar(pacientes[i]);
-        std::cout << separadorParcial();
+        separadorParcial();
     }
 }
 
@@ -185,7 +185,7 @@ void ManagerPaciente::ordenadosEdad() {
         }
 
         mostrar(pacientes[i]);
-        std::cout << separadorParcial();
+        separadorParcial();
     }
 }
 
@@ -220,7 +220,7 @@ void ManagerPaciente::ordenadosObraSocial() {
         }
 
         mostrar(pacientes[i]);
-        std::cout << separadorParcial();
+        separadorParcial();
     }
 }
 

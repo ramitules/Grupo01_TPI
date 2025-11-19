@@ -35,7 +35,7 @@ bool ManagerAnalisisProtocolo::cargar(int idProtocolo) {
 
         std::cout << "Seguro que desea agregar el agregar el analisis al Protocolo? s/n: ";
         std::cin >> opc;
-
+        /*
         if (opc == 's') {
             AnalisisProtocolo analisisProtocolo(idProtocolo,tipoAnalisis.getID(),tipoAnalisis.getPrecio());
 
@@ -46,6 +46,7 @@ bool ManagerAnalisisProtocolo::cargar(int idProtocolo) {
             }
         }
         return true;
+        */
     }
 }
 

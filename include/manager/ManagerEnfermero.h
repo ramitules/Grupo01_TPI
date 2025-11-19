@@ -1,3 +1,4 @@
+
 #pragma once
 #include "archivo/ArchivoEnfermero.h"
 
@@ -9,6 +10,8 @@ class ManagerEnfermero{
     public:
         ManagerEnfermero();
 
+        bool comprobar(int dniEnfermero = -1);
+        Enfermero seleccionar(int dniEnfermero);
         bool cargar();
         void mostrar(Enfermero enfermero);
         void mostrarTodos();

@@ -5,6 +5,43 @@
 
 ManagerEnfermero::ManagerEnfermero(){};
 
+//VALIDACION: Comprueba que exista el dni
+
+bool ManagerEnfermero::comprobar(int dniEnfermero) {
+    Enfermero regEnfermero;
+    int cantidadTipoAnalisis = _repo.cantidadRegistros();
+
+    if (cantidadTipoAnalisis <= 0) {
+        std::cout << "\nRegistro vacio.\n\n" << std::endl;
+        return false;
+    }
+
+    if (dniEnfermero == -1) { // valor por defecto: no se ingresó parametro
+        return true;
+    }
+
+    regEnfermero = _repo.leer(dniEnfermero-1);
+
+    if (dniEnfermero==regEnfermero.getDNI() && regEnfermero.getEliminado()!=true) {
+        //std::cout << "Tipo de Analisis encontrado";
+        return true;
+    }
+    else {
+        std::cout << "\nATENCION: No existe el DNI ingresado.\n" << std::endl;
+        return false;
+    }
+}
+
+//RETORNA EL OBJETO CON EL DNI INGRESADO
+
+Enfermero ManagerEnfermero::seleccionar(int dniEnfermero) {
+    Enfermero regEnfermero;
+
+    int posicion = _repo.getPos(dniEnfermero);
+    regEnfermero = _repo.leer(posicion);
+    return regEnfermero;
+}
+
 bool ManagerEnfermero::cargar(){
     int habilitado = 1;
 
@@ -43,9 +80,23 @@ void ManagerEnfermero::mostrar(Enfermero enfermero){
 }
 
 void ManagerEnfermero::mostrarTodos(){
+    ManagerPersona mPersona;
+    Enfermero regEnfermero;
+    int cantidadEnfermeros = _repo.cantidadRegistros();
+
+    std::cout << "\nOpc\tNombre\t\tDNI\t\tHabilitado\n";
+
     for(int i=0; i<_repo.cantidadRegistros(); i++){
-        this->mostrar(_repo.leer(i));
+        regEnfermero = _repo.leer(i);
+
+        if (regEnfermero.getEliminado()!=true) {
+            std::cout << i << "\t";
+            std::cout << regEnfermero.getNombre() << " " << regEnfermero.getApellido() << "\t";
+            std::cout << regEnfermero.getDNI() << "\t";
+            std::cout << regEnfermero.getHabilitado() << "\n";
+        }
     }
+    std::cout << std::endl;
 }
 
 bool ManagerEnfermero::eliminar(Enfermero enfermero){

@@ -18,6 +18,17 @@ Fecha::Fecha(int dia, int mes, int anio){
     setAnio(anio);
 };
 
+Fecha::Fecha(const std::string &fechaStr) {
+    // Asumimos que el formato es "DD/MM/AAAA"
+    int dia = std::stoi(fechaStr.substr(0, 2));
+    int mes = std::stoi(fechaStr.substr(3, 2));
+    int anio = std::stoi(fechaStr.substr(6, 4));
+
+    setDia(dia);
+    setMes(mes);
+    setAnio(anio);
+}
+
 //GETTERS
 int Fecha::getDia(){
     return _dia;
@@ -29,6 +40,13 @@ int Fecha::getMes(){
 
 int Fecha::getAnio(){
     return _anio;
+}
+
+std::string Fecha::to_str(){
+    std::string diaStr = (getDia() < 10) ? "0" + std::to_string(getDia()) : std::to_string(getDia());
+    std::string mesStr = (getMes() < 10) ? "0" + std::to_string(getMes()) : std::to_string(getMes());
+    std::string anioStr = std::to_string(getAnio());
+    return diaStr + "/" + mesStr + "/" + anioStr;
 }
 
 //SETTERS

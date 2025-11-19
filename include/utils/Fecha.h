@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 
 class Fecha{
@@ -10,11 +11,16 @@ class Fecha{
     public:
         Fecha();
         Fecha(int dia, int mes, int anio);
+        // Construye una Fecha a partir de un string con formato "DD/MM/AAAA"
+        Fecha(const std::string &fechaStr);
 
         //GETTERS
         int getDia();
         int getMes();
         int getAnio();
+
+        // String con formato "DD/MM/AAAA"
+        std::string to_str();
 
         //SETTERS
         void setDia(int dia);

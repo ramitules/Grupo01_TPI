@@ -17,6 +17,16 @@ Hora::Hora(int hora, int minuto, int segundo) {
     setSegundo(segundo);
 };
 
+Hora::Hora(const std::string &horaStr) {
+    // Asumir que el formato es siempre "HH:MM:SS"
+    int hora = std::stoi(horaStr.substr(0, 2));
+    int minuto = std::stoi(horaStr.substr(3, 2));
+    int segundo = std::stoi(horaStr.substr(6, 2));
+
+    setHora(hora);
+    setMinuto(minuto);
+    setSegundo(segundo);
+}
 
 //SETTERS
 void Hora::setHora(int hora){
@@ -42,6 +52,13 @@ int Hora::getMinuto(){
 
 int Hora::getSegundo(){
     return _segundo;
+}
+
+std::string Hora::to_str(){
+    std::string hh = (_hora < 10 ? "0" : "") + std::to_string(_hora);
+    std::string mm = (_minuto < 10 ? "0" : "") + std::to_string(_minuto);
+    std::string ss = (_segundo < 10 ? "0" : "") + std::to_string(_segundo);
+    return hh + ":" + mm + ":" + ss;
 }
 
 bool Hora::operator==(const Hora &otro){

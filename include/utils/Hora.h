@@ -10,6 +10,8 @@ class Hora{
     public:
         Hora();
         Hora(int hora, int minuto, int segundo);
+        // Construye una Hora a partir de un string con formato "HH:MM:SS"
+        Hora(const std::string &horaStr);
 
         //SETTERS
         void setHora(int hora);
@@ -20,6 +22,9 @@ class Hora{
         int getHora();
         int getMinuto();
         int getSegundo();
+
+        // String con formato "HH:MM:SS"
+        std::string to_str();
 
         // Sobrecarga de operadores
         bool operator==(const Hora &otro);

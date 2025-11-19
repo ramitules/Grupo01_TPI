@@ -154,7 +154,7 @@ void restaurarBackup(){
     }
     
     std::cout << "Restaurar copia de seguridad\n";
-    std::cout << separador();
+    separador();
     std::cout << "Se ha encontrado una copia de seguridad con los siguientes datos\n\n";
     std::cout << "Fecha de creacion: " << std::put_time(tm_local, "%d-%m-%Y") << '\n';
     std::cout << "Peso: " << tamTotal << peso << "b\n\n";
@@ -180,70 +180,152 @@ void restaurarBackup(){
     if (opc == 'n') {
         return;
     }
-    std::cout << separador();
+    separador();
     std::cout << "Restaurando copia de seguridad desde archivos CSV\n";
     
     std::cout << "Turnos... ";
-    Turno* turnos = csvTurno.leerTodo();
-    ArchivoTurno arTurnos;
-    arTurnos.guardarVarios(turnos, csvTurno.cantidadLineasDatos());
-    delete[] turnos;
-    rlutil::msleep(500);  // Simula tiempo de procesamiento
-    std::cout << csvTurno.cantidadLineasDatos() << " turnos restaurados.\n";
+    if (resTurno == 0) {
+        Turno* turnos = csvTurno.leerTodo();
+        ArchivoTurno arTurnos;
+        arTurnos.guardarVarios(turnos, csvTurno.cantidadLineasDatos());
+        delete[] turnos;
+        rlutil::msleep(500);  // Simula tiempo de procesamiento
+        std::cout << csvTurno.cantidadLineasDatos() << " turnos restaurados.\n";
+    } else {
+        std::cout << "0 turnos restaurados (copia de seguridad no encontrada).\n";
+    }
     
-    std::cout << "Pacientes... ";
-    Paciente* pacientes = csvPacientes.leerTodo();
-    ArchivoPaciente arPacientes;
-    arPacientes.guardarVarios(pacientes, csvPacientes.cantidadLineasDatos());
-    delete[] pacientes;
-    rlutil::msleep(500);
-    std::cout << csvPacientes.cantidadLineasDatos() << " pacientes restaurados.\n";
+    if (resPacientes == 0) {
+        std::cout << "Pacientes... ";
+        Paciente* pacientes = csvPacientes.leerTodo();
+        ArchivoPaciente arPacientes;
+        arPacientes.guardarVarios(pacientes, csvPacientes.cantidadLineasDatos());
+        delete[] pacientes;
+        rlutil::msleep(500);
+        std::cout << csvPacientes.cantidadLineasDatos() << " pacientes restaurados.\n";
+    } else {
+        std::cout << "0 pacientes restaurados (copia de seguridad no encontrada).\n";
+    }
 
     std::cout << "Protocolos... ";
-    Protocolo* protocolos = csvProtocolo.leerTodo();
-    ArchivoProtocolo arProtocolos;
-    arProtocolos.guardarVarios(protocolos, csvProtocolo.cantidadLineasDatos());
-    delete[] protocolos;
-    rlutil::msleep(500);
-    std::cout << csvProtocolo.cantidadLineasDatos() << " protocolos restaurados.\n";
+    if (resProtocolos == 0) {
+        Protocolo* protocolos = csvProtocolo.leerTodo();
+        ArchivoProtocolo arProtocolos;
+        arProtocolos.guardarVarios(protocolos, csvProtocolo.cantidadLineasDatos());
+        delete[] protocolos;
+        rlutil::msleep(500);
+        std::cout << csvProtocolo.cantidadLineasDatos() << " protocolos restaurados.\n";
+    } else {
+        std::cout << "0 protocolos restaurados (copia de seguridad no encontrada).\n";
+    }
 
     std::cout << "Tipos de analisis... ";
-    TipoAnalisis* tiposAnalisis = csvTipoAnalisis.leerTodo();
-    ArchivoTipoAnalisis arTiposAnalisis;
-    arTiposAnalisis.guardarVarios(tiposAnalisis, csvTipoAnalisis.cantidadLineasDatos());
-    delete[] tiposAnalisis;
-    rlutil::msleep(500);
-    std::cout << csvTipoAnalisis.cantidadLineasDatos() << " tipos de analisis restaurados.\n";
+    if (resTiposAnalisis == 0) {
+        TipoAnalisis* tiposAnalisis = csvTipoAnalisis.leerTodo();
+        ArchivoTipoAnalisis arTiposAnalisis;
+        arTiposAnalisis.guardarVarios(tiposAnalisis, csvTipoAnalisis.cantidadLineasDatos());
+        delete[] tiposAnalisis;
+        rlutil::msleep(500);
+        std::cout << csvTipoAnalisis.cantidadLineasDatos() << " tipos de analisis restaurados.\n";
+    } else {
+        std::cout << "0 tipos de analisis restaurados (copia de seguridad no encontrada).\n";
+    }
 
     std::cout << "Obras sociales... ";
-    ObraSocial* obrasSociales = csvObraSocial.leerTodo();
-    ArchivoObraSocial arObrasSociales;
-    arObrasSociales.guardarVarios(obrasSociales, csvObraSocial.cantidadLineasDatos());
-    delete[] obrasSociales;
-    rlutil::msleep(500);
-    std::cout << csvObraSocial.cantidadLineasDatos() << " obras sociales restauradas.\n";
+    if (resObraSocial == 0) {
+        ObraSocial* obrasSociales = csvObraSocial.leerTodo();
+        ArchivoObraSocial arObrasSociales;
+        arObrasSociales.guardarVarios(obrasSociales, csvObraSocial.cantidadLineasDatos());
+        delete[] obrasSociales;
+        rlutil::msleep(500);
+        std::cout << csvObraSocial.cantidadLineasDatos() << " obras sociales restauradas.\n";
+    } else {
+        std::cout << "0 obras sociales restauradas (copia de seguridad no encontrada).\n";
+    }
 
     std::cout << "Enfermeros... ";
-    Enfermero* enfermeros = csvEnfermero.leerTodo();
-    ArchivoEnfermero arEnfermeros;
-    arEnfermeros.guardarVarios(enfermeros, csvEnfermero.cantidadLineasDatos());
-    delete[] enfermeros;
-    rlutil::msleep(500);
-    std::cout << csvEnfermero.cantidadLineasDatos() << " enfermeros restaurados.\n";
+    if (resEnfermeros == 0) {
+        Enfermero* enfermeros = csvEnfermero.leerTodo();
+        ArchivoEnfermero arEnfermeros;
+        arEnfermeros.guardarVarios(enfermeros, csvEnfermero.cantidadLineasDatos());
+        delete[] enfermeros;
+        rlutil::msleep(500);
+        std::cout << csvEnfermero.cantidadLineasDatos() << " enfermeros restaurados.\n";
+    } else {
+        std::cout << "0 enfermeros restaurados (copia de seguridad no encontrada).\n";
+    }
     
     std::cout << "Analisis por protocolos... ";
-    AnalisisProtocolo* analisisProtocolos = csvAnalisisProtocolo.leerTodo();
-    ArchivoAnalisisProtocolo arAnalisisProtocolos;
-    arAnalisisProtocolos.guardarVarios(analisisProtocolos, csvAnalisisProtocolo.cantidadLineasDatos());
-    delete[] analisisProtocolos;
-    rlutil::msleep(500);
-    std::cout << csvAnalisisProtocolo.cantidadLineasDatos() << " analisis por protocolos restaurados.\n";
-
+    if (resAP == 0) {
+        AnalisisProtocolo* analisisProtocolos = csvAnalisisProtocolo.leerTodo();
+        ArchivoAnalisisProtocolo arAnalisisProtocolos;
+        arAnalisisProtocolos.guardarVarios(analisisProtocolos, csvAnalisisProtocolo.cantidadLineasDatos());
+        delete[] analisisProtocolos;
+        rlutil::msleep(500);
+        std::cout << csvAnalisisProtocolo.cantidadLineasDatos() << " analisis por protocolos restaurados.\n";
+    } else {
+        std::cout << "0 analisis por protocolos restaurados (copia de seguridad no encontrada).\n";
+    }
+    
     std::cout << "Restauracion completa. Presione ENTER para continuar.\n";
     rlutil::getkey();
 }
 
 
 void paletaColores(){
-    std::cout << "Seleccione una variante de colores";
+    int opc = 0;
+    const int NEGRO = rlutil::BLACK;
+    const int BLANCO = rlutil::WHITE;
+    const int GRIS = rlutil::GREY;
+    const int VERDE = rlutil::GREEN;
+
+    std::cout << "Seleccione una variante de colores\n";
+    separadorParcial();
+    std::cout << "1. Fondo negro y letras blancas\n";
+    std::cout << "2. Fondo blanco y letras negras\n";
+    std::cout << "3. Fondo gris y letras blancas\n";
+    std::cout << "4. Fondo gris y letras negras\n";
+    std::cout << "5. Fondo negro y letras verdes\n\n";
+    std::cout << "6. Volver al menu\n";
+    separadorParcial();
+
+    while (true) {
+        std::cout << "Seleccione una opcion: ";
+        std::cin >> opc;
+
+        if (opc == 1) {
+            rlutil::setBackgroundColor(NEGRO);
+            rlutil::setColor(BLANCO);
+            break;
+        }
+        if (opc == 2) {
+            rlutil::setBackgroundColor(BLANCO);
+            rlutil::setColor(NEGRO);
+            break;
+        }
+        if (opc == 3) {
+            rlutil::setBackgroundColor(GRIS);
+            rlutil::setColor(BLANCO);
+            break;
+        }
+        if (opc == 4) {
+            rlutil::setBackgroundColor(GRIS);
+            rlutil::setColor(NEGRO);
+            break;
+        }
+        if (opc == 5) {
+            rlutil::setBackgroundColor(NEGRO);
+            rlutil::setColor(VERDE);
+            break;
+        }
+        if (opc == 6) {
+            return;
+        }
+
+        std::cout << "Intente nuevamente\n";
+    }
+
+    rlutil::cls();
+    std::cout << "Colores cambiados correctamente. Presione ENTER para volver.\n";
+    rlutil::getkey();
 }

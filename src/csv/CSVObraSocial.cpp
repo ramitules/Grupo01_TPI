@@ -45,6 +45,11 @@ void CSVObraSocial::guardarTodos() {
 
     ArchivoObraSocial archivoOS;
     const int CANTIDAD = archivoOS.cantidadRegistros();
+    if (CANTIDAD == 0) {
+        out.close();
+        return;
+    }
+    
     ObraSocial* obraSociales = archivoOS.leerTodos();
 
     // Encabezado

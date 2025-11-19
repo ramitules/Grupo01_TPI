@@ -46,9 +46,14 @@ void CSVPaciente::guardarTodos() {
     }
 
     ArchivoPaciente arPaciente;
-    Paciente* pacientes = arPaciente.leerTodos();
+    
     const int CANTIDAD = arPaciente.cantidadRegistros();
-
+    if (CANTIDAD == 0) {
+        out.close();
+        return;
+    }
+    
+    Paciente* pacientes = arPaciente.leerTodos();
     // Encabezado
     out << "dni,nombre,apellido,telefono,email,fecha_nacimiento,codigo_obra_social,eliminado?\n";
 

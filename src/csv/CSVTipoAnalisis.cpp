@@ -43,8 +43,14 @@ void CSVTipoAnalisis::guardarTodos() {
     }
 
     ArchivoTipoAnalisis arTipoAnalisis;
-    TipoAnalisis* tiposAnalisis = arTipoAnalisis.leerTodos();
     const int cantidad = arTipoAnalisis.cantidadRegistros();
+    if (cantidad == 0) {
+        out.close();
+        return;
+    }
+
+    TipoAnalisis* tiposAnalisis = arTipoAnalisis.leerTodos();
+    
 
     // Encabezado
     out << "id,nombre_analisis,precio,tiempoResultado,eliminado?\n";

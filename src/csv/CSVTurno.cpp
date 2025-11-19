@@ -45,6 +45,11 @@ void CSVTurno::guardarTodos() {
 
     ArchivoTurno archivoTurno;
     const int CANTIDAD = archivoTurno.cantidadRegistros();
+    if (CANTIDAD == 0) {
+        out.close();
+        return;
+    }
+    
     Turno* turnos = archivoTurno.leerTodos();
 
     // Encabezado

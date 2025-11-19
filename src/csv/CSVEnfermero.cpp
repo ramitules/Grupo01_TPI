@@ -48,6 +48,11 @@ void CSVEnfermero::guardarTodos() {
 
     ArchivoEnfermero arEnfermero;
     const int CANTIDAD = arEnfermero.cantidadRegistros();
+    if (CANTIDAD == 0) {
+        out.close();
+        return;
+    }
+    
     Enfermero* enfermeros = arEnfermero.leerTodos();
 
     // Encabezado

@@ -46,6 +46,11 @@ void CSVProtocolo::guardarTodos() {
 
     ArchivoProtocolo arProtocolo;
     const int CANTIDAD = arProtocolo.cantidadRegistros();
+    if (CANTIDAD == 0) {
+        out.close();
+        return;
+    }
+    
     Protocolo* protocolos = arProtocolo.leerTodos();
 
     // Encabezado

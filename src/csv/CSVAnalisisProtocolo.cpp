@@ -44,6 +44,11 @@ void CSVAnalisisProtocolo::guardarTodos() {
     ArchivoAnalisisProtocolo archivoAP;
     
     const int CANTIDAD = archivoAP.cantidadRegistros();
+    if (CANTIDAD == 0) {
+        out.close();
+        return;
+    }
+    
     AnalisisProtocolo* analisisProtocolos = archivoAP.leerTodos();
 
     // Encabezado

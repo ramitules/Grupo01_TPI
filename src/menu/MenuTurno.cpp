@@ -51,6 +51,23 @@ void MenuTurno::ejecutarOpcion(){
         // Mostrar todos los turnos por pantalla
         // Esto sirve para modificacion y eliminacion por igual
         mTurno.mostrarTodos();
+
+        while (true) {
+            std::cout << "Ingrese el ID del turno, o 0 para cancelar: ";
+            std::cin >> opcionSecundaria;
+
+            if (opcionSecundaria == 0) {
+                return;
+            }
+
+            posTurno = (mTurno.getRepositorio().getPos(opcionSecundaria));
+
+            if (posTurno != -1) {
+                break;
+            }
+
+            std::cout << "El ID ingresado no existe. Intente nuevamente\n";
+        }
     } else if (opcionSecundaria > 0){
         // Con un ID especifico, no se permite intentar nuevamente (sin ciclo while)
         posTurno = (mTurno.getRepositorio().getPos(opcionSecundaria));
@@ -61,30 +78,15 @@ void MenuTurno::ejecutarOpcion(){
         }
     }
 
-    while (true) {
-        std::cout << "Ingrese el ID del turno, o 0 para cancelar: ";
-        std::cin >> opcionSecundaria;
-
-        if (opcionSecundaria == 0) {
-            return;
-        }
-
-        posTurno = (mTurno.getRepositorio().getPos(opcionSecundaria));
-
-        if (posTurno != -1) {
-            break;
-        }
-
-        std::cout << "El ID ingresado no existe. Intente nuevamente\n";
-    }
+    Turno turno = mTurno.getRepositorio().leer(posTurno);
 
     if (_opcionSeleccionada == 2) {
-        mTurno.actualizar(mTurno.getRepositorio().leer(posTurno));
+        mTurno.actualizar(turno);
         return;
     }
 
     if (opcionSecundaria == 3) {
-        mTurno.eliminar(mTurno.getRepositorio().leer(posTurno));
+        mTurno.eliminar(turno);
         return;
     }
 }

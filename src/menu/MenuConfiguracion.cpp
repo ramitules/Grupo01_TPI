@@ -1,9 +1,10 @@
-#include "menu/MenuAnalisisProtocolo.h"
+#include "menu/MenuConfiguracion.h"
+#include "utils/funcBackend.h"
 #include <iostream>
 
 
-MenuAnalisisProtocolo::MenuAnalisisProtocolo(): Menu(4, "Menu Configuracion"){
-    std::string opciones[4] = {
+MenuConfiguracion::MenuConfiguracion(): Menu(3, "Menu Configuracion"){
+    std::string opciones[3] = {
         "Realizar copia de seguridad",
         "Restaurar copia de seguridad",
         "Paleta de colores"
@@ -13,13 +14,16 @@ MenuAnalisisProtocolo::MenuAnalisisProtocolo(): Menu(4, "Menu Configuracion"){
     setSalir(false);
 }
 
-void MenuAnalisisProtocolo::ejecutarOpcion(){
-    switch (_opcionSeleccionada) {
-        case 0:
-            return;
+void MenuConfiguracion::ejecutarOpcion(){
+    if (_opcionSeleccionada == 1) {
+        return backup();
+    } 
+    
+    if (_opcionSeleccionada == 2) {
+        return restaurarBackup();
+    }
 
-        default:
-            std::cout << "Intente nuevamente\n";
-            break;
+    if (_opcionSeleccionada == 3) {
+        return paletaColores();
     }
 }

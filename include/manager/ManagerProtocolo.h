@@ -15,8 +15,8 @@ class ManagerProtocolo{
         bool asignar(Protocolo protocolo);
         void mostrar(Protocolo protocolo);
         bool mostrarTodos();
-        bool comprobarProtocolo(int idProtocolo);
-        Protocolo seleccionarProtocolo(int idProtocolo);
+        bool comprobar(int idProtocolo = -1);
+        Protocolo seleccionar(int idProtocolo);
         bool eliminar(Protocolo protocolo);
         bool actualizar(Protocolo protocolo);
 };

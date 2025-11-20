@@ -188,7 +188,8 @@ void ManagerPaciente::mostrarVarios(Paciente* pacientes, const int cantidad){
 
 void ManagerPaciente::mostrarTodos(){
     const int CANTIDAD = _repo.cantidadRegistros();
-    Paciente* todos = new Paciente[CANTIDAD];
+    Paciente* todos = _repo.leerTodos();
+    
     mostrarVarios(todos, CANTIDAD);
     delete[] todos;
 }

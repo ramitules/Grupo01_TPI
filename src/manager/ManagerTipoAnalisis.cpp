@@ -26,7 +26,7 @@ bool ManagerTipoAnalisis::comprobar(int idTipoAnalisis) {
         return true;
     }
     else {
-        std::cout << "\nATENCION: ID no existente.\n" << std::endl;
+        std::cout << "\nATENCION: ID Tipo Analisis no existente.\n" << std::endl;
         return false;
     }
 }
@@ -157,7 +157,7 @@ bool ManagerTipoAnalisis::actualizar(TipoAnalisis tipoAnalisis){
     }
 
     if (_repo.modificar(tipoAnalisis, tipoAnalisis.getID()-1)) {
-        std::cout << "\nEl tipo de analisis se ha modificado correctamente.\n\n" << std::endl;
+        std::cout << "\nEl tipo de analisis se ha modificado correctamente.\n\n";
         return true;
     }
     return true;

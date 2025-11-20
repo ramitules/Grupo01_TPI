@@ -30,8 +30,14 @@ bool ManagerTurno::cargar(){
 
     // Carga de paciente. Comienza con DNI
     while (true) {
-        std::cout << "Ingrese el DNI del paciente: ";
+        std::cout << "Ingrese el DNI del paciente (0 - listar todos): ";
         std::cin >> dniPaciente;
+
+        if (dniPaciente == 0) {
+            mPaciente.mostrarTodos();
+            std::cout << "Ingrese el DNI del paciente: ";
+            std::cin >> dniPaciente;
+        }
 
         if (dniPaciente > 10000000 && dniPaciente < 99999999) {
             break;
@@ -75,18 +81,27 @@ bool ManagerTurno::cargar(){
 
     if (opc == 's') {
         ManagerProtocolo mProtocolo;
-        mProtocolo.iniciar(proximoID);
+        int id_proto = mProtocolo.iniciar(proximoID);
+        mProtocolo.cargarAnalisis(mProtocolo.getRepositorio().leer(id_proto));
         // Obtener importe sumando todos los analisis por protocolos
         Protocolo auxProto;
+        AnalisisProtocolo auxAP;
         ManagerAnalisisProtocolo mAP;
 
         bool* indices = new bool[mProtocolo.getRepositorio().cantidadRegistros()] {false};
+
         for (int i = 0; i < mProtocolo.getRepositorio().cantidadRegistros(); i ++) {
+
             auxProto = mProtocolo.getRepositorio().leer(i);
+
             if (auxProto.getIdTurno() == proximoID) {
+
                 for (int j = 0; j < mAP.getRepositorio().cantidadRegistros(); j ++) {
-                    if (mAP.getRepositorio().leer(j).getIdProtocolo() == auxProto.getId()){
-                        importe += mAP.getRepositorio().leer(j).getPrecioSolicitud();
+
+                    auxAP = mAP.getRepositorio().leer(j);
+
+                    if (auxAP.getIdProtocolo() == auxProto.getId()){
+                        importe += auxAP.getTipoAnalisis().getPrecio();
                     }
                 }
             }
@@ -558,7 +573,7 @@ void ManagerTurno::actualizarImportes(){
             if (auxProto.getIdTurno() == turnos[i].getID()) {
                 for (int k = 0; k < mAP.getRepositorio().cantidadRegistros(); k ++) {
                     if (mAP.getRepositorio().leer(k).getIdProtocolo() == auxProto.getId()){
-                        nuevoImporte += mAP.getRepositorio().leer(k).getPrecioSolicitud();
+                        nuevoImporte += mAP.getRepositorio().leer(k).getTipoAnalisis().getPrecio();
                     }
                 }
             }
@@ -618,22 +633,30 @@ bool ManagerTurno::actualizar(Turno turno){
         turno.setHoraAtencion(mHora.cargar());
     }
 
-    std::cout << "El importe sera el mismo? s/n: ";
+    std::cout << "El paciente se atendera ahora? s/n: ";
     std::cin >> opc;
-    
-    if (opc != 's') {
-        std::cin.ignore(2, '\n');
-        while (true) {
-            std::cout << "Ingrese un importe: $";
-            std::cin >> importe;
 
-            if (importe >= 0) {
-                turno.setImporte(importe);
-                break;
+    if (opc == 's') {
+        ManagerProtocolo mProtocolo;
+        int id_proto = mProtocolo.buscarTurno(turno.getID());
+        mProtocolo.cargarAnalisis(mProtocolo.getRepositorio().leer(id_proto));
+        // Obtener importe sumando todos los analisis por protocolos
+        Protocolo auxProto;
+        ManagerAnalisisProtocolo mAP;
+
+        bool* indices = new bool[mProtocolo.getRepositorio().cantidadRegistros()] {false};
+        for (int i = 0; i < mProtocolo.getRepositorio().cantidadRegistros(); i ++) {
+            auxProto = mProtocolo.getRepositorio().leer(i);
+            if (auxProto.getIdTurno() == turno.getID()) {
+                for (int j = 0; j < mAP.getRepositorio().cantidadRegistros(); j ++) {
+                    if (mAP.getRepositorio().leer(j).getIdProtocolo() == auxProto.getId()){
+                        importe += mAP.getRepositorio().leer(j).getTipoAnalisis().getPrecio();
+                    }
+                }
             }
-
-            std::cout << "No se permiten importes negativos. Intente nuevamente.\n";
         }
+        delete[] indices;
+        
     }
 
     if (_repo.modificar(turno, _repo.getPos(turno.getID()))) {

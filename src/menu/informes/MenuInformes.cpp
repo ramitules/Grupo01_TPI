@@ -1,5 +1,66 @@
 #include "menu/informes/MenuInformes.h"
+#include "manager/ManagerTurno.h"
+#include "manager/ManagerProtocolo.h"
+#include "manager/ManagerAnalisisProtocolo.h"
+#include "archivo/ArchivoTipoAnalisis.h"
+#include "utils/rlutil.h"
+#include "utils/Fecha.h"
 #include <iostream>
+
+
+void analisisMesTipo() {
+    Fecha fecha;
+    Fecha fechaTurno;
+
+    ArchivoTipoAnalisis arTipoAnalisis;
+    ManagerAnalisisProtocolo mAnalisisP;
+    ManagerProtocolo mProto;
+    ManagerTurno mTurno;
+
+    AnalisisProtocolo auxAnalisisP;
+    Protocolo auxProto;
+    Turno auxTurno;
+
+    int acumTipoAnalisis[500] = {0};
+
+    for (int i = 0; i < mTurno.getRepositorio().cantidadRegistros(); i ++) {
+        auxTurno = mTurno.getRepositorio().leer(i);
+
+        // Fechas coinciden
+        if (auxTurno.getFechaAtencion().getMes() == fecha.getMes() && auxTurno.getFechaAtencion().getAnio() == fecha.getAnio()) {
+            for (int j = 0; j < mProto.getRepositorio().cantidadRegistros(); j ++) {
+                if (auxProto.getIdTurno() != auxTurno.getID()) { continue; }
+                // IDs turno coinciden
+                auxProto = mProto.getRepositorio().leer(j);
+
+                for (int k = 0; k < mAnalisisP.getRepositorio().cantidadRegistros(); k ++) {
+                    auxAnalisisP = mAnalisisP.getRepositorio().leer(k);
+
+                    // IDs protocolo coinciden
+                    if (auxAnalisisP.getIdProtocolo() == auxProto.getId()) {
+                        acumTipoAnalisis[auxAnalisisP.getTipoAnalisis().getID()] ++;
+                    }
+                }
+            }
+        }
+    }
+
+    std::cout << "-- Analisis realizados en este mes --\n";
+
+    for (int i = 0; i < 500; i ++) {
+        if (acumTipoAnalisis[i] > 0) {
+            std::cout << arTipoAnalisis.leer(i).getNombreAnalisis() << ": " << acumTipoAnalisis[i] << "\n";
+        }
+    }
+    std::cout << "\nPresione ENTER para volver\n";
+    rlutil::anykey();
+}
+
+void analisisMesOS() {
+
+}
+
+
 
 
 MenuInformes::MenuInformes(): Menu(7, "Menu Informes"){
@@ -18,12 +79,8 @@ MenuInformes::MenuInformes(): Menu(7, "Menu Informes"){
 }
 
 void MenuInformes::ejecutarOpcion(){
-    switch (_opcionSeleccionada) {
-        case 0:
-            return;
+    if (_opcionSeleccionada == 0) { return; }
+    if (_opcionSeleccionada == 1) { return analisisMesTipo(); }
+    if (_opcionSeleccionada == 2) { return analisisMesOS(); }
 
-        default:
-            std::cout << "Intente nuevamente\n";
-            break;
-    }
 }

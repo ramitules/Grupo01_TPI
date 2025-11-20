@@ -8,6 +8,7 @@ TipoAnalisis::TipoAnalisis(int id, const char nombreAnalisis[], int tiempoResult
     setNombreAnalisis(nombreAnalisis);
     setTiempoResultado(tiempoResultado);
     setPrecio(precio);
+    setEliminado(false);
 }
 
 //SETERS

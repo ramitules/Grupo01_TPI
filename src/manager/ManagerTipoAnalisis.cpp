@@ -57,13 +57,16 @@ bool ManagerTipoAnalisis::mostrarTodos(){
     for(int i=0; i<cantidadTipoAnalisis; i++){
         regTipoAnalisis = _repo.leer(i);
 
-        if (regTipoAnalisis.getEliminado()!=true) {
-            std::cout << regTipoAnalisis.getID() << "\t";
-            std::cout << regTipoAnalisis.getNombreAnalisis() << "\t\t";
-            std::cout << regTipoAnalisis.getTiempoResultado() << " dias\t";
-            std::cout << "\t$ " << regTipoAnalisis.getPrecio() << "\n";
+        if (regTipoAnalisis.getEliminado()) {
+            continue;
         }
+
+        std::cout << regTipoAnalisis.getID() << "\t";
+        std::cout << regTipoAnalisis.getNombreAnalisis() << "\t\t";
+        std::cout << regTipoAnalisis.getTiempoResultado() << " dias\t";
+        std::cout << "\t$ " << regTipoAnalisis.getPrecio() << "\n";
     }
+    
     std::cout << std::endl;
     return true;
 }

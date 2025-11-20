@@ -3,12 +3,12 @@
 #include <iostream>
 
 
-ListadosPacientes::ListadosPacientes(): Menu(3, "Menu Listados"){
+ListadosPacientes::ListadosPacientes(): Menu(4, "Menu Listados"){
     std::string opciones[4] = {
         "Ordenados por apellido",
         "Ordenados por DNI",
         "Ordenados por edad",
-        "Agrupados por obra social"
+        "Ordenados por obra social"
     };
 
     setVectorOpciones(opciones);
@@ -22,25 +22,10 @@ void ListadosPacientes::ejecutarOpcion(){
 
     ManagerPaciente mPaciente;
 
-    if (_opcionSeleccionada == 1) {
-        mPaciente.ordenadosApellido();
-        return;
-    }
-
-    if (_opcionSeleccionada == 2) {
-        mPaciente.ordenadosDNI();
-        return;
-    }
-
-    if (_opcionSeleccionada == 3) {
-        mPaciente.ordenadosEdad();
-        return;
-    }
-
-    if (_opcionSeleccionada == 4) {
-        mPaciente.ordenadosObraSocial();
-        return;
-    }
+    if (_opcionSeleccionada == 1) { return mPaciente.ordenadosApellido(); }
+    if (_opcionSeleccionada == 2) { return mPaciente.ordenadosDNI(); }
+    if (_opcionSeleccionada == 3) { return mPaciente.ordenadosEdad(); }
+    if (_opcionSeleccionada == 4) { return mPaciente.ordenadosObraSocial(); }
 
     std::cout << "Opcion fuera de rango. Intente nuevamente.\n";
 }

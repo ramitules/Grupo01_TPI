@@ -7,24 +7,23 @@
 ManagerPersona::ManagerPersona(){};
 
 
-Persona ManagerPersona::cargar(){
+Persona ManagerPersona::cargar(int dni){
     std::string nombre, apellido, email;
-    int dni, telefono;
+    int telefono;
     ManagerFecha fecha;
 
-    std::cin.ignore(100, '\n');
+    if (dni == 0) {
+        while (true) {
+            std::cout << "Ingrese el DNI: ";
+            std::cin >> dni;
 
-    while (true) {
-        std::cout << "Ingrese el DNI: ";
-        std::cin >> dni;
+            if (dni > 1000000 && dni < 100000000){
+                break;
+            }
 
-        if (dni > 1000000 && dni < 100000000){
-            break;
+            std::cout << "Intente nuevamente. Asegurese que sea un numero entre un millon y cien millones.\n";
         }
-
-        std::cout << "Intente nuevamente. Asegurese que sea un numero entre un millon y cien millones.\n";
     }
-    
     std::cin.ignore(100, '\n');
 
     std::cout << "Ingrese el nombre: ";
@@ -48,8 +47,6 @@ Persona ManagerPersona::cargar(){
         email = "Sin email";
     }
 
-    std::cin.ignore(100, '\n');
-
     while (true) {
         std::cout << "Ingrese el telefono: ";
         std::cin >> telefono;
@@ -60,8 +57,6 @@ Persona ManagerPersona::cargar(){
 
         std::cout << "Intente nuevamente. Asegurese que sea un numero celular de 10 digitos.\n";
     }
-
-    std::cin.ignore(100, '\n');
 
     std::cout << "Ingrese la fecha de nacimiento:\n";
     Fecha fechaNacimiento = fecha.cargar();

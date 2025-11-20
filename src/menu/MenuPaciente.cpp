@@ -1,5 +1,6 @@
 #include "menu/MenuPaciente.h"
 #include "manager/ManagerPaciente.h"
+#include "utils/rlutil.h"
 #include <iostream>
 
 
@@ -22,13 +23,15 @@ void MenuPaciente::ejecutarOpcion(){
 
     ManagerPaciente mPaciente;
 
-    if (_opcionSeleccionada == 1) {
-        mPaciente.cargar();
+    if (_opcionSeleccionada == 1) { 
+        mPaciente.cargar(); 
         return;
     }
 
     if (_opcionSeleccionada == 4) {
         mPaciente.mostrarTodos();
+        std::cout << "Presione ENTER para continuar";
+        rlutil::anykey();
         return;
     }
 
@@ -51,31 +54,33 @@ void MenuPaciente::ejecutarOpcion(){
         // Mostrar todos los pacientes por pantalla
         // Esto sirve para modificacion y eliminacion por igual
         mPaciente.mostrarTodos();
+
+        while (true) {
+            std::cout << "Ingrese el DNI del paciente, o 0 para cancelar: ";
+            std::cin >> opcionSecundaria;
+
+            if (opcionSecundaria == 0) {
+                return;
+            }
+
+            posPaciente = (mPaciente.getRepositorio().getPos(opcionSecundaria));
+
+            if (posPaciente != -1) {
+                break;
+            }
+
+            std::cout << "El DNI ingresado no existe. Intente nuevamente\n";
+        }
+
     } else if (opcionSecundaria > 0){
         // Con un ID especifico, no se permite intentar nuevamente (sin ciclo while)
         posPaciente = (mPaciente.getRepositorio().getPos(opcionSecundaria));
 
         if (posPaciente == -1) {
-            std::cout << "El paciente no existe.\n";
+            std::cout << "El paciente no existe. Presione ENTER para volver.\n";
+            rlutil::anykey();
             return;
         }
-    }
-
-    while (true) {
-        std::cout << "Ingrese el DNI del paciente, o 0 para cancelar: ";
-        std::cin >> opcionSecundaria;
-
-        if (opcionSecundaria == 0) {
-            return;
-        }
-
-        posPaciente = (mPaciente.getRepositorio().getPos(opcionSecundaria));
-
-        if (posPaciente != -1) {
-            break;
-        }
-
-        std::cout << "El DNI ingresado no existe. Intente nuevamente\n";
     }
 
     Paciente paciente = mPaciente.getRepositorio().leer(posPaciente);

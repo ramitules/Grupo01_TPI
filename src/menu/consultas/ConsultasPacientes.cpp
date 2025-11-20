@@ -1,4 +1,5 @@
 #include "menu/consultas/ConsultasPacientes.h"
+#include "manager/ManagerPaciente.h"
 #include <iostream>
 
 
@@ -16,6 +17,11 @@ void ConsultasPacientes::ejecutarOpcion(){
     if (_opcionSeleccionada == 0) {
         return;
     }
+
+    ManagerPaciente mPaciente;
+
+    if (_opcionSeleccionada == 1) { return mPaciente.busquedaDNI(); }
+    if (_opcionSeleccionada == 2) { return mPaciente.busquedaObraSocial(); }
 }
 
 void ConsultasPacientes::mostrarOpciones(){

@@ -6,7 +6,7 @@ class ManagerPersona{
     public:
         ManagerPersona();
 
-        Persona cargar();
+        Persona cargar(int dni = 0);
         // En este caso, el metodo "actualizar" modifica el propio objeto.
         // Se aplicara polimorfismo siguiendo el principio de sustitucion de Liskov.
         void actualizar(Persona& persona);

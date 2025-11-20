@@ -4,6 +4,7 @@
 #include "manager/ManagerTurno.h"
 #include "Protocolo.h"
 #include "utils/funcFrontend.h"
+#include "archivo/ArchivoProtocolo.h"
 
 ManagerProtocolo::ManagerProtocolo(){};
 
@@ -80,19 +81,50 @@ bool ManagerProtocolo::mostrarTodos(){
     return true;
 }
 
+int ManagerProtocolo::buscarTurno(int idTurno) {
+    Protocolo regProtocolo;
+    int cantidadRegistros = _repo.cantidadRegistros();
+    int idProtocolo;
+    bool turnoEncontrado = false;
+
+    for(int i=0; i<cantidadRegistros; i++) {
+        regProtocolo = _repo.leer(i);
+
+        if (regProtocolo.getIdTurno()==idTurno) {
+            idProtocolo = regProtocolo.getId();
+            turnoEncontrado = true;
+
+            std::cout  << "El turno ya tiene un protocolo iniciado.\n\n";
+
+            this->mostrar(regProtocolo);
+
+            return idProtocolo;
+        }
+    }
+
+    if (turnoEncontrado == false) {
+        return -1;
+    }
+}
+
 //INICIA UN PROTOCOLO RECIBIENDO EL ID DEL TURNO
 
 int ManagerProtocolo::iniciar(int idTurno) {
     Protocolo protocolo;
+    int auxTurno;
 
     ManagerProtocolo mProtocolo;
     ManagerAnalisisProtocolo mAnalisisProtocolo;
 
+    auxTurno = this->buscarTurno(idTurno);
+
+    if (auxTurno != -1) {
+        return auxTurno;
+    }
+
     int idProtocolo = _repo.cantidadRegistros()+1;
 
     char opc;
-
-    std::cin.ignore(100, '\n');
 
     std::cout << "\nSe iniciara el protocolo del turno " << idTurno << "\n\n";
 
@@ -104,6 +136,8 @@ int ManagerProtocolo::iniciar(int idTurno) {
         std::cout << "ATENCION: No se inicio el protocolo\n\n";
         return -1;
     }
+
+
 
     protocolo.setId(idProtocolo);
     protocolo.setIdTurno(idTurno);
@@ -135,6 +169,8 @@ bool ManagerProtocolo::asignar(Protocolo protocolo){
 
     std::cout << "Seleccionar Enfermero (x DNI): ";
     std::cin >> dniEnfermero;
+
+    mEnfermero.comprobar(dniEnfermero);
 
     enfermero = protocolo.getEnfermero();
     pos = archivoEnfermero.getPos(dniEnfermero);
@@ -232,3 +268,4 @@ bool ManagerProtocolo::eliminar(Protocolo protocolo){
     std::cout << "\nATENCION: No se eliminaron los datos.\n\n";
     return false;
 }
+

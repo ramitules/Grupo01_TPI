@@ -26,6 +26,8 @@ class ManagerTurno{
         void busquedaFecha();
         // Busca turnos pidiendo los datos de un paciente
         void busquedaPaciente();
+
+        void actualizarImportes();
         
         ArchivoTurno getRepositorio();
 };

@@ -1,5 +1,6 @@
 #include "manager/ManagerPaciente.h"
 #include "manager/ManagerProtocolo.h"
+#include "manager/ManagerAnalisisProtocolo.h"
 #include "manager/ManagerTurno.h"
 #include "utils/ManagerFecha.h"
 #include "utils/ManagerHora.h"
@@ -21,6 +22,7 @@ bool ManagerTurno::cargar(){
 
     int proximoID = _repo.cantidadRegistros() + 1;
     int dniPaciente;
+    float importe = 0.0f;
     bool pacienteExiste = false;
     Fecha fechaAtencion;
     Hora horaAtencion;
@@ -74,15 +76,35 @@ bool ManagerTurno::cargar(){
     if (opc == 's') {
         ManagerProtocolo mProtocolo;
         mProtocolo.iniciar(proximoID);
-        //Pendiente agregar lo que sigue
+        // Obtener importe sumando todos los analisis por protocolos
+        Protocolo auxProto;
+        ManagerAnalisisProtocolo mAP;
+
+        bool* indices = new bool[mProtocolo.getRepositorio().cantidadRegistros()] {false};
+        for (int i = 0; i < mProtocolo.getRepositorio().cantidadRegistros(); i ++) {
+            auxProto = mProtocolo.getRepositorio().leer(i);
+            if (auxProto.getIdTurno() == proximoID) {
+                for (int j = 0; j < mAP.getRepositorio().cantidadRegistros(); j ++) {
+                    if (mAP.getRepositorio().leer(j).getIdProtocolo() == auxProto.getId()){
+                        importe += mAP.getRepositorio().leer(j).getPrecioSolicitud();
+                    }
+                }
+            }
+        }
+        delete[] indices;
+        
+    } else {
+        std::cin.ignore(100, '\n');
+
+        fechaAtencion = mFecha.cargar();
+        horaAtencion = mHora.cargar();
+
+        std::cout << "Ingrese a continuacion el importe a cobrar: $";
+        std::cin >> importe;
+        std::cin.ignore(100, '\n');
     }
 
-    std::cin.ignore(100, '\n');
-
-    fechaAtencion = mFecha.cargar();
-    horaAtencion = mHora.cargar();
-
-    Turno turno(proximoID, dniPaciente, fechaAtencion, horaAtencion, 0.0f);
+    Turno turno(proximoID, dniPaciente, fechaAtencion, horaAtencion, importe);
 
     if (_repo.guardar(turno)) {
         std::cout << "El turno se ha guardado correctamente. Presione ENTER para continuar\n";
@@ -513,6 +535,40 @@ void ManagerTurno::busquedaPaciente(){
 
     delete[] turnos;
     delete[] indices;
+}
+
+void ManagerTurno::actualizarImportes(){
+    const int CANTIDAD = _repo.cantidadRegistros();
+    Turno* turnos = _repo.leerTodos();
+    ManagerProtocolo mProtocolo;
+    ManagerAnalisisProtocolo mAP;
+
+    Protocolo auxProto;
+
+    for (int i = 0; i < CANTIDAD; i ++) {
+        if (turnos[i].getEliminado()) {
+            continue;
+        }
+
+        float nuevoImporte = 0.0f;
+
+        for (int j = 0; j < mProtocolo.getRepositorio().cantidadRegistros(); j ++) {
+            auxProto = mProtocolo.getRepositorio().leer(j);
+            
+            if (auxProto.getIdTurno() == turnos[i].getID()) {
+                for (int k = 0; k < mAP.getRepositorio().cantidadRegistros(); k ++) {
+                    if (mAP.getRepositorio().leer(k).getIdProtocolo() == auxProto.getId()){
+                        nuevoImporte += mAP.getRepositorio().leer(k).getPrecioSolicitud();
+                    }
+                }
+            }
+        }
+
+        turnos[i].setImporte(nuevoImporte);
+        _repo.modificar(turnos[i], _repo.getPos(turnos[i].getID()));
+    }
+
+    delete[] turnos;
 }
 
 bool ManagerTurno::actualizar(Turno turno){

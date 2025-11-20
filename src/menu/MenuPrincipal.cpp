@@ -9,6 +9,8 @@
 #include "menu/listados/MenuListados.h"
 #include "menu/consultas/MenuConsultas.h"
 #include "menu/informes/MenuInformes.h"
+#include "manager/ManagerTurno.h"
+#include "utils/rlutil.h"
 #include <iostream>
 
 
@@ -35,6 +37,18 @@ void MenuPrincipal::ejecutarOpcion(){
     }
 
     if (_opcionSeleccionada == 1) {
+        // Antes de entrar al menu de Turnos, corroborar si el usuario desea actualizar 
+        // el importe de los turnos existenes segun los protocolos creados
+        std::cout << "\nDesea actualizar los importes de los turnos existentes segun los protocolos actuales? s/n: ";
+        char opc;
+        std::cin >> opc;
+        if (opc == 's') {
+            ManagerTurno mTurno;
+            mTurno.actualizarImportes();
+            std::cout << "Importes actualizados correctamente.\n";
+            std::cout << "Presione ENTER para continuar";
+            rlutil::anykey();
+        }
         MenuTurno menu;
         menu.buclePrincipal();
     } else if (_opcionSeleccionada == 2) {

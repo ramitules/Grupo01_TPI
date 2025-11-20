@@ -43,19 +43,7 @@ Hora ManagerHora::cargar(){
         std::cout << "Intente nuevamente. Asegurese que sea un numero entre 0 y 59.\n";
     }
 
-    // Segundo es opcional
-    std::cout << "Segundo (0-59 | -1 para segundos actuales): ";
-    std::cin >> segundo;
-
-    if (segundo == -1) {
-        segundo = datetime.tm_sec;
-    } else if (segundo < -1) {
-        segundo = 0;
-    } else if (segundo > 59) {
-        segundo = 59;
-    }
-    
-    Hora h(hora, minuto, segundo);
+    Hora h(hora, minuto, 0);
     return h;
 }
 

@@ -12,7 +12,7 @@ MenuProtocolo::MenuProtocolo(): Menu(7, "Menu Protocolo"){
         "Iniciar",
         "Cargar Estudios",
         "Asignar Protocolo",
-        "Modificar protocolo",
+        "Finalizar protocolo",
         "Mostrar Protocolo",
         "Mostrar todos",
         "Eliminar protocolo"
@@ -27,6 +27,7 @@ void MenuProtocolo::ejecutarOpcion(){
     ManagerAnalisisProtocolo mAnalisisProtocolo;
     Protocolo protocolo;
     int idProtocolo;
+
     switch (_opcionSeleccionada) {
         case 0:
             return;
@@ -47,11 +48,10 @@ void MenuProtocolo::ejecutarOpcion(){
                 std::cout << "Ingrese ID del Protocolo a cargar: ";
                 std::cin >> idProtocolo;
 
-                mAnalisisProtocolo.cargar(idProtocolo);
-
-
+                if (mProtocolo.comprobar(idProtocolo)) {
+                    mAnalisisProtocolo.cargar(idProtocolo);
+                }
             }
-
             system("pause");
             break;
             case 3:
@@ -74,20 +74,37 @@ void MenuProtocolo::ejecutarOpcion(){
         case 4:
             std::cout << getNombreMenu() << ": " << _opciones[3] << "\n";
             std::cout << "==============================\n";
+
+            if (mProtocolo.comprobar()) {
+                std::cout << "Ingrese el ID a finalizar: ";
+                std::cin >> idProtocolo;
+
+                if (mProtocolo.comprobar(idProtocolo)) {
+                    protocolo = mProtocolo.seleccionar(idProtocolo);
+
+                    mProtocolo.finalizar(protocolo);
+                }
+            }
             system("pause");
             break;
         case 5:
             std::cout << getNombreMenu() << ": " << _opciones[4] << "\n";
             std::cout << "==============================\n";
 
-            int idProtocolo;
             mProtocolo.mostrarTodos();
 
-            std::cout << "Ingrese ID del Protocolo: ";
-            std::cin >> idProtocolo;
+            if (mProtocolo.comprobar()) {
+                std::cout << "Ingrese el ID a asignar: ";
+                std::cin >> idProtocolo;
 
-            mProtocolo.mostrar(mProtocolo.seleccionar(idProtocolo));
+                if (mProtocolo.comprobar(idProtocolo)) {
+                    mProtocolo.mostrar(mProtocolo.seleccionar(idProtocolo));
 
+                    if (mAnalisisProtocolo.comprobar(idProtocolo)) {
+                        mAnalisisProtocolo.mostrarTodos(idProtocolo);
+                    }
+                }
+            }
             system("pause");
             break;
         case 6:
@@ -99,6 +116,19 @@ void MenuProtocolo::ejecutarOpcion(){
         case 7:
             std::cout << getNombreMenu() << ": " << _opciones[6] << "\n";
             std::cout << "==============================\n";
+
+            if (mProtocolo.comprobar()) {
+                std::cout << "Ingrese el ID a Eliminar: ";
+                std::cin >> idProtocolo;
+
+                if (mProtocolo.comprobar(idProtocolo)) {
+                    protocolo = mProtocolo.seleccionar(idProtocolo);
+
+                    mProtocolo.mostrar(protocolo);
+
+                    mProtocolo.eliminar(protocolo);
+                }
+            }
             system("pause");
             break;
 

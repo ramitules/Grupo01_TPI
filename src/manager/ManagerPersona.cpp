@@ -138,9 +138,8 @@ void ManagerPersona::actualizar(Persona& persona){
         } else {
             persona.setTelefono(telefono);
         }
+        std::cin.ignore(100, '\n');
     }
-
-    std::cin.ignore(100, '\n');
 
     std::cout << "La fecha de nacimiento es la misma? s/n: ";
     std::cin >> opc;

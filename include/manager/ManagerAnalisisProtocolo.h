@@ -8,12 +8,9 @@ class ManagerAnalisisProtocolo{
     public:
         ManagerAnalisisProtocolo();
 
+        bool comprobar(int idProtocolo = -1);
         bool cargar(int idProtocolo);
-        bool actualizar(AnalisisProtocolo analisisProtocolo);
-        void mostrar(AnalisisProtocolo analisisProtocolo);
-        void mostrarTodos();
-        bool eliminar(AnalisisProtocolo analisisProtocolo);
-
+        void mostrarTodos(int idProtocolo);
 
         ArchivoAnalisisProtocolo getRepositorio();
 };

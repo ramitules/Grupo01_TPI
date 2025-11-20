@@ -5,7 +5,7 @@
 #include "archivo/ArchivoEnfermero.h"
 
 
-CSVEnfermero::CSVEnfermero(const std::string& ruta) : ArchivoCSV(ruta) {}
+CSVEnfermero::CSVEnfermero() : ArchivoCSV("backup_enfermero.csv") {}
 
 void CSVEnfermero::guardar(Enfermero enfermero) {
     bool vacio = archivoVacio();
@@ -38,19 +38,19 @@ void CSVEnfermero::guardar(Enfermero enfermero) {
 }
 
 void CSVEnfermero::guardarTodos() {
+    ArchivoEnfermero arEnfermero;
+
+    const int CANTIDAD = arEnfermero.cantidadRegistros();
+    if (CANTIDAD == 0) {
+        return;
+    }
+
     std::ofstream out(_ruta, std::ios::trunc);
 
     if (!out.is_open()) {
         std::cout << "No se pudo abrir el archivo en la ruta " << _ruta << "\n. Presione ENTER para salir.";
         rlutil::anykey();
         exit(0);
-    }
-
-    ArchivoEnfermero arEnfermero;
-    const int CANTIDAD = arEnfermero.cantidadRegistros();
-    if (CANTIDAD == 0) {
-        out.close();
-        return;
     }
     
     Enfermero* enfermeros = arEnfermero.leerTodos();

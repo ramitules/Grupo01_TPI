@@ -5,7 +5,7 @@
 #include "archivo/ArchivoProtocolo.h"
 
 
-CSVProtocolo::CSVProtocolo(const std::string& ruta) : ArchivoCSV(ruta) {}
+CSVProtocolo::CSVProtocolo() : ArchivoCSV("backup_protocolo.csv") {}
 
 void CSVProtocolo::guardar(Protocolo protocolo) {
     bool vacio = archivoVacio();
@@ -36,6 +36,13 @@ void CSVProtocolo::guardar(Protocolo protocolo) {
 }
 
 void CSVProtocolo::guardarTodos() {
+    ArchivoProtocolo arProtocolo;
+    
+    const int CANTIDAD = arProtocolo.cantidadRegistros();
+    if (CANTIDAD == 0) {
+        return;
+    }
+
     std::ofstream out(_ruta, std::ios::trunc);
 
     if (!out.is_open()) {
@@ -44,13 +51,6 @@ void CSVProtocolo::guardarTodos() {
         exit(0);
     }
 
-    ArchivoProtocolo arProtocolo;
-    const int CANTIDAD = arProtocolo.cantidadRegistros();
-    if (CANTIDAD == 0) {
-        out.close();
-        return;
-    }
-    
     Protocolo* protocolos = arProtocolo.leerTodos();
 
     // Encabezado

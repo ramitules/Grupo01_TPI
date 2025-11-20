@@ -5,11 +5,8 @@
 
 
 class CSVProtocolo: public ArchivoCSV{
-    private:
-        std::string _ruta;
-
     public:
-        CSVProtocolo(const std::string& ruta);
+        CSVProtocolo();
 
         void guardar(Protocolo protocolo);
         void guardarTodos();

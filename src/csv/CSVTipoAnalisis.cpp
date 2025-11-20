@@ -5,7 +5,7 @@
 #include "archivo/ArchivoTipoAnalisis.h"
 
 
-CSVTipoAnalisis::CSVTipoAnalisis(const std::string& ruta) : ArchivoCSV(ruta) {}
+CSVTipoAnalisis::CSVTipoAnalisis() : ArchivoCSV("backup_tipo_analisis.csv") {}
 
 void CSVTipoAnalisis::guardar(TipoAnalisis tipoAnalisis) {
     bool vacio = archivoVacio();
@@ -34,19 +34,19 @@ void CSVTipoAnalisis::guardar(TipoAnalisis tipoAnalisis) {
 }
 
 void CSVTipoAnalisis::guardarTodos() {
+    ArchivoTipoAnalisis arTipoAnalisis;
+    
+    const int cantidad = arTipoAnalisis.cantidadRegistros();
+    if (cantidad == 0) {
+        return;
+    }
+
     std::ofstream out(_ruta, std::ios::trunc);
 
     if (!out.is_open()) {
         std::cout << "No se pudo abrir el archivo en la ruta " << _ruta << "\n. Presione ENTER para salir.";
         rlutil::anykey();
         exit(0);
-    }
-
-    ArchivoTipoAnalisis arTipoAnalisis;
-    const int cantidad = arTipoAnalisis.cantidadRegistros();
-    if (cantidad == 0) {
-        out.close();
-        return;
     }
 
     TipoAnalisis* tiposAnalisis = arTipoAnalisis.leerTodos();

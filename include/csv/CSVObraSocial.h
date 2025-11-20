@@ -5,11 +5,8 @@
 
 
 class CSVObraSocial: public ArchivoCSV{
-    private:
-        std::string _ruta;
-
     public:
-        CSVObraSocial(const std::string& ruta);
+        CSVObraSocial();
 
         void guardar(ObraSocial obraSocial);
         void guardarTodos();

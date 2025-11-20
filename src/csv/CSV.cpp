@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 
-ArchivoCSV::ArchivoCSV(const std::string& ruta) : _ruta(ruta) {}
+ArchivoCSV::ArchivoCSV(const std::string ruta) : _ruta(ruta) {}
 
 int ArchivoCSV::cantidadLineasDatos() {
     std::ifstream archivo(_ruta);
@@ -40,4 +40,8 @@ bool ArchivoCSV::archivoVacio() {
 
     archivo.close();
     return esVacio;
+}
+
+std::string ArchivoCSV::getRuta(){
+    return _ruta;
 }

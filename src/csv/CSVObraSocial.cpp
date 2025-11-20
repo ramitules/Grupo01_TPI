@@ -5,7 +5,7 @@
 #include "archivo/ArchivoObraSocial.h"
 
 
-CSVObraSocial::CSVObraSocial(const std::string& ruta) : ArchivoCSV(ruta) {}
+CSVObraSocial::CSVObraSocial() : ArchivoCSV("backup_obra_social.csv") {}
 
 void CSVObraSocial::guardar(ObraSocial obraSocial) {
     bool vacio = archivoVacio();
@@ -35,19 +35,19 @@ void CSVObraSocial::guardar(ObraSocial obraSocial) {
 }
 
 void CSVObraSocial::guardarTodos() {
+    ArchivoObraSocial archivoOS;
+
+    const int CANTIDAD = archivoOS.cantidadRegistros();
+    if (CANTIDAD == 0) {
+        return;
+    }
+
     std::ofstream out(_ruta, std::ios::trunc);
 
     if (!out.is_open()) {
         std::cout << "No se pudo abrir el archivo en la ruta " << _ruta << "\n. Presione ENTER para salir.";
         rlutil::anykey();
         exit(0);
-    }
-
-    ArchivoObraSocial archivoOS;
-    const int CANTIDAD = archivoOS.cantidadRegistros();
-    if (CANTIDAD == 0) {
-        out.close();
-        return;
     }
     
     ObraSocial* obraSociales = archivoOS.leerTodos();

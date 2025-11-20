@@ -4,7 +4,7 @@
 #include "csv/CSVAnalisisProtocolo.h"
 #include "archivo/ArchivoAnalisisProtocolo.h"
 
-CSVAnalisisProtocolo::CSVAnalisisProtocolo(const std::string& ruta) : ArchivoCSV(ruta) {}
+CSVAnalisisProtocolo::CSVAnalisisProtocolo() : ArchivoCSV("backup_analisis_protocolo.csv") {}
 
 void CSVAnalisisProtocolo::guardar(AnalisisProtocolo analisisProtocolo) {
     bool vacio = archivoVacio();
@@ -33,20 +33,19 @@ void CSVAnalisisProtocolo::guardar(AnalisisProtocolo analisisProtocolo) {
 }
 
 void CSVAnalisisProtocolo::guardarTodos() {
+    ArchivoAnalisisProtocolo archivoAP;
+    
+    const int CANTIDAD = archivoAP.cantidadRegistros();
+    if (CANTIDAD == 0) {
+        return;
+    }
+    
     std::ofstream out(_ruta, std::ios::trunc);
 
     if (!out.is_open()) {
         std::cout << "No se pudo abrir el archivo en la ruta " << _ruta << "\n. Presione ENTER para salir.";
         rlutil::anykey();
         exit(0);
-    }
-
-    ArchivoAnalisisProtocolo archivoAP;
-    
-    const int CANTIDAD = archivoAP.cantidadRegistros();
-    if (CANTIDAD == 0) {
-        out.close();
-        return;
     }
     
     AnalisisProtocolo* analisisProtocolos = archivoAP.leerTodos();

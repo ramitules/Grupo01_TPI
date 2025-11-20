@@ -5,11 +5,8 @@
 
 
 class CSVPaciente: public ArchivoCSV{
-    private:
-        std::string _ruta;
-
     public:
-        CSVPaciente(const std::string& ruta);
+        CSVPaciente();
 
         void guardar(Paciente paciente);
         void guardarTodos();

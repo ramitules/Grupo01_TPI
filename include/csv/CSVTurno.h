@@ -5,11 +5,8 @@
 
 
 class CSVTurno: public ArchivoCSV{
-    private:
-        std::string _ruta;
-
     public:
-        CSVTurno(const std::string& ruta);
+        CSVTurno();
 
         void guardar(Turno turno);
         void guardarTodos();

@@ -3,12 +3,14 @@
 
 
 class ArchivoCSV {
-    private:
+    protected:
         std::string _ruta;
 
     public:
-        ArchivoCSV(const std::string& ruta);
+        ArchivoCSV(const std::string ruta);
 
         int cantidadLineasDatos();
         bool archivoVacio();
+
+        std::string getRuta();
 };

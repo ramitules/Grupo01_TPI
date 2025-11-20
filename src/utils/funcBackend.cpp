@@ -31,43 +31,43 @@ void backup(){
     std::cout << "Realizando copia de seguridad en formato CSV\n";
 
     std::cout << "Turnos... ";
-    CSVTurno csvTurno("backup_turnos.csv");
+    CSVTurno csvTurno;
     csvTurno.guardarTodos();
     rlutil::msleep(500);  // Simula tiempo de procesamiento
     std::cout << "completado.\n";
     
     std::cout << "Pacientes... ";
-    CSVPaciente csvPacientes("backup_pacientes.csv");
+    CSVPaciente csvPacientes;
     csvPacientes.guardarTodos();
     rlutil::msleep(500);
     std::cout << "completado.\n";
 
     std::cout << "Protocolos... ";
-    CSVProtocolo csvProtocolo("backup_protocolos.csv");
+    CSVProtocolo csvProtocolo;
     csvProtocolo.guardarTodos();
     rlutil::msleep(500);
     std::cout << "completado.\n";
 
     std::cout << "Tipos de analisis... ";
-    CSVTipoAnalisis csvTipoAnalisis("backup_tipos_analisis.csv");
+    CSVTipoAnalisis csvTipoAnalisis;
     csvTipoAnalisis.guardarTodos();
     rlutil::msleep(500);
     std::cout << "completado.\n";
 
     std::cout << "Obras sociales... ";
-    CSVObraSocial csvObraSocial("backup_obras_sociales.csv");
+    CSVObraSocial csvObraSocial;
     csvObraSocial.guardarTodos();
     rlutil::msleep(500);
     std::cout << "completado.\n";
 
     std::cout << "Enfermeros... ";
-    CSVEnfermero csvEnfermero("backup_enfermeros.csv");
+    CSVEnfermero csvEnfermero;
     csvEnfermero.guardarTodos();
     rlutil::msleep(500);
     std::cout << "completado.\n";
     
     std::cout << "Analisis por protocolos... ";
-    CSVAnalisisProtocolo csvAnalisisProtocolo("backup_analisis_protocolos.csv");
+    CSVAnalisisProtocolo csvAnalisisProtocolo;
     csvAnalisisProtocolo.guardarTodos();
     rlutil::msleep(500);
     std::cout << "completado.\n";
@@ -78,21 +78,28 @@ void backup(){
 
 
 void restaurarBackup(){
+    CSVTurno csvTurno;
+    CSVPaciente csvPacientes;
+    CSVProtocolo csvProtocolo;
+    CSVTipoAnalisis csvTipoAnalisis;
+    CSVObraSocial csvObraSocial;
+    CSVEnfermero csvEnfermero;
+    CSVAnalisisProtocolo csvAnalisisProtocolo;
     // Estructuras para metadatos de los archivos CSV
     struct stat stTurnos;
-    int resTurno = stat("backup_turnos.csv", &stTurnos);
+    int resTurno = stat(csvTurno.getRuta().c_str(), &stTurnos);
     struct stat stPacientes;
-    int resPacientes = stat("backup_pacientes.csv", &stPacientes);
+    int resPacientes = stat(csvPacientes.getRuta().c_str(), &stPacientes);
     struct stat stProtocolos;
-    int resProtocolos = stat("backup_protocolos.csv", &stProtocolos);
+    int resProtocolos = stat(csvProtocolo.getRuta().c_str(), &stProtocolos);
     struct stat stTiposAnalisis;
-    int resTiposAnalisis = stat("backup_tipos_analisis.csv", &stTiposAnalisis);
+    int resTiposAnalisis = stat(csvTipoAnalisis.getRuta().c_str(), &stTiposAnalisis);
     struct stat stObraSocial;
-    int resObraSocial = stat("backup_obras_sociales.csv", &stObraSocial);
+    int resObraSocial = stat(csvObraSocial.getRuta().c_str(), &stObraSocial);
     struct stat stEnfermeros;
-    int resEnfermeros = stat("backup_enfermeros.csv", &stEnfermeros);
+    int resEnfermeros = stat(csvEnfermero.getRuta().c_str(), &stEnfermeros);
     struct stat stAP;
-    int resAP = stat("backup_analisis_protocolos.csv", &stAP);
+    int resAP = stat(csvAnalisisProtocolo.getRuta().c_str(), &stAP);
 
     // Calculo de fecha
     // Tambien se comprueba que exista al menos un archivo de backup
@@ -118,7 +125,7 @@ void restaurarBackup(){
     }
     
     // Calculo de peso
-    char peso = 'b';
+    char peso = ' ';
     float tamTotal = 0.0f;
     if (resTurno == 0) {
         tamTotal += stTurnos.st_size;
@@ -159,19 +166,12 @@ void restaurarBackup(){
     std::cout << "Fecha de creacion: " << std::put_time(tm_local, "%d-%m-%Y") << '\n';
     std::cout << "Peso: " << tamTotal << peso << "b\n\n";
     
-    CSVTurno csvTurno("backup_turnos.csv");
     std::cout << "Turnos: " << csvTurno.cantidadLineasDatos() << '\n';
-    CSVPaciente csvPacientes("backup_pacientes.csv");
     std::cout << "Pacientes: " << csvPacientes.cantidadLineasDatos() << '\n';
-    CSVProtocolo csvProtocolo("backup_protocolos.csv");
     std::cout << "Protocolos: " << csvProtocolo.cantidadLineasDatos() << '\n';
-    CSVTipoAnalisis csvTipoAnalisis("backup_tipos_analisis.csv");
     std::cout << "Tipos de analisis: " << csvTipoAnalisis.cantidadLineasDatos() << '\n';
-    CSVObraSocial csvObraSocial("backup_obras_sociales.csv");
     std::cout << "Obras sociales: " << csvObraSocial.cantidadLineasDatos() << '\n';
-    CSVEnfermero csvEnfermero("backup_enfermeros.csv");
     std::cout << "Enfermeros: " << csvEnfermero.cantidadLineasDatos() << '\n';
-    CSVAnalisisProtocolo csvAnalisisProtocolo("backup_analisis_protocolos.csv");
     std::cout << "Analisis por protocolos: " << csvAnalisisProtocolo.cantidadLineasDatos() << "\n\n";
 
     char opc = 'n';

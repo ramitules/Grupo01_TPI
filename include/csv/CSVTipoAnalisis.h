@@ -5,11 +5,8 @@
 
 
 class CSVTipoAnalisis: public ArchivoCSV{
-    private:
-        std::string _ruta;
-
     public:
-        CSVTipoAnalisis(const std::string& ruta);
+        CSVTipoAnalisis();
 
         void guardar(TipoAnalisis tipoAnalisis);
         void guardarTodos();

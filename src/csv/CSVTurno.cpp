@@ -5,7 +5,7 @@
 #include "archivo/ArchivoTurno.h"
 
 
-CSVTurno::CSVTurno(const std::string& ruta) : ArchivoCSV(ruta) {}
+CSVTurno::CSVTurno() : ArchivoCSV("backup_turnos.csv") {}
 
 void CSVTurno::guardar(Turno turno) {
     bool vacio = archivoVacio();
@@ -35,19 +35,19 @@ void CSVTurno::guardar(Turno turno) {
 }
 
 void CSVTurno::guardarTodos() {
+    ArchivoTurno archivoTurno;
+    
+    const int CANTIDAD = archivoTurno.cantidadRegistros();
+    if (CANTIDAD == 0) {
+        return;
+    }
+
     std::ofstream out(_ruta, std::ios::trunc);
 
     if (!out.is_open()) {
-        std::cout << "No se pudo abrir el archivo en la ruta " << _ruta << "\n. Presione ENTER para salir.";
+        std::cout << "No se pudo abrir el archivo en la ruta " << _ruta << ".\nPresione ENTER para salir.";
         rlutil::anykey();
         exit(0);
-    }
-
-    ArchivoTurno archivoTurno;
-    const int CANTIDAD = archivoTurno.cantidadRegistros();
-    if (CANTIDAD == 0) {
-        out.close();
-        return;
     }
     
     Turno* turnos = archivoTurno.leerTodos();

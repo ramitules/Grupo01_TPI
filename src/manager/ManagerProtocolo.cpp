@@ -161,19 +161,30 @@ bool ManagerProtocolo::asignar(Protocolo protocolo){
 
     mProtocolo.mostrar(protocolo);
 
+    if (protocolo.getEstado()==1) {
+        std::cout << "\n\nProtocolo ya cerrado\n";
+        return false;
+    }
+
     std::cout << "CLINICA - Enfermeros habilitados para asignar\n";
 
     mEnfermero.mostrarTodos();
 
-    std::cout << "Seleccionar Enfermero (x DNI): ";
-    std::cin >> dniEnfermero;
+    while (true) {
+        std::cout << "Seleccionar Enfermero (x DNI): ";
+        std::cin >> dniEnfermero;
 
-    enfermero = protocolo.getEnfermero();
-    pos = archivoEnfermero.getPos(dniEnfermero);
+        enfermero = protocolo.getEnfermero();
+        pos = archivoEnfermero.getPos(dniEnfermero);
 
-    if (mEnfermero.comprobar(dniEnfermero)) {
-        enfermero = mEnfermero.seleccionar(dniEnfermero);
-        protocolo.setDniEnfermero(enfermero.getDNI());
+        if (mEnfermero.comprobar(dniEnfermero)) {
+            enfermero = mEnfermero.seleccionar(dniEnfermero);
+            protocolo.setDniEnfermero(enfermero.getDNI());
+            break;
+        }
+        else {
+            std::cout << "Dni no valido";
+        }
     }
 
     std::cout << "\nAsignar sala de atencion: ";

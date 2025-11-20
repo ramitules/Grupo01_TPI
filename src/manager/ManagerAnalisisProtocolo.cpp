@@ -81,6 +81,7 @@ void ManagerAnalisisProtocolo::mostrarTodos(int idProtocolo){
     TipoAnalisis regTipoAnalisis;
     int cantidadAnalisisProtocolo = _repo.cantidadRegistros();
     int resultadoDias = -1;
+    int total = 0;
 
     std::cout << "\nID\tTipo\tTiempo estimado\tPrecio solicitud\n";
 
@@ -95,12 +96,13 @@ void ManagerAnalisisProtocolo::mostrarTodos(int idProtocolo){
             std::cout << regTipoAnalisis.getTiempoResultado() << " dias\t";
             std::cout << "\t$ " << regAnalisisProtocolo.getPrecioSolicitud() << "\n\n";
 
+            total += regTipoAnalisis.getPrecio();
             if (regTipoAnalisis.getTiempoResultado() > resultadoDias) {
                 resultadoDias = regTipoAnalisis.getTiempoResultado();
             }
         }
     }
-
+    std::cout << "PRECIO FINAL: $" << total << "\n";
     std::cout << "RESULTADOS en " << resultadoDias << " dia(s)\n\n" ;
 }
 

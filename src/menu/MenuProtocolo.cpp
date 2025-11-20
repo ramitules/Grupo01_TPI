@@ -27,6 +27,7 @@ void MenuProtocolo::ejecutarOpcion(){
     ManagerAnalisisProtocolo mAnalisisProtocolo;
     Protocolo protocolo;
     int idProtocolo;
+    int idTurno;
 
     switch (_opcionSeleccionada) {
         case 0:
@@ -35,7 +36,10 @@ void MenuProtocolo::ejecutarOpcion(){
             std::cout << getNombreMenu() << ": " << _opciones[0] << "\n";
             std::cout << "==============================\n";
 
-            mProtocolo.iniciar(1);
+            std::cout << "Ingrese el ID de turno: ";
+            std:: cin >> idTurno;
+
+            mProtocolo.iniciar(idTurno);
             system("pause");
             break;
         case 2:
@@ -59,6 +63,8 @@ void MenuProtocolo::ejecutarOpcion(){
             std::cout << "==============================\n";
 
             if (mProtocolo.comprobar()) {
+                mProtocolo.mostrarTodos();
+
                 std::cout << "Ingrese el ID a asignar: ";
                 std::cin >> idProtocolo;
 
@@ -74,6 +80,8 @@ void MenuProtocolo::ejecutarOpcion(){
         case 4:
             std::cout << getNombreMenu() << ": " << _opciones[3] << "\n";
             std::cout << "==============================\n";
+
+            mProtocolo.mostrarTodos();
 
             if (mProtocolo.comprobar()) {
                 std::cout << "Ingrese el ID a finalizar: ";
@@ -94,7 +102,7 @@ void MenuProtocolo::ejecutarOpcion(){
             mProtocolo.mostrarTodos();
 
             if (mProtocolo.comprobar()) {
-                std::cout << "Ingrese el ID a asignar: ";
+                std::cout << "Ingrese el ID a observar: ";
                 std::cin >> idProtocolo;
 
                 if (mProtocolo.comprobar(idProtocolo)) {

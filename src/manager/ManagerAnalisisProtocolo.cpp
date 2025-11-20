@@ -104,10 +104,6 @@ void ManagerAnalisisProtocolo::mostrarTodos(int idProtocolo){
     std::cout << "RESULTADOS en " << resultadoDias << " dia(s)\n\n" ;
 }
 
-bool ManagerAnalisisProtocolo::actualizar(AnalisisProtocolo analisisProtocolo){
-    // PENDIENTE
-}
-
 ArchivoAnalisisProtocolo ManagerAnalisisProtocolo::getRepositorio(){
     return _repo;
 }

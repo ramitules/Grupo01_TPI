@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-Turno::Turno(): _id(0), _dniPaciente(0), _fechaAtencion(), _horaAtencion(), _importe(0.0f) {};
+Turno::Turno(): _id(0), _dniPaciente(0), _fechaAtencion(), _horaAtencion(), _importe(0.0f), _eliminado(false) {};
 
 Turno::Turno(int id, int dniPaciente, Fecha fechaAtencion, Hora horaAtencion, float importe){
     setID(id);
@@ -11,6 +11,7 @@ Turno::Turno(int id, int dniPaciente, Fecha fechaAtencion, Hora horaAtencion, fl
     setFechaAtencion(fechaAtencion);
     setHoraAtencion(horaAtencion);
     setImporte(importe);
+    setEliminado(false);
 };
 
 // SETTERS

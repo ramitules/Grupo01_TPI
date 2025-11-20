@@ -89,7 +89,7 @@ void MenuTurno::ejecutarOpcion(){
         return;
     }
 
-    if (opcionSecundaria == 3) {
+    if (_opcionSeleccionada == 3) {
         mTurno.eliminar(turno);
         return;
     }

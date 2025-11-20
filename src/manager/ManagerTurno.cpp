@@ -341,6 +341,7 @@ void ManagerTurno::agrupadosPaciente(){
 
     delete[] turnos;
     delete[] indicesVisitados;
+    delete[] indicesPacientes;
 
     std::cout << "Presione ENTER para continuar";
     rlutil::anykey();
@@ -356,12 +357,12 @@ void ManagerTurno::busquedaFecha(){
     ManagerFecha mFecha;
     int dias = 0;
 
-    std::cout << "-- Ingreso de rango de fechas --";
+    std::cout << "-- Ingreso de rango de fechas --\n\n";
     std::cout << "DESDE\n";
     Fecha desde = mFecha.cargar();
     
     while (true) {
-        std::cout << "Cantidad de dias (1 = solo la fecha ingresada): \n";
+        std::cout << "Cantidad de dias (1 = solo la fecha ingresada): ";
         std::cin >> dias;
 
         if (dias > 0 && dias < 366) {
@@ -379,27 +380,42 @@ void ManagerTurno::busquedaFecha(){
 
     buscando();
     
-    bool mostrarLeyenda = true;
+    bool* indicesTurnos = new bool[CANTIDAD] {false};
+    int totalTurnos = 0, iAux = 0;
 
-    if (dias == 1) {
+    if (dias == 1) {  // Una fecha determinada
+        // Filtrar
         for (int i=0; i<CANTIDAD; i++) {
             if (turnos[i].getEliminado()) {
                 continue;
             }
 
             if (turnos[i].getFechaAtencion() == desde) {
-                if (mostrarLeyenda) {
-                    mostrarLeyenda = false;
-                    std::cout << "-- Se encontraron los siguientes turnos en la fecha provista --\n";
-                }
-
-                mostrarUno(turnos[i]);
-                std::cout << "\n\n";
+                indicesTurnos[i] = true;
+                totalTurnos ++;
             }
         }
-    } else {
-        Fecha* fechasElegidas = mFecha.rangoFechas(desde, dias);
+        // Mostrar
+        if (totalTurnos > 0) {
+            std::cout << "-- Se encontraron los siguientes turnos en la fecha provista --\n";
+            Turno *turnosFecha = new Turno[totalTurnos];
 
+            for (int j = 0; j < CANTIDAD; j ++) {
+                if (indicesTurnos[j]) {
+                    turnosFecha[iAux] = turnos[j];
+                    iAux ++;
+                }
+            }
+
+            mostrarVarios(turnosFecha, totalTurnos);
+            std::cout << "\n\n";
+            delete[] turnosFecha;
+        } else {
+            std::cout << "No se han encontrado turnos en la fecha provista.\n";
+        }
+    } else {  // Un rango de fechas
+        Fecha* fechasElegidas = mFecha.rangoFechas(desde, dias);
+        // Filtrar
         for (int i=0; i<CANTIDAD; i++) {
             if (turnos[i].getEliminado()) {
                 continue;
@@ -407,21 +423,35 @@ void ManagerTurno::busquedaFecha(){
             
             for (int j=0; j<dias; j++) {
                 if (turnos[i].getFechaAtencion() == fechasElegidas[j]) {
-                    if (mostrarLeyenda) {
-                        mostrarLeyenda = false;
-                        std::cout << "-- Se encontraron los siguientes turnos en el rango de fechas provisto --\n";
-                    }
-
-                    mostrarUno(turnos[i]);
-                    std::cout << "\n\n";
+                    indicesTurnos[i] = true;
+                    totalTurnos ++;
                 }
             }
+        }
+        // Mostrar
+        if (totalTurnos > 0) {
+            std::cout << "-- Se encontraron los siguientes turnos en el rango de fechas --\n";
+            Turno *turnosFecha = new Turno[totalTurnos];
+
+            for (int j = 0; j < CANTIDAD; j ++) {
+                if (indicesTurnos[j]) {
+                    turnosFecha[iAux] = turnos[j];
+                    iAux ++;
+                }
+            }
+
+            mostrarVarios(turnosFecha, totalTurnos);
+            std::cout << "\n\n";
+            delete[] turnosFecha;
+        } else {
+            std::cout << "No se han encontrado turnos en el rango de fechas.\n";
         }
 
         delete[] fechasElegidas;
     }
     delete[] turnos;
     delete[] indicesVisitados;
+    delete[] indicesTurnos;
 
     std::cout << "Presione ENTER para continuar";
     rlutil::anykey();
@@ -452,11 +482,10 @@ void ManagerTurno::busquedaPaciente(){
 
     std::cin.ignore(100, '\n');
 
-    // Para una leyenda posterior en caso de no existir
-    bool encontrado = false;
-
+    int totalTurnos = 0, iAux = 0;
+    // Busqueda por DNI
     if (opc == 1) {
-        // Busqueda por DNI
+        
         int dni = 0;
 
         std::cout << "Ingrese el DNI del paciente: ";
@@ -469,14 +498,13 @@ void ManagerTurno::busquedaPaciente(){
                 continue;
             }
             if (turnos[i].getDniPaciente() == dni) {
-                encontrado = true;
                 indices[i] = true;
+                totalTurnos ++;
             }
         }
     }
-
+    // Busqueda por nombre completo
     if (opc == 2) {
-        // Busqueda por nombre completo
         std::string nombreCompleto;
         std::string nombreIngresado;
         Paciente auxPaciente;
@@ -499,21 +527,26 @@ void ManagerTurno::busquedaPaciente(){
             nombreCompleto.append(auxPaciente.getApellido());
 
             if (nombreCompleto.compare(nombreIngresado) == 0) {
-                encontrado = true;
                 indices[i] = true;
+                totalTurnos ++;
             }
         }
     }
-
-    if (encontrado) {
+    // Mostrar
+    if (totalTurnos > 0) {
         std::cout << "-- Se encontraron los siguientes turnos para el paciente seleccionado --\n";
-        
+        Turno *turnosPaciente = new Turno[totalTurnos];
+
         for (int i = 0; i < CANTIDAD; i ++) {
             if (indices[i]) {
-                mPaciente.mostrar(turnos[i].getPaciente());
-                separadorParcial();
+                turnosPaciente[iAux] = turnos[i];
+                iAux ++;
             }
         }
+
+        mostrarVarios(turnosPaciente, totalTurnos);
+        std::cout << "\n\n";
+        delete[] turnosPaciente;
     } else {
         std::cout << "No se ha encontrado el paciente en la base de datos de turnos\n";
     }

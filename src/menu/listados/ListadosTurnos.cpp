@@ -3,9 +3,10 @@
 #include <iostream>
 
 
-ListadosTurnos::ListadosTurnos(): Menu(1, "Menu Listados"){
-    std::string opciones[1] = {
-        "Ordenados por fecha"
+ListadosTurnos::ListadosTurnos(): Menu(2, "Menu Listados"){
+    std::string opciones[2] = {
+        "Ordenados por fecha",
+        "Agrupados por paciente"
     };
 
     setVectorOpciones(opciones);
@@ -16,12 +17,11 @@ void ListadosTurnos::ejecutarOpcion(){
     if (_opcionSeleccionada == 0) {
         return;
     }
+    ManagerTurno mTurno;
 
-    if (_opcionSeleccionada == 1) {
-        ManagerTurno mTurno;
-        mTurno.ordenadosFecha();
-        return;
-    }
+    if (_opcionSeleccionada == 1) { return mTurno.ordenadosFecha(); }
+    if (_opcionSeleccionada == 2) { return mTurno.agrupadosPaciente(); }
+
 
     std::cout << "Opcion fuera de rango. Intente nuevamente.\n";
 }

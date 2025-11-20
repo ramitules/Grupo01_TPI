@@ -196,54 +196,11 @@ void ManagerTurno::mostrarVarios(Turno* turnos, const int cantidad) {
 }
 
 void ManagerTurno::mostrarTodos(){
-    if (_repo.cantidadRegistros() == 0) {
-        std::cout << "No hay turnos cargados en la base de datos.\n";
-        return;
-    }
-
-    Turno* turnos = _repo.leerTodos();
-
-    // -- Calcular ancho maximo --
-    int anchoPaciente = 8; // Largo minimo "Paciente"
-    int anchoFecha = 14;   // Largo minimo "Fecha Atencion"
-    int anchoImporte = 7;  // Largo minimo "Importe"
-    std::string nombreCompleto;
-    std::string precioStr;
-
-    for(int i=0; i<_repo.cantidadRegistros(); i++) {
-        if (turnos[i].getEliminado()) {
-            continue;
-        }
-        nombreCompleto = turnos[i].getPaciente().getNombre();
-        nombreCompleto += " ";
-        nombreCompleto += turnos[i].getPaciente().getApellido();
-
-        anchoPaciente = std::max(anchoPaciente, (int)nombreCompleto.length());
-        anchoFecha = std::max(anchoFecha, (int)turnos[i].getFechaAtencion().to_str().length());
-        precioStr = std::to_string((int)turnos[i].getImporte()) + ".00";
-        anchoImporte = std::max(anchoImporte, (int)precioStr.length());
-    }
-
-    std::string linea = mostrarCabecera(anchoPaciente, anchoFecha, anchoImporte);
-
-    // Datos
-    for(int i=0; i<_repo.cantidadRegistros(); i++){
-        if (turnos[i].getEliminado()) {
-            continue;
-        }
-
-        nombreCompleto = turnos[i].getPaciente().getNombre();
-        nombreCompleto += " ";
-        nombreCompleto += turnos[i].getPaciente().getApellido();
-        
-        std::cout << "| " << std::setw(3) << turnos[i].getID() << " | " 
-                  << std::setw(anchoPaciente) << nombreCompleto << " | "
-                  << std::setw(anchoFecha) << turnos[i].getFechaAtencion().to_str() << " | "
-                  << std::setw(13) << turnos[i].getHoraAtencion().to_str() << " | "
-                  << "$ " << std::setw(anchoImporte - 2) << std::fixed << std::setprecision(2) << turnos[i].getImporte() << " |\n";
-    }
-
-    std::cout << linea;
+    const int CANTIDAD = _repo.cantidadRegistros();
+    Turno* todos = _repo.leerTodos();
+    
+    mostrarVarios(todos, CANTIDAD);
+    delete[] todos;
 }
 
 void ManagerTurno::ordenadosFecha(){

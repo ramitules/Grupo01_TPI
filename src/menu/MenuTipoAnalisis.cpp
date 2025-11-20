@@ -27,14 +27,14 @@ void MenuTipoAnalisis::ejecutarOpcion(){
         case 0:
             return;
         case 1:
-            std::cout << getNombreMenu() << ": " << _opciones[1] << "\n";
+            std::cout << getNombreMenu() << ": " << _opciones[0] << "\n";
             std::cout << "==============================\n";
 
             mTipoAnalisis.cargar();
             system("pause");
             break;
         case 2:
-            std::cout << getNombreMenu() << ": " << _opciones[0] << "\n";
+            std::cout << getNombreMenu() << ": " << _opciones[1] << "\n";
             std::cout << "==============================\n";
 
             if (mTipoAnalisis.comprobar()) {

@@ -10,13 +10,13 @@ class ManagerProtocolo{
     public:
         ManagerProtocolo();
 
-        bool iniciar(int idTurno);
+        bool comprobar(int idProtocolo = -1);
+        Protocolo seleccionar(int idProtocolo);
+        int iniciar(int idTurno);
         bool cargarAnalisis(Protocolo protocolo);
         bool asignar(Protocolo protocolo);
         void mostrar(Protocolo protocolo);
         bool mostrarTodos();
-        bool comprobar(int idProtocolo = -1);
-        Protocolo seleccionar(int idProtocolo);
+        bool finalizar(Protocolo protocolo);
         bool eliminar(Protocolo protocolo);
-        bool actualizar(Protocolo protocolo);
 };

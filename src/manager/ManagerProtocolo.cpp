@@ -137,8 +137,6 @@ int ManagerProtocolo::iniciar(int idTurno) {
         return -1;
     }
 
-
-
     protocolo.setId(idProtocolo);
     protocolo.setIdTurno(idTurno);
 
@@ -169,8 +167,6 @@ bool ManagerProtocolo::asignar(Protocolo protocolo){
 
     std::cout << "Seleccionar Enfermero (x DNI): ";
     std::cin >> dniEnfermero;
-
-    mEnfermero.comprobar(dniEnfermero);
 
     enfermero = protocolo.getEnfermero();
     pos = archivoEnfermero.getPos(dniEnfermero);
@@ -267,5 +263,9 @@ bool ManagerProtocolo::eliminar(Protocolo protocolo){
 
     std::cout << "\nATENCION: No se eliminaron los datos.\n\n";
     return false;
+}
+
+ArchivoProtocolo ManagerProtocolo::getRepositorio() {
+    return _repo;
 }
 

@@ -1,5 +1,6 @@
 #include "menu/MenuObraSocial.h"
 #include "manager/ManagerObraSocial.h"
+#include "utils/rlutil.h"
 #include <iostream>
 
 
@@ -29,6 +30,8 @@ void MenuObraSocial::ejecutarOpcion(){
 
     if (_opcionSeleccionada == 4) {
         mObraSocial.mostrarTodos();
+        std::cout << "Presione ENTER para continuar";
+        rlutil::anykey();
         return;
     }
 
@@ -73,13 +76,20 @@ void MenuObraSocial::ejecutarOpcion(){
         posObraSocial = (mObraSocial.getRepositorio().getPos(opcionSecundaria));
 
         if (posObraSocial == -1) {
-            std::cout << "La obra social no existe.\n";
+            std::cout << "La obra social no existe. Presione ENTER para volver.\n";
+            rlutil::anykey();
             return;
         }
     }
 
     ObraSocial obraSocial = mObraSocial.getRepositorio().leer(posObraSocial);
 
+    if (obraSocial.getID() == 1) {
+        std::cout << "La obra social por defecto no puede ser modificada o eliminada. Presione ENTER para volver.\n";
+        rlutil::anykey();
+        return;
+    }
+    
     if (_opcionSeleccionada == 2) {
         mObraSocial.actualizar(obraSocial);
         return;

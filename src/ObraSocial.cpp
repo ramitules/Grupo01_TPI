@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cstring>
 
-ObraSocial::ObraSocial(): _id(0), _nombre(""), _nombreContacto(""), _telefono(0), _email("") {};
+ObraSocial::ObraSocial(): _id(0), _nombre(""), _nombreContacto(""), _telefono(0), _email(""), _eliminado(false) {};
 
 ObraSocial::ObraSocial(int id, const char nombre[], const char nombreContacto[], int telefono, const char email[]){
     setID(id);
@@ -10,6 +10,7 @@ ObraSocial::ObraSocial(int id, const char nombre[], const char nombreContacto[],
     setNombreContacto(nombreContacto);
     setTelefono(telefono);
     setEmail(email);
+    setEliminado(false);
 }
 
 //SETTERS

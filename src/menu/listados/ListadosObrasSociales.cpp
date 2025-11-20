@@ -1,4 +1,5 @@
 #include "menu/listados/ListadosObrasSociales.h"
+#include "manager/ManagerObraSocial.h"
 #include <iostream>
 
 
@@ -16,6 +17,13 @@ void ListadosObrasSociales::ejecutarOpcion(){
     if (_opcionSeleccionada == 0) {
         return;
     }
+
+    ManagerObraSocial mOS;
+
+    if (_opcionSeleccionada == 1) { return mOS.ordenadosNombre(); }
+    if (_opcionSeleccionada == 2) { return mOS.agrupadosPacientes(); }
+
+    std::cout << "Opcion fuera de rango. Intente nuevamente.\n";
 }
 
 void ListadosObrasSociales::mostrarOpciones(){

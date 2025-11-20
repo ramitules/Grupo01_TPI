@@ -163,6 +163,86 @@ bool ManagerTipoAnalisis::actualizar(TipoAnalisis tipoAnalisis){
     return true;
 }
 
+void ManagerTipoAnalisis::listadoXnombre() {
+    const int CANTIDAD = _repo.cantidadRegistros();
+    TipoAnalisis *regTipoAnalisis = _repo.leerTodos(); //Pide memoria
+    TipoAnalisis aux;
+
+    // Ordenar
+    for (int i=0; i<CANTIDAD; i++) {
+
+        for (int j=i+1; j<CANTIDAD; j++) {
+            std::string nombre1 =regTipoAnalisis[i].getNombreAnalisis();
+            std::string nombre2 =regTipoAnalisis[j].getNombreAnalisis();
+
+            if (nombre1 > nombre2) {
+                aux = regTipoAnalisis[i];
+                regTipoAnalisis[i] = regTipoAnalisis[j];
+                regTipoAnalisis[j] = aux;
+            }
+        }
+    }
+
+    // Mostrar
+
+    std::cout << "Tipo\t\tID\tTiempo estimado\tPrecio\n\n";
+
+    for(int i=0; i<CANTIDAD; i++){
+
+        if (regTipoAnalisis[i].getEliminado()!=true) {
+            std::cout << regTipoAnalisis[i].getNombreAnalisis() << "\t\t";
+            std::cout << regTipoAnalisis[i].getID() << "\t";
+            std::cout << regTipoAnalisis[i].getTiempoResultado() << " dias\t";
+            std::cout << "\t$ " << regTipoAnalisis[i].getPrecio() << "\n";
+        }
+    }
+
+    delete [] regTipoAnalisis;
+        //rlutil::anykey();
+        //separadorParcial();
+}
+
+void ManagerTipoAnalisis::listadoXvalor() {
+    const int CANTIDAD = _repo.cantidadRegistros();
+    TipoAnalisis *regTipoAnalisis = _repo.leerTodos(); //Pide memoria
+    TipoAnalisis aux;
+
+    // Ordenar
+    for (int i=0; i<CANTIDAD; i++) {
+
+        for (int j=i+1; j<CANTIDAD; j++) {
+            std::string nombre1 =regTipoAnalisis[i].getNombreAnalisis();
+            std::string nombre2 =regTipoAnalisis[j].getNombreAnalisis();
+
+            if (regTipoAnalisis[i].getPrecio() > regTipoAnalisis[j].getPrecio()) {
+                aux = regTipoAnalisis[i];
+                regTipoAnalisis[i] = regTipoAnalisis[j];
+                regTipoAnalisis[j] = aux;
+            }
+        }
+    }
+
+    // Mostrar
+
+    std::cout << "Precio\tID\tTipo\t\tID\tTiempo estimado\n\n";
+
+    for(int i=0; i<CANTIDAD; i++){
+
+        if (regTipoAnalisis[i].getEliminado()!=true) {
+            std::cout << "$ " << regTipoAnalisis[i].getPrecio() << "\t";
+            std::cout << regTipoAnalisis[i].getID() << "\t";
+            std::cout << regTipoAnalisis[i].getNombreAnalisis() << "\t\t";
+            std::cout << regTipoAnalisis[i].getTiempoResultado() << " dias\n";
+        }
+    }
+
+    delete [] regTipoAnalisis;
+    //rlutil::anykey();
+    //separadorParcial();
+}
+
+
+
 bool ManagerTipoAnalisis::eliminar(TipoAnalisis tipoAnalisis){
     char opc;
 

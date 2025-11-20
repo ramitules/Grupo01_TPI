@@ -14,6 +14,8 @@ class ManagerTipoAnalisis{
         bool cargar();
         void mostrar(TipoAnalisis tipoAnalisis);
         bool mostrarTodos();
+        void listadoXnombre();
+        void listadoXvalor();
         bool eliminar(TipoAnalisis tipoAnalisis);
         bool actualizar(TipoAnalisis tipoAnalisis);
 };

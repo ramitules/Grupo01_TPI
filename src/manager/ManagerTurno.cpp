@@ -6,6 +6,8 @@
 #include "utils/rlutil.h"
 #include "utils/funcFrontend.h"
 #include "Paciente.h"
+#include <algorithm>
+#include <iomanip>
 
 
 ManagerTurno::ManagerTurno(){};
@@ -47,11 +49,16 @@ bool ManagerTurno::cargar(){
 
     // Dar la posibilidad de cargar todos los datos del paciente si no existe
     if (!pacienteExiste) {
-        std::cout << "Desea cargar los datos del paciente ahora? s/n: ";
+        std::cout << "Paciente inexistente. Desea cargar sus datos ahora? s/n: ";
         std::cin >> opc;
 
         if (opc == 's') {
-            mPaciente.cargar();
+            if (!mPaciente.cargar(dniPaciente)) {
+                std::cout << "No se pudo cargar el paciente. El turno no sera guardado.\n";
+                std::cout << "Presione ENTER para continuar\n";
+                rlutil::anykey();
+                return false;
+            }
         } else {
             Paciente paciente;
             paciente.setDNI(dniPaciente);
@@ -79,47 +86,164 @@ bool ManagerTurno::cargar(){
 
     if (_repo.guardar(turno)) {
         std::cout << "El turno se ha guardado correctamente. Presione ENTER para continuar\n";
-
         rlutil::anykey();
         return true;
     }
 
     std::cout << "Ocurrio un error al intentar guardar el turno. Presione ENTER para continuar\n";
-    
     rlutil::anykey();
     return false;
 }
 
-void ManagerTurno::mostrar(Turno turno){
-    Paciente auxP = turno.getPaciente();
+std::string ManagerTurno::mostrarCabecera(const int anchoPaciente, const int anchoFecha, const int anchoImporte) {
+    // -- Mostrar tabla --
+    std::cout << std::left; // Alinear a la izquierda
 
-    ManagerFecha mFecha;
-    ManagerHora mHora;
+    // Linea horizontal
+    std::string linea = "+" + std::string(5, '-') + 
+                        "+" + std::string(anchoPaciente + 2, '-') + 
+                        "+" + std::string(anchoFecha + 2, '-') + 
+                        "+" + std::string(15, '-') +
+                        "+" + std::string(anchoImporte + 2, '-') + "+\n";
+    // Cabeceras
+    std::cout << linea;
+    std::cout << "| " << std::setw(3) << "ID" << " | " 
+              << std::setw(anchoPaciente) << "Paciente" << " | "
+              << std::setw(anchoFecha) << "Fecha atencion" << " | "
+              << std::setw(13) << "Hora atencion" << " | "
+              << std::setw(anchoImporte) << "Importe" << " |\n";
+    std::cout << linea;
 
-    std::cout << "ID: " << turno.getID() << "\n";
-    std::cout << "Paciente: " << auxP.getNombre() << " " << auxP.getApellido() << ", con DNI " << auxP.getDNI() << "\n";
-    std::cout << "Fecha de atencion: ";
-    std::cout << mFecha.mostrar(turno.getFechaAtencion()) << "\n";
-    std::cout << "Hora de atencion: ";
-    std::cout << mHora.mostrar(turno.getHoraAtencion()) << "\n";
-    std::cout << "Importe: $" << turno.getImporte() << "\n";
+    return linea;
 }
 
-void ManagerTurno::mostrarTodos(){
-    Turno auxTurno;
+void ManagerTurno::mostrarUno(Turno turno){
+    ManagerFecha mFecha;
+    ManagerHora mHora;
     
-    for(int i=0; i<_repo.cantidadRegistros(); i++){
-        auxTurno = _repo.leer(i);
-        
-        if (auxTurno.getEliminado()) {
+    // -- Calcular ancho maximo --
+    int anchoPaciente = 8; // Largo minimo "Paciente"
+    int anchoFecha = 14;   // Largo minimo "Fecha Atencion"
+    int anchoImporte = 7;  // Largo minimo "Importe"
+    std::string nombreCompleto;
+    std::string precioStr;
+
+    nombreCompleto = turno.getPaciente().getNombre();
+    nombreCompleto += " ";
+    nombreCompleto += turno.getPaciente().getApellido();
+
+    anchoPaciente = std::max(anchoPaciente, (int)nombreCompleto.length());
+    anchoFecha = std::max(anchoFecha, (int)turno.getFechaAtencion().to_str().length());
+    precioStr = std::to_string((int)turno.getImporte()) + ".00";
+    anchoImporte = std::max(anchoImporte, (int)precioStr.length());
+
+    std::string linea = mostrarCabecera(anchoPaciente, anchoFecha, anchoImporte);
+
+    std::cout << "| " << std::setw(3) << turno.getID() << " | " 
+              << std::setw(anchoPaciente) << nombreCompleto << " | "
+              << std::setw(anchoFecha) << turno.getFechaAtencion().to_str() << " | "
+              << std::setw(13) << turno.getHoraAtencion().to_str() << " | "
+              << "$ " << std::setw(anchoImporte - 2) << std::fixed << std::setprecision(2) << turno.getImporte() << " |\n";
+}
+
+void ManagerTurno::mostrarVarios(Turno* turnos, const int cantidad) {
+    if (cantidad == 0) {
+        std::cout << "No hay turnos para mostrar.\n";
+        return;
+    }
+
+    // -- Calcular ancho maximo de columnas --
+    int anchoPaciente = 8; // Largo minimo "Paciente"
+    int anchoFecha = 14;   // Largo minimo "Fecha Atencion"
+    int anchoImporte = 7;  // Largo minimo "Importe"
+    std::string nombreCompleto;
+    std::string precioStr;
+
+    for(int i=0; i<cantidad; i++) {
+        if (turnos[i].getEliminado()) {
+            continue;
+        }
+        nombreCompleto = turnos[i].getPaciente().getNombre();
+        nombreCompleto += " ";
+        nombreCompleto += turnos[i].getPaciente().getApellido();
+
+        anchoPaciente = std::max(anchoPaciente, (int)nombreCompleto.length());
+        anchoFecha = std::max(anchoFecha, (int)turnos[i].getFechaAtencion().to_str().length());
+        precioStr = std::to_string((int)turnos[i].getImporte()) + ".00";
+        anchoImporte = std::max(anchoImporte, (int)precioStr.length());
+    }
+
+    std::string linea = mostrarCabecera(anchoPaciente, anchoFecha, anchoImporte);
+
+    // Datos
+    for(int i=0; i<cantidad; i++){
+        if (turnos[i].getEliminado()) {
             continue;
         }
 
-        mostrar(auxTurno);
-        separadorParcial();
+        nombreCompleto = turnos[i].getPaciente().getNombre();
+        nombreCompleto += " ";
+        nombreCompleto += turnos[i].getPaciente().getApellido();
+        
+        std::cout << "| " << std::setw(3) << turnos[i].getID() << " | " 
+                  << std::setw(anchoPaciente) << nombreCompleto << " | "
+                  << std::setw(anchoFecha) << turnos[i].getFechaAtencion().to_str() << " | "
+                  << std::setw(13) << turnos[i].getHoraAtencion().to_str() << " | "
+                  << "$ " << std::setw(anchoImporte - 2) << std::fixed << std::setprecision(2) << turnos[i].getImporte() << " |\n";
     }
 
-    separador();
+    std::cout << linea;
+}
+
+void ManagerTurno::mostrarTodos(){
+    if (_repo.cantidadRegistros() == 0) {
+        std::cout << "No hay turnos cargados en la base de datos.\n";
+        return;
+    }
+
+    Turno* turnos = _repo.leerTodos();
+
+    // -- Calcular ancho maximo --
+    int anchoPaciente = 8; // Largo minimo "Paciente"
+    int anchoFecha = 14;   // Largo minimo "Fecha Atencion"
+    int anchoImporte = 7;  // Largo minimo "Importe"
+    std::string nombreCompleto;
+    std::string precioStr;
+
+    for(int i=0; i<_repo.cantidadRegistros(); i++) {
+        if (turnos[i].getEliminado()) {
+            continue;
+        }
+        nombreCompleto = turnos[i].getPaciente().getNombre();
+        nombreCompleto += " ";
+        nombreCompleto += turnos[i].getPaciente().getApellido();
+
+        anchoPaciente = std::max(anchoPaciente, (int)nombreCompleto.length());
+        anchoFecha = std::max(anchoFecha, (int)turnos[i].getFechaAtencion().to_str().length());
+        precioStr = std::to_string((int)turnos[i].getImporte()) + ".00";
+        anchoImporte = std::max(anchoImporte, (int)precioStr.length());
+    }
+
+    std::string linea = mostrarCabecera(anchoPaciente, anchoFecha, anchoImporte);
+
+    // Datos
+    for(int i=0; i<_repo.cantidadRegistros(); i++){
+        if (turnos[i].getEliminado()) {
+            continue;
+        }
+
+        nombreCompleto = turnos[i].getPaciente().getNombre();
+        nombreCompleto += " ";
+        nombreCompleto += turnos[i].getPaciente().getApellido();
+        
+        std::cout << "| " << std::setw(3) << turnos[i].getID() << " | " 
+                  << std::setw(anchoPaciente) << nombreCompleto << " | "
+                  << std::setw(anchoFecha) << turnos[i].getFechaAtencion().to_str() << " | "
+                  << std::setw(13) << turnos[i].getHoraAtencion().to_str() << " | "
+                  << "$ " << std::setw(anchoImporte - 2) << std::fixed << std::setprecision(2) << turnos[i].getImporte() << " |\n";
+    }
+
+    std::cout << linea;
 }
 
 void ManagerTurno::ordenadosFecha(){
@@ -130,6 +254,7 @@ void ManagerTurno::ordenadosFecha(){
     // Ordenar
     for (int i=0; i<CANTIDAD; i++) {
         if (turnos[i].getEliminado()) {
+
             continue;
         }
 
@@ -150,19 +275,10 @@ void ManagerTurno::ordenadosFecha(){
     }
 
     // Mostrar
-    for (int i=0; i<CANTIDAD; i++) {
-        if (turnos[i].getEliminado()) {
-            continue;
-        }
-        rlutil::anykey();
-        mostrar(turnos[i]);
-        separadorParcial();
-    }
+    mostrarVarios(turnos, CANTIDAD);
 
-    separador();
-
+    // Finalizar
     delete[] turnos;
-
     std::cout << "Presione ENTER para continuar";
     rlutil::anykey();
 }
@@ -170,22 +286,24 @@ void ManagerTurno::ordenadosFecha(){
 void ManagerTurno::agrupadosPaciente(){
     const int CANTIDAD = _repo.cantidadRegistros();
     bool* indicesVisitados = new bool[CANTIDAD] {false};
+    bool* indicesPacientes = new bool[CANTIDAD] {false};
     Turno *turnos = _repo.leerTodos();
     Paciente auxPaciente;
 
+    int totalPacientes = 0;
+    int iAux = 0;
     for (int i=0; i<CANTIDAD; i++) {
-        // Saltear turnos ya mostrados
-        if (indicesVisitados[i]) {
+        if (indicesVisitados[i]) {      // Saltear turnos ya mostrados
             continue;
         }
 
-        if (turnos[i].getEliminado()) {
+        if (turnos[i].getEliminado()) { // y eliminados
             indicesVisitados[i] = true;
             continue;
         }
 
         auxPaciente = turnos[i].getPaciente();
-        std::cout << "-- Turnos del paciente " << auxPaciente.getNombre() << ' ' << auxPaciente.getApellido() << " --";
+        std::cout << "-- Turnos del paciente " << auxPaciente.getNombre() << ' ' << auxPaciente.getApellido() << " --\n";
        
         for (int j=0; j<CANTIDAD; j++) {
             if (turnos[i].getEliminado()) {
@@ -196,14 +314,29 @@ void ManagerTurno::agrupadosPaciente(){
             }
 
             if (turnos[j].getDniPaciente() == auxPaciente.getDNI()) {
-                mostrar(turnos[j]);
-                separadorParcial();
+                totalPacientes += 1;
                 indicesVisitados[j] = true;
+                indicesPacientes[j] = true;
             }
         }
 
-        separador();
+        Turno *turnosPaciente = new Turno[totalPacientes];
+
+        for (int j = 0; j < CANTIDAD; j ++) {
+            if (indicesPacientes[j]) {
+                turnosPaciente[iAux] = turnos[j];
+                iAux ++;
+            }
+        }
+
+        mostrarVarios(turnosPaciente, totalPacientes);
         std::cout << "\n\n";
+
+        // Reiniciar variables
+        totalPacientes = 0;
+        iAux = 0;
+        for (int j = 0; j < CANTIDAD; j ++) { indicesPacientes[j] = false; }
+        delete[] turnosPaciente;
     }
 
     delete[] turnos;
@@ -260,7 +393,7 @@ void ManagerTurno::busquedaFecha(){
                     std::cout << "-- Se encontraron los siguientes turnos en la fecha provista --\n";
                 }
 
-                mostrar(turnos[i]);
+                mostrarUno(turnos[i]);
                 std::cout << "\n\n";
             }
         }
@@ -279,7 +412,7 @@ void ManagerTurno::busquedaFecha(){
                         std::cout << "-- Se encontraron los siguientes turnos en el rango de fechas provisto --\n";
                     }
 
-                    mostrar(turnos[i]);
+                    mostrarUno(turnos[i]);
                     std::cout << "\n\n";
                 }
             }

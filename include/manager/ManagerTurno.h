@@ -10,7 +10,10 @@ class ManagerTurno{
         ManagerTurno();
 
         bool cargar();
-        void mostrar(Turno turno);
+        void mostrarUno(Turno turno);
+        void mostrarVarios(Turno* turnos, const int cantidad);
+        /// @return linea separadora para cabeceras y limites superior/inferior
+        std::string mostrarCabecera(const int anchoPaciente, const int anchoFecha, const int anchoImporte);
         void mostrarTodos();
         bool eliminar(Turno turno);
         bool actualizar(Turno turno);
@@ -23,12 +26,6 @@ class ManagerTurno{
         void busquedaFecha();
         // Busca turnos pidiendo los datos de un paciente
         void busquedaPaciente();
-        // Guarda un turno en un archivo CSV.
-        bool exportarCSV(Turno turno);
-        // Guarda todos los turnos existentes en un archivo CSV.
-        bool exportarTodosCSV();
-        // Exporta todos los turnos a un string, separando los atributos por coma y los turnos por salto de linea
-        std::string stringTodosCSV();
         
         ArchivoTurno getRepositorio();
 };

@@ -1,16 +1,15 @@
 #include "menu/MenuEnfermero.h"
 #include "manager/ManagerEnfermero.h"
-#include "Enfermero.h"
+#include "utils/rlutil.h"
 #include <iostream>
 
 
-MenuEnfermero::MenuEnfermero(): Menu(5, "Menu Enfermero"){
-    std::string opciones[5] = {
-        "Ingresar nuevo enfermero",
+MenuEnfermero::MenuEnfermero(): Menu(4, "Menu Enfermero"){
+    std::string opciones[4] = {
+        "Nuevo enfermero",
         "Modificar enfermero",
-        "Mostrar Enfermero",
-        "Mostrar todos",
-        "Eliminar enfermero"
+        "Eliminar enfermero",
+        "Mostrar todos"
     };
 
     setVectorOpciones(opciones);
@@ -18,55 +17,80 @@ MenuEnfermero::MenuEnfermero(): Menu(5, "Menu Enfermero"){
 }
 
 void MenuEnfermero::ejecutarOpcion(){
-    ManagerEnfermero mEnfermero;
-    Enfermero enfermero;
+    if (_opcionSeleccionada == 0) {
+        return;
+    }
 
-    int dniEnfermero;
-    bool seleccion = false;
+    ManagerEnfermero mEnf;
 
-    switch (_opcionSeleccionada) {
-        case 0:
-            return;
-        case 1:
-            std::cout << getNombreMenu() << ": " << _opciones[1] << "\n";
-            std::cout << "==============================\n";
+    if (_opcionSeleccionada == 1) {
+        mEnf.cargar();
+        return;
+    }
 
-            mEnfermero.cargar();
-            system("pause");
-            break;
-        case 2:
-            std::cout << getNombreMenu() << ": " << _opciones[0] << "\n";
-            std::cout << "==============================\n";
+    if (_opcionSeleccionada == 4) {
+        mEnf.mostrarTodos();
+        std::cout << "Presione ENTER para continuar";
+        rlutil::anykey();
+        return;
+    }
 
+    if (_opcionSeleccionada < 0 || _opcionSeleccionada > _cantidadOpciones) {
+        std::cout << "Opcion fuera de rango. Intente nuevamente.\n";
+        return;
+    }
 
-            system("pause");
-            break;
-        case 3:
-            std::cout << getNombreMenu() << ": " << _opciones[2] << "\n";
-            std::cout << "==============================\n";
+    int opcionSecundaria = 0;
+    int posEnfermero = -1;
 
+    std::cout << "Si conoce el DNI del enfermero, ingreselo a continuacion (0 = listar todos | -1 = salir): ";
+    std::cin >> opcionSecundaria;
 
-            system("pause");
-            break;
-        case 4:
-            std::cout << getNombreMenu() << ": " << _opciones[2] << "\n";
-            std::cout << "==============================\n";
+    if (opcionSecundaria < 0) {
+        return;
+    }
 
-            if (mEnfermero.comprobar()) {
-                mEnfermero.mostrarTodos();
+    if (opcionSecundaria == 0) {
+        // Mostrar todos los enfermeros por pantalla
+        // Esto sirve para modificacion y eliminacion por igual
+        mEnf.mostrarTodos();
+
+        while (true) {
+            std::cout << "Ingrese el DNI del enfermero, o 0 para cancelar: ";
+            std::cin >> opcionSecundaria;
+
+            if (opcionSecundaria == 0) {
+                return;
             }
 
-            system("pause");
-            break;
-        case 5:
-            std::cout << getNombreMenu() << ": " << _opciones[2] << "\n";
-            std::cout << "==============================\n";
+            posEnfermero = (mEnf.getRepositorio().getPos(opcionSecundaria));
 
+            if (posEnfermero != -1) {
+                break;
+            }
 
-            system("pause");
-            break;
-        default:
-            std::cout << "Intente nuevamente\n";
-            break;
+            std::cout << "El enfermero no existe. Intente nuevamente.\n";
+        }
+    } else if (opcionSecundaria > 0){
+        // Con un ID especifico, no se permite intentar nuevamente (sin ciclo while)
+        posEnfermero = (mEnf.getRepositorio().getPos(opcionSecundaria));
+
+        if (posEnfermero == -1) {
+            std::cout << "El enfermero no existe. Presione ENTER para volver.\n";
+            rlutil::anykey();
+            return;
+        }
+    }
+
+    Enfermero enfermero = mEnf.getRepositorio().leer(posEnfermero);
+    
+    if (_opcionSeleccionada == 2) {
+        mEnf.actualizar(enfermero);
+        return;
+    }
+    
+    if (_opcionSeleccionada == 3) {
+        mEnf.eliminar(enfermero);
+        return;
     }
 }

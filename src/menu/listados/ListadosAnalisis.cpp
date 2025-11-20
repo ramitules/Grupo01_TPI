@@ -1,6 +1,5 @@
 #include "menu/listados/ListadosAnalisis.h"
 #include <iostream>
-
 #include "manager/ManagerTipoAnalisis.h"
 
 
@@ -49,6 +48,7 @@ void ListadosAnalisis::mostrarOpciones(){
     std::cout << '\n';
     std::cout << "  Listados de turnos\n";
     std::cout << "  Listados de obras sociales\n";
+    std::cout << "  Listados de enfermeros\n";
     std::cout << "------------------------------\n";
     std::cout << "0. Volver\n";
 }

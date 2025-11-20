@@ -1,6 +1,10 @@
 #include "manager/ManagerEnfermero.h"
 #include "manager/ManagerPersona.h"
 #include "utils/ManagerFecha.h"
+#include "utils/rlutil.h"
+#include "utils/funcFrontend.h"
+#include <algorithm>
+#include <iomanip>
 
 
 ManagerEnfermero::ManagerEnfermero(){};
@@ -44,80 +48,323 @@ Enfermero ManagerEnfermero::seleccionar(int dniEnfermero) {
     return regEnfermero;
 }
 
-bool ManagerEnfermero::cargar(){
-    int habilitado = 1;
-
+bool ManagerEnfermero::cargar(int dniEnfermero){
     ManagerPersona mPersona;
+
+    Persona persona = mPersona.cargar(dniEnfermero);
+
+    char opc = 'n';
+    std::cout << "El enfermero esta habilitado? (s/n): ";
+    std::cin >> opc;
+
+    bool habilitado = (opc == 's');
+
     ManagerFecha mFecha;
-
-    Persona persona = mPersona.cargar();
-
     std::cout << "Ingrese la fecha de ingreso del enfermero:\n";
     Fecha fechaIngreso = mFecha.cargar();
 
-    std::cout << "El enfermero esta habilitado? (1 = si, 0 = no): ";
-    std::cin >> habilitado;
-
     Enfermero enfermero(persona, habilitado, fechaIngreso);
 
-    std::cin.ignore(100, '\n');
-
     if (_repo.guardar(enfermero)) {
-        std::cout << "El enfermero se ha guardado correctamente.\n";
+        std::cout << "El enfermero se ha guardado correctamente. Presione ENTER para continuar\n";
+        rlutil::anykey();
         return true;
     }
 
-    std::cout << "No se pudo guardar el enfermero.\n";
+    std::cout << "Ocurrio un error al intentar guardar el enfermero. Presione ENTER para continuar\n";
+    rlutil::anykey();
     return false;
 }
 
+std::string ManagerEnfermero::mostrarCabecera(
+    const int anchoDNI, 
+    const int anchoNombre, 
+    const int anchoApellido, 
+    const int anchoTelefono, 
+    const int anchoEmail,
+    const int anchoFecha
+){
+    // -- Mostrar tabla --
+    std::cout << std::left; // Alinear a la izquierda
 
-void ManagerEnfermero::mostrar(Enfermero enfermero){
-    ManagerFecha mFecha;
-    ManagerPersona mPersona;
+    // Linea horizontal
+    std::string linea = "+" + std::string(anchoDNI + 2, '-') + 
+                        "+" + std::string(anchoNombre + 2, '-') + 
+                        "+" + std::string(anchoApellido + 2, '-') + 
+                        "+" + std::string(anchoTelefono + 2, '-') + 
+                        "+" + std::string(anchoEmail + 2, '-') +
+                        "+" + std::string(anchoFecha + 2, '-') +
+                        "+" + std::string(13, '-') +
+                        "+" + std::string(anchoFecha + 2, '-') + "+\n";
+    // Cabeceras
+    std::cout << linea;
+    std::cout << "| " << std::setw(anchoDNI) << "DNI" << " | " 
+              << std::setw(anchoNombre) << "Nombre" << " | "
+              << std::setw(anchoApellido) << "Apellido" << " | "
+              << std::setw(anchoTelefono) << "Telefono" << " | "
+              << std::setw(anchoEmail) << "Email" << " | "
+              << std::setw(anchoFecha) << "Fecha Nacimiento" << " | "
+              << std::setw(11) << "Habilitado" << " | "
+              << std::setw(anchoFecha) << "Fecha Ingreso" << " |\n";
+    std::cout << linea;
 
-    mPersona.mostrar(enfermero);
-    std::cout << "Habilitado: " << (enfermero.getHabilitado() ? "Si" : "No") << "\n";
-    std::cout << "Fecha de ingreso: " << mFecha.mostrar(enfermero.getFechaIngreso()) << "\n";
+    return linea;
+}
+
+void ManagerEnfermero::mostarUno(Enfermero enfermero){
+    // -- Calcular ancho maximo --
+    int anchoDNI = 9;               // Largo minimo "DNI"
+    int anchoNombre = 6;            // Largo minimo "Nombre"
+    int anchoApellido = 8;          // Largo minimo "Apellido"
+    const int anchoTelefono = 10;   // Constante
+    int anchoEmail = 5;             // Largo minimo "Email"
+    const int anchoFecha = 17;      // Constante
+
+    anchoDNI = std::max(anchoDNI, (int)std::to_string(enfermero.getDNI()).length());
+    anchoNombre = std::max(anchoNombre, (int)strlen(enfermero.getNombre()));
+    anchoApellido = std::max(anchoApellido, (int)strlen(enfermero.getApellido()));
+    anchoEmail = std::max(anchoEmail, (int)strlen(enfermero.getEmail()));
+    
+    std::string linea = mostrarCabecera(
+        anchoDNI, 
+        anchoNombre, 
+        anchoApellido, 
+        anchoTelefono, 
+        anchoEmail,
+        anchoFecha
+    );
+
+    std::cout << "| " << std::setw(anchoDNI) << enfermero.getDNI() << " | "
+              << std::setw(anchoNombre) << enfermero.getNombre() << " | "
+              << std::setw(anchoApellido) << enfermero.getApellido() << " | "
+              << std::setw(anchoTelefono) << enfermero.getTelefono() << " | "
+              << std::setw(anchoEmail) << enfermero.getEmail() << " | "
+              << std::setw(anchoFecha) << enfermero.getFechaNacimiento().to_str() << " | "
+              << std::setw(11) << (enfermero.getHabilitado() ? "Si" : "No") << " | "
+              << std::setw(anchoFecha) << enfermero.getFechaIngreso().to_str() << " |\n";
+
+    std::cout << linea;
+}
+
+void ManagerEnfermero::mostrarVarios(Enfermero* enfermeros, const int cantidad){
+    if (cantidad == 0) {
+        std::cout << "No hay enfermeros para mostrar.\n";
+        return;
+    }
+
+    // -- Calcular ancho maximo de columnas --
+    int anchoDNI = 9;               // Largo minimo "DNI"
+    int anchoNombre = 6;            // Largo minimo "Nombre"
+    int anchoApellido = 8;          // Largo minimo "Apellido"
+    const int anchoTelefono = 10;   // Constante
+    int anchoEmail = 5;             // Largo minimo "Email"
+    const int anchoFecha = 17;      // Constante
+
+    for(int i=0; i<cantidad; i++) {
+        if (enfermeros[i].getEliminado()) {
+            continue;
+        }
+
+        anchoDNI = std::max(anchoDNI, (int)std::to_string(enfermeros[i].getDNI()).length());
+        anchoNombre = std::max(anchoNombre, (int)strlen(enfermeros[i].getNombre()));
+        anchoApellido = std::max(anchoApellido, (int)strlen(enfermeros[i].getApellido()));
+        anchoEmail = std::max(anchoEmail, (int)strlen(enfermeros[i].getEmail()));
+    }
+
+    std::string linea = mostrarCabecera(
+        anchoDNI, 
+        anchoNombre, 
+        anchoApellido, 
+        anchoTelefono, 
+        anchoEmail,
+        anchoFecha
+    );
+
+    // Datos
+    for(int i=0; i<cantidad; i++){
+        if (enfermeros[i].getEliminado()) {
+            continue;
+        }
+
+        std::cout << "| " << std::setw(anchoDNI) << enfermeros[i].getDNI() << " | "
+                  << std::setw(anchoNombre) << enfermeros[i].getNombre() << " | "
+                  << std::setw(anchoApellido) << enfermeros[i].getApellido() << " | "
+                  << std::setw(anchoTelefono) << enfermeros[i].getTelefono() << " | "
+                  << std::setw(anchoEmail) << enfermeros[i].getEmail() << " | "
+                  << std::setw(anchoFecha) << enfermeros[i].getFechaNacimiento().to_str() << " | "
+                  << std::setw(11) << (enfermeros[i].getHabilitado() ? "Si" : "No") << " | "
+                  << std::setw(anchoFecha) << enfermeros[i].getFechaIngreso().to_str() << " |\n";
+    }
+
+    std::cout << linea;
 }
 
 void ManagerEnfermero::mostrarTodos(){
-    ManagerPersona mPersona;
-    Enfermero regEnfermero;
-    int cantidadEnfermeros = _repo.cantidadRegistros();
-
-    std::cout << "\nOpc\tNombre\t\tDNI\t\tHabilitado\n";
-
-    for(int i=0; i<_repo.cantidadRegistros(); i++){
-        regEnfermero = _repo.leer(i);
-
-        if (regEnfermero.getEliminado()!=true) {
-            std::cout << i+1<< "\t";
-            std::cout << regEnfermero.getNombre() << " " << regEnfermero.getApellido() << "\t";
-            std::cout << regEnfermero.getDNI() << "\t";
-            std::cout << regEnfermero.getHabilitado() << "\n";
-        }
-    }
-    std::cout << std::endl;
+    const int CANTIDAD = _repo.cantidadRegistros();
+    Enfermero* todos = _repo.leerTodos();
+    
+    mostrarVarios(todos, CANTIDAD);
+    delete[] todos;
 }
 
-bool ManagerEnfermero::eliminar(Enfermero enfermero){
-    int pos = _repo.getPos(enfermero.getDNI());
+void ManagerEnfermero::ordenadosApellido() {
+    const int CANTIDAD = _repo.cantidadRegistros();
+    Enfermero *enfermeros = _repo.leerTodos();
+    Enfermero aux;
 
-    if (pos == -1) {
-        std::cout << "No se encontro el enfermero.\n";
-        return false;
+    // Ordenar
+    for (int i=0; i<CANTIDAD; i++) {
+        if (enfermeros[i].getEliminado()) {
+            continue;
+        }
+
+        for (int j=i+1; j<CANTIDAD; j++) {
+            if (enfermeros[j].getEliminado()) {
+                continue;
+            }
+
+            if (strcmp(enfermeros[i].getApellido(), enfermeros[j].getApellido()) > 0) {
+                aux = enfermeros[i];
+                enfermeros[i] = enfermeros[j];
+                enfermeros[j] = aux;
+            }
+        }
     }
 
-    if (_repo.eliminar(pos)) {
-        std::cout << "El enfermero se ha eliminado correctamente.\n";
+    // Mostrar
+    mostrarVarios(enfermeros, CANTIDAD);
+
+    // Finalizar
+    delete[] enfermeros;
+    std::cout << "Presione ENTER para continuar";
+    rlutil::anykey();
+}
+
+void ManagerEnfermero::ordenadosDNI() {
+    const int CANTIDAD = _repo.cantidadRegistros();
+    Enfermero *enfermeros = _repo.leerTodos();
+    Enfermero aux;
+
+    // Ordenar
+    for (int i=0; i<CANTIDAD; i++) {
+        if (enfermeros[i].getEliminado()) {
+            continue;
+        }
+
+        for (int j=i+1; j<CANTIDAD; j++) {
+            if (enfermeros[j].getEliminado()) {
+                continue;
+            }
+
+            if (enfermeros[i].getDNI() > enfermeros[j].getDNI()) {
+                aux = enfermeros[i];
+                enfermeros[i] = enfermeros[j];
+                enfermeros[j] = aux;
+            }
+        }
+    }
+
+    // Mostrar
+    mostrarVarios(enfermeros, CANTIDAD);
+
+    // Finalizar
+    delete[] enfermeros;
+    std::cout << "Presione ENTER para continuar";
+    rlutil::anykey();
+}
+
+void ManagerEnfermero::ordenadosAntiguedad() {
+    const int CANTIDAD = _repo.cantidadRegistros();
+    Enfermero *enfermeros = _repo.leerTodos();
+    Enfermero aux;
+
+    // Ordenar
+    for (int i=0; i<CANTIDAD; i++) {
+        if (enfermeros[i].getEliminado()) {
+            continue;
+        }
+
+        for (int j=i+1; j<CANTIDAD; j++) {
+            if (enfermeros[j].getEliminado()) {
+                continue;
+            }
+
+            if (enfermeros[i].getFechaIngreso() > enfermeros[j].getFechaIngreso()) {
+                aux = enfermeros[i];
+                enfermeros[i] = enfermeros[j];
+                enfermeros[j] = aux;
+            }
+        }
+    }
+
+    // Mostrar
+    mostrarVarios(enfermeros, CANTIDAD);
+
+    // Finalizar
+    delete[] enfermeros;
+    std::cout << "Presione ENTER para continuar";
+    rlutil::anykey();
+}
+
+bool ManagerEnfermero::actualizar(Enfermero& enfermero){
+    ManagerPersona mPersona;
+    ManagerFecha mFecha;
+
+    mPersona.actualizar(enfermero);
+
+    char opc = 'n';
+
+    std::cin.ignore(100, '\n');
+
+    if (enfermero.getHabilitado()) {
+        std::cout << "El enfermero sigue habilitado? (s/n): ";
+        std::cin >> opc;
+
+        enfermero.setHabilitado(opc == 's');
+    } else {
+        std::cout << "El enfermero sigue deshabilitado? (s/n): ";
+        std::cin >> opc;
+
+        enfermero.setHabilitado(opc == 'n');
+    }
+
+    std::cout << "Su fecha de ingreso sigue siendo la misma? (s/n): ";
+    std::cin >> opc;
+
+    if (opc != 's') {
+        enfermero.setFechaIngreso(mFecha.cargar());
+    }
+    
+    if (_repo.modificar(enfermero, _repo.getPos(enfermero.getDNI()))) {
+        std::cout << "El enfermero se ha modificado correctamente. Presione ENTER para continuar.\n";
+        rlutil::anykey();
         return true;
     }
 
-    std::cout << "No se pudo eliminar el enfermero.\n";
+    std::cout << "Ocurrio un error al intentar modificar el enfermero. Presione ENTER para continuar.\n";
+    rlutil::anykey();
     return false;
 }
 
-bool ManagerEnfermero::actualizar(Enfermero enfermero){
-    // PENDIENTE
+bool ManagerEnfermero::eliminar(Enfermero& enfermero){
+    char opc;
+
+    std::cout << "Seguro que desea eliminar el enfermero? (s/n): ";
+    std::cin >> opc;
+
+    if (opc == 's') {
+        enfermero.setEliminado(true);
+        if (_repo.modificar(enfermero, _repo.getPos(enfermero.getDNI()))) {
+            std::cout << "El enfermero se ha eliminado correctamente. Presione ENTER para continuar.\n";
+            rlutil::anykey();
+            return true;
+        }
+    }
+
+    std::cout << "Operacion cancelada.\n";
+    return false;
+}
+
+ArchivoEnfermero ManagerEnfermero::getRepositorio(){
+    return _repo;
 }

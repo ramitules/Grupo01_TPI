@@ -60,6 +60,7 @@ set(SOURCES
     src/menu/listados/ListadosObrasSociales.cpp
     src/menu/listados/ListadosPacientes.cpp
     src/menu/listados/ListadosTurnos.cpp
+    src/menu/listados/ListadosEnfermeros.cpp
     src/menu/consultas/MenuConsultas.cpp
     src/menu/consultas/ConsultasAnalisis.cpp
     src/menu/consultas/ConsultasPacientes.cpp

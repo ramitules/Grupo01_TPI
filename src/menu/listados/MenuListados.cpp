@@ -3,15 +3,17 @@
 #include "menu/listados/ListadosAnalisis.h"
 #include "menu/listados/ListadosTurnos.h"
 #include "menu/listados/ListadosObrasSociales.h"
+#include "menu/listados/ListadosEnfermeros.h"
 #include <iostream>
 
 
-MenuListados::MenuListados(): Menu(4, "Menu Listados"){
-    std::string opciones[4] = {
+MenuListados::MenuListados(): Menu(5, "Menu Listados"){
+    std::string opciones[5] = {
         "Listados de pacientes",
         "Listados de analisis",
         "Listados de turnos",
-        "Listados de obras sociales"
+        "Listados de obras sociales",
+        "Listados de enfermeros"
     };
 
     setVectorOpciones(opciones);
@@ -34,6 +36,9 @@ void MenuListados::ejecutarOpcion(){
         menu.buclePrincipal();
     } else if (_opcionSeleccionada == 4){
         ListadosObrasSociales menu;
+        menu.buclePrincipal();
+    } else if (_opcionSeleccionada == 5) {
+        ListadosEnfermeros menu;
         menu.buclePrincipal();
     } else {
         std::cout << "Intente nuevamente\n";

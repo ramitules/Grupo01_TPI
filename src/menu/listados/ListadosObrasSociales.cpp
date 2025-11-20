@@ -40,6 +40,7 @@ void ListadosObrasSociales::mostrarOpciones(){
     }
 
     std::cout << '\n';
+    std::cout << "  Listados de enfermeros\n";
     std::cout << "------------------------------\n";
     std::cout << "0. Volver\n";
 }

@@ -550,6 +550,7 @@ bool ManagerTurno::actualizar(Turno turno){
     std::cin >> opc;
 
     if (opc != 's') {
+        std::cin.ignore(2, '\n');
         turno.setFechaAtencion(mFecha.cargar());
     }
     
@@ -557,6 +558,7 @@ bool ManagerTurno::actualizar(Turno turno){
     std::cin >> opc;
     
     if (opc != 's') {
+        std::cin.ignore(2, '\n');
         turno.setHoraAtencion(mHora.cargar());
     }
 
@@ -564,6 +566,7 @@ bool ManagerTurno::actualizar(Turno turno){
     std::cin >> opc;
     
     if (opc != 's') {
+        std::cin.ignore(2, '\n');
         while (true) {
             std::cout << "Ingrese un importe: $";
             std::cin >> importe;

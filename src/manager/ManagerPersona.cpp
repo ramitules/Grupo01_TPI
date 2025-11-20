@@ -74,7 +74,6 @@ void ManagerPersona::actualizar(Persona& persona){
     std::string apellido = persona.getApellido();
     std::string email = persona.getEmail();
     int telefono = persona.getTelefono();
-    Fecha fechaNacimiento = persona.getFechaNacimiento();
     char opc = 'n';
 
     ManagerFecha fecha;
@@ -86,6 +85,7 @@ void ManagerPersona::actualizar(Persona& persona){
 
     if (opc != 's') {
         std::cout << "Ingrese el nombre: ";
+        std::cin.ignore(2, '\n');
         std::getline(std::cin, nombre);
 
         if (nombre == "" || nombre == " ") {
@@ -100,6 +100,7 @@ void ManagerPersona::actualizar(Persona& persona){
 
     if (opc != 's') {
         std::cout << "Ingrese el apellido: ";
+        std::cin.ignore(2, '\n');
         std::getline(std::cin, apellido);
         
         if (apellido == "" || apellido == " ") {
@@ -114,6 +115,7 @@ void ManagerPersona::actualizar(Persona& persona){
 
     if (opc != 's') {
         std::cout << "Ingrese el email: ";
+        std::cin.ignore(2, '\n');
         std::getline(std::cin, email);
         
         if (email == "" || email == " ") {
@@ -123,12 +125,11 @@ void ManagerPersona::actualizar(Persona& persona){
         persona.setEmail(email.c_str());
     }
 
-    std::cin.ignore(100, '\n');
-
     std::cout << "El telefono es el mismo? s/n: ";
     std::cin >> opc;
 
     if (opc != 's'){
+        std::cin.ignore(2, '\n');
         std::cout << "Ingrese el telefono: ";
         std::cin >> telefono;
 

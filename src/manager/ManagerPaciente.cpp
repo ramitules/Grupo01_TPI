@@ -126,6 +126,8 @@ void ManagerPaciente::mostrarUno(Paciente paciente){
               << std::setw(anchoEmail) << paciente.getEmail() << " | "
               << std::setw(anchoFechaNacimiento) << paciente.getFechaNacimiento().to_str() << " | "
               << std::setw(anchoObraSocial) << paciente.getObraSocial().getNombre() << " |\n";
+
+    std::cout << linea;
 }
 
 void ManagerPaciente::mostrarVarios(Paciente* pacientes, const int cantidad){

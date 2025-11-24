@@ -1,6 +1,7 @@
 #include "menu/MenuTipoAnalisis.h"
-#include "manager/ManagerTipoAnalisis.h"
 #include "TipoAnalisis.h"
+#include "manager/ManagerTipoAnalisis.h"
+#include "utils/funcFrontend.h"
 #include <iostream>
 
 
@@ -21,63 +22,146 @@ void MenuTipoAnalisis::ejecutarOpcion(){
     TipoAnalisis tipoAnalisis;
 
     int idTipoAnalisis;
-    bool seleccion = false;
+    char confirmar;
 
     switch (_opcionSeleccionada) {
         case 0:
             return;
         case 1:
-            std::cout << getNombreMenu() << ": " << _opciones[0] << "\n";
+            std::cout << getNombreMenu() << ": " << _opciones[0] << "\t(Ingrese 0 para SALIR)\n";
             std::cout << "==============================\n";
+            tipoAnalisis = TipoAnalisis();
 
-            mTipoAnalisis.cargar();
-            system("pause");
+            if (!mTipoAnalisis.ingresarDatos(tipoAnalisis, true)) {
+                break;
+            }
+
+            std::cout << "\nCONFIRMAR: Cargar los datos s/n: ";
+            std::cin >> confirmar;
+
+            if (confirmar != 's') {
+                //CARGA CANCELADA
+                menuVolver();
+                break;
+            }
+
+            if (mTipoAnalisis.cargarDatos(tipoAnalisis)) {
+                std::cout << "\nCARGA EXITOSA. ";
+            } else {
+                std::cout << "\nCARGA CANCELADA. ";
+            }
+            pausa();
             break;
         case 2:
-            std::cout << getNombreMenu() << ": " << _opciones[1] << "\n";
+            std::cout << getNombreMenu() << ": " << _opciones[1] << "\t(Ingrese 0 para SALIR)\n";
             std::cout << "==============================\n";
+            tipoAnalisis = TipoAnalisis();
 
             if (mTipoAnalisis.comprobar()) {
                 mTipoAnalisis.mostrarTodos();
+                std::cout << std::endl;
             }
 
-            system("pause");
+            pausa();
             break;
         case 3:
-            std::cout << getNombreMenu() << ": " << _opciones[2] << "\n";
+            std::cout << getNombreMenu() << ": " << _opciones[2] << "\t(Ingrese 0 para SALIR)\n";
             std::cout << "==============================\n";
 
-            if (mTipoAnalisis.comprobar()) {
-                mTipoAnalisis.mostrarTodos();
+            std::cin.ignore(100,'\n');
 
-                std::cout << "Ingrese el ID a modificar: ";
-                std::cin >> idTipoAnalisis;
+            mTipoAnalisis.mostrarTodos();
 
-                if (mTipoAnalisis.comprobar(idTipoAnalisis)) {
-                    tipoAnalisis = mTipoAnalisis.seleccionar(idTipoAnalisis);
-                    mTipoAnalisis.actualizar(tipoAnalisis);
-                }
+            std::cout << "\nIngrese el ID a modificar: ";
+            std::cin >> idTipoAnalisis;
+
+            if (idTipoAnalisis==0) {
+                menuVolver();
+                break;
             }
 
-            system("pause");
+            if (!mTipoAnalisis.comprobar(idTipoAnalisis)) {
+                pausa();
+                break;
+            }
+
+            tipoAnalisis = mTipoAnalisis.seleccionar(idTipoAnalisis);
+            mTipoAnalisis.mostrar(tipoAnalisis);
+
+            std::cout << "\nModificar los datos s/n: ";
+            std::cin >> confirmar;
+
+            if (confirmar != 's') {
+                //CARGA CANCELADA
+                menuVolver();
+                break;
+            }
+
+            if (!mTipoAnalisis.ingresarDatos(tipoAnalisis)) {
+                menuVolver();
+                break;
+            }
+
+            std::cout << "\nCONFIRMAR: Guardar los cambios realizados s/n: ";
+            std::cin >> confirmar;
+
+            if (confirmar != 's') {
+                //CARGA CANCELADA
+                menuVolver();
+                break;
+            }
+
+            if (mTipoAnalisis.actualizar(tipoAnalisis)) {
+                std::cout << "\nMODIFICACION EXITOSA. ";
+            } else {
+                std::cout << "\nMODIFICACION CANCELADA. ";
+            }
+
+            pausa();
             break;
         case 4:
-            std::cout << getNombreMenu() << ": " << _opciones[3] << "\n";
+            std::cout << getNombreMenu() << ": " << _opciones[3] <<  "\t(Ingrese 0 para SALIR)\n";
             std::cout << "==============================\n";
 
-            if (mTipoAnalisis.comprobar()) {
+            if (!mTipoAnalisis.comprobar()) {
                 mTipoAnalisis.mostrarTodos();
-
-                std::cout << "Ingrese el ID a eliminar: ";
-                std::cin >> idTipoAnalisis;
-
-                if (mTipoAnalisis.comprobar(idTipoAnalisis)) {
-                    tipoAnalisis = mTipoAnalisis.seleccionar(idTipoAnalisis);
-                    mTipoAnalisis.eliminar(tipoAnalisis);
-                }
+                menuVolver();
+                break;
             }
-            system("pause");
+
+            mTipoAnalisis.mostrarTodos();
+
+            std::cout << "\nIngrese el ID a eliminar: ";
+            std::cin >> idTipoAnalisis;
+
+            if (idTipoAnalisis==0) {
+                menuVolver();
+                break;
+            }
+            if (!mTipoAnalisis.comprobar(idTipoAnalisis)) {
+                pausa();
+                break;
+            }
+
+            tipoAnalisis = mTipoAnalisis.seleccionar(idTipoAnalisis);
+
+            std::cout << "\nCONFIRMAR: Eliminar los datos s/n: ";
+            std::cin >> confirmar;
+
+            if (confirmar != 's') {
+                //CARGA CANCELADA
+                menuVolver();
+                break;
+            }
+
+            if (mTipoAnalisis.eliminar(tipoAnalisis)){
+                std::cout << "\nELIMINACION EXITOSA. \n";
+            } else {
+                std::cout << "\nELIMINACION CANCELADA. \n";
+            }
+            pausa();
             break;
+
         default:
             std::cout << "Intente nuevamente\n";
             break;

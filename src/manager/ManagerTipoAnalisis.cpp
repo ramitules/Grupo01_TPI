@@ -1,27 +1,34 @@
 #include "manager/ManagerTipoAnalisis.h"
+#include "TipoAnalisis.h"
+#include "utils/IngresarDatos.h"
 #include <string>
-#include <iomanip>
+#include <cstring>
+#include <iomanip> //chequear uso
+
+
 
 ManagerTipoAnalisis::ManagerTipoAnalisis(){};
 
 //VALIDACION: Comprueba que exista el ID
 
 bool ManagerTipoAnalisis::comprobar(int idTipoAnalisis) {
+
     TipoAnalisis regTipoAnalisis;
     int cantidadTipoAnalisis = _repo.cantidadRegistros();
 
-    if (cantidadTipoAnalisis <= 0) {
-        std::cout << "\nRegistro vacio.\n\n" << std::endl;
+    if (cantidadTipoAnalisis == 0) {
+        std::cout << "\nRegistro vacio.\n" << std::endl;
         return false;
     }
 
-    if (idTipoAnalisis == -1) { // valor por defecto: no se ingresó parametro
+    //Posterior a comprobar el registro, sin ID ingresado retorna.
+    if (idTipoAnalisis == -1) {
         return true;
     }
 
     regTipoAnalisis = _repo.leer(idTipoAnalisis-1);
 
-    if (idTipoAnalisis==regTipoAnalisis.getID() && regTipoAnalisis.getEliminado()!=true) {
+    if (idTipoAnalisis==regTipoAnalisis.getID() && regTipoAnalisis.getEliminado()==0) {
         //std::cout << "Tipo de Analisis encontrado";
         return true;
     }
@@ -48,119 +55,122 @@ void ManagerTipoAnalisis::mostrar(TipoAnalisis tipoAnalisis){
     std::cout << "\t$ " << tipoAnalisis.getPrecio() << "\n";
 }
 
-bool ManagerTipoAnalisis::mostrarTodos(){
+void ManagerTipoAnalisis::mostrarTodos(){
     TipoAnalisis regTipoAnalisis;
     int cantidadTipoAnalisis = _repo.cantidadRegistros();
 
-    std::cout << "ID\tTipo\t\tTiempo estimado\tPrecio\n\n";
+    std::cout << "ID\tTipo\t\tTiempo estimado\tPrecio\tDatos\n\n";
 
-    for(int i=0; i<cantidadTipoAnalisis; i++){
+    for(int i=0; i<cantidadTipoAnalisis; i++) {
         regTipoAnalisis = _repo.leer(i);
 
-        if (regTipoAnalisis.getEliminado()) {
-            continue;
-        }
-
-        std::cout << regTipoAnalisis.getID() << "\t";
-        std::cout << regTipoAnalisis.getNombreAnalisis() << "\t\t";
-        std::cout << regTipoAnalisis.getTiempoResultado() << " dias\t";
-        std::cout << "\t$ " << regTipoAnalisis.getPrecio() << "\n";
+            std::cout << regTipoAnalisis.getID() << "\t";
+            std::cout << regTipoAnalisis.getNombreAnalisis() << "\t\t";
+            std::cout << regTipoAnalisis.getTiempoResultado() << " dias\t";
+            std::cout << "\t$ " << regTipoAnalisis.getPrecio() << "\t";
+            (regTipoAnalisis.getEliminado())? std::cout << "Eliminado\n" : std::cout << "Existente\n";
     }
-    
-    std::cout << std::endl;
-    return true;
 }
 
-bool ManagerTipoAnalisis::cargar(){
-
-    int tipoAnalisisID = _repo.cantidadRegistros()+1;
-
+bool ManagerTipoAnalisis::ingresarDatos(TipoAnalisis &tipoAnalisis, bool nuevoId) {
+    int idTipoAnalisis;
     std::string nombre;
-    float precio = 0.0f;
+    float precio = 0;
     int tiempoResultado = 0;
-    char opc;
+    char confirmar;
+
+    IngresarDatos ingresar;
+
+    if (nuevoId==true) {
+        idTipoAnalisis = _repo.cantidadRegistros()+1;
+    } else {
+        idTipoAnalisis = tipoAnalisis.getID();
+    }
 
     std::cin.ignore(100, '\n');
 
-    std::cout << "\nIngrese el nombre: ";
-    std::getline(std::cin, nombre);
-    if (nombre == "") {
-        std::cout << "No se puede continuar sin un nombre de tipo de analisis.\n";
-        system("pause");
+    if (!ingresar.nombre(nombre)) {
         return false;
+        //Carga cancelada
+    }
+    if (!ingresar.tiempoResultado(tiempoResultado)){
+        return false;
+        //Carga cancelada
+    }
+    if (!ingresar.precio(precio)){
+        return false;
+        //Carga cancelada
     }
 
-    std::cout << "Tiempo del resultado (dias): ";
-    std::cin >> tiempoResultado;
-    if (tiempoResultado <= 0) {
-        std::cout << "No se puede continuar, plazo minimo de 1 dia.\n";
-        system("pause");
-        return false;
+    tipoAnalisis = TipoAnalisis(idTipoAnalisis, nombre.c_str(), tiempoResultado, precio);
+    return true;
+}
+
+bool ManagerTipoAnalisis::cargarDatos(TipoAnalisis tipoAnalisis) {
+    const int cantidadRegistros = _repo.cantidadRegistros();
+    TipoAnalisis* regTipoAnalisis = _repo.leerTodos();
+    bool cargaValida = true;
+
+    //CHEQUEO VALORES REPETIDOS
+
+    for (int i = 0; i < cantidadRegistros; i++){
+
+        if (regTipoAnalisis[i].getEliminado()) {
+            continue;
+        }
+        if (strcmp(tipoAnalisis.getNombreAnalisis(),regTipoAnalisis[i].getNombreAnalisis()) == 0) {
+            std::cout << "\nERROR: El nombre ingresado ya existe.\n";
+            cargaValida = false;
+            break;
+        }
     }
 
-    std::cout << "Precio ($): ";
-    std::cin >> precio;
-    std::cout << "\n";
-    if (precio <= 0) {
-        std::cout << "No se puede continuar sin un precio mayor a 0.\n";
-        system("pause");
-        return false;
-    }
+    delete[] regTipoAnalisis; //Devuelvo la memoria de repo.leerTodos.}
 
-    TipoAnalisis tipoAnalisis(tipoAnalisisID, nombre.c_str(), tiempoResultado, precio);
-    mostrar(tipoAnalisis);
-
-    std::cout << "CONFIRMAR: Cargar los datos s/n: ";
-    std::cin >> opc;
-    std::cout << "\n";
-
-    if (opc != 's') {
-        std::cout << "ATENCION: No se cargaron los datos\n\n";
+    if (!cargaValida) {
         return false;
     }
 
     if (_repo.guardar(tipoAnalisis)) {
-        std::cout << "El tipo de analisis se ha cargado correctamente.\n\n";
+        //CARGA OK
         return true;
+    } else {
+        std::cout << "\nATENCION: Error al intentar guardar el tipo de analisis. ";
+        return false;
     }
-
-    std::cout << "ATENCION: Ocurrio un error al intentar guardar el tipo de analisis.\n\n";
-    return false;
 }
 
 bool ManagerTipoAnalisis::actualizar(TipoAnalisis tipoAnalisis){
     std::string nombre;
-    int tiempoResultado, precio;
-    char opc;
+    int tiempoResultado;
+    float precio;
+    char confirmar;
 
-    std::cout << "\nNombre actual: " << tipoAnalisis.getNombreAnalisis() << "\n";
-    std::cout << "Nuevo nombre: ";
-    std::cin.ignore(100, '\n');
-    std::getline(std::cin, nombre);
-    tipoAnalisis.setNombreAnalisis(nombre.c_str());
+    //CHEQUEO VALORES REPETIDOS
 
-    std::cout << "\nTiempo actual: " << tipoAnalisis.getTiempoResultado() << "\n";
-    std::cout << "Nuevo Tiempo: ";
-    std::cin >> tiempoResultado;
-    tipoAnalisis.setTiempoResultado(tiempoResultado);
+    const int cantidadRegistros = _repo.cantidadRegistros();
+    TipoAnalisis* regTipoAnalisis = _repo.leerTodos();
+    bool cargaValida = true;
 
-    std::cout << "\nPrecio actual: " << tipoAnalisis.getPrecio() << "\n";
-    std::cout << "Nuevo Precio: ";
-    std::cin >> precio; tipoAnalisis.setPrecio(precio);
+    for (int i = 0; i < cantidadRegistros; i++){
 
+        if (regTipoAnalisis[i].getEliminado()) {
+            continue;
+        }
+        if (strcmp(tipoAnalisis.getNombreAnalisis(),regTipoAnalisis[i].getNombreAnalisis()) == 0) {
+            std::cout << "\nERROR: El nombre ingresado ya existe.\n";
+            cargaValida = false;
+            break;
+        }
+    }
 
-    mostrar(tipoAnalisis);
+    delete[] regTipoAnalisis; //Devuelvo la memoria de repo.leerTodos.}
 
-    std::cout << "\nModificar los datos s/n: ";
-    std::cin >> opc;
-
-    if (opc != 's') {
-        std::cout << "\nATENCION: No se modificaron los datos\n\n";
+    if (!cargaValida) {
         return false;
     }
 
     if (_repo.modificar(tipoAnalisis, tipoAnalisis.getID()-1)) {
-        std::cout << "\nEl tipo de analisis se ha modificado correctamente.\n\n";
         return true;
     }
     return true;
@@ -244,25 +254,14 @@ void ManagerTipoAnalisis::listadoXvalor() {
     //separadorParcial();
 }
 
-
-
 bool ManagerTipoAnalisis::eliminar(TipoAnalisis tipoAnalisis){
-    char opc;
 
-    std::cout << "\nSeguro que desea eliminar el tipo de analisis? s/n: ";
-    std::cin >> opc;
+    tipoAnalisis.setEliminado(true);
 
-    if (opc == 's') {
-        tipoAnalisis.setEliminado(true);
-        if (_repo.modificar(tipoAnalisis,tipoAnalisis.getID()-1)){
-            std::cout << "\nSe ha eliminado correctamente.\n\n" << std::endl;
-            return true;
-        } else {
-            std::cout << "\nATENCION: Error al intentar eliminar el tipo de analisis.\n\n";
-            return false;
-        }
+    if (_repo.modificar(tipoAnalisis,tipoAnalisis.getID()-1)){
+        return true;
+    } else {
+        std::cout << "\nATENCION: Error al intentar eliminar el tipo de analisis.\n";
+        return false;
     }
-
-    std::cout << "\nATENCION: No se eliminaron los datos.\n\n";
-    return false;
 }

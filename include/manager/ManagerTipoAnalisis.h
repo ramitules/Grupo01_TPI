@@ -11,11 +11,15 @@ class ManagerTipoAnalisis{
 
         TipoAnalisis seleccionar(int idTipoAnalisis);
         bool comprobar(int idTipoAnalisis = -1);
-        bool cargar();
         void mostrar(TipoAnalisis tipoAnalisis);
-        bool mostrarTodos();
+        void mostrarTodos();
+
+        bool ingresarDatos(TipoAnalisis &tipoAnalisis, bool nuevoId = false);
+        bool cargarDatos(TipoAnalisis tipoAnalisis);
+
         void listadoXnombre();
         void listadoXvalor();
-        bool eliminar(TipoAnalisis tipoAnalisis);
+
         bool actualizar(TipoAnalisis tipoAnalisis);
+        bool eliminar(TipoAnalisis tipoAnalisis);
 };

@@ -1,13 +1,15 @@
 #include "Protocolo.h"
 #include <cstring>
 
-Protocolo::Protocolo(): _id(0), _idTurno(0), _dniEnfermero(0), _sala(0), _observaciones("sin observaciones"), _estado(false), _eliminado(false){};
+Protocolo::Protocolo(): _id(0), _idTurno(0), _dniEnfermero(0), _sala(0), _analisis(false), _observaciones("sin observaciones"), _estado(false), _eliminado(false){};
 
-Protocolo::Protocolo(int id, int idTurno, int dniEnfermero, int sala, const char observaciones[]) {
+Protocolo::Protocolo(int id, int idTurno, int dniEnfermero, int sala, bool estado, bool analisis, const char observaciones[]) {
     setId(id);
     setIdTurno(idTurno);
     setDniEnfermero(dniEnfermero);
     setSala(sala);
+    setEstado(estado);
+    setAnalisis(analisis);
     setObservaciones(observaciones);
 };
 
@@ -35,6 +37,11 @@ const char* Protocolo::getObservaciones(){
 bool Protocolo::getEstado() {
     return _estado;
 }
+
+bool Protocolo::getAnalisis() {
+    return _analisis;
+}
+
 
 Enfermero Protocolo::getEnfermero() {
     ArchivoEnfermero repoEnfermero;
@@ -88,6 +95,10 @@ void Protocolo::setObservaciones(const char observaciones[]) {
 
 void Protocolo::setEstado(bool estado) {
     _estado = estado;
+}
+
+void Protocolo::setAnalisis(bool analisis) {
+    _analisis = analisis;
 }
 
 void Protocolo::setEliminado(bool eliminado) {

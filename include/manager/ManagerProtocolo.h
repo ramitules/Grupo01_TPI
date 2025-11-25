@@ -12,8 +12,8 @@ class ManagerProtocolo{
 
         bool comprobar(int idProtocolo = -1);
         Protocolo seleccionar(int idProtocolo);
-        int iniciar(int idTurno);
-        int buscarTurno(int idTurno);
+        bool iniciar(Protocolo &protocolo);
+        bool chequearTurno(Protocolo protocolo);
         bool cargarAnalisis(Protocolo protocolo);
         bool asignar(Protocolo protocolo);
         void mostrar(Protocolo protocolo);

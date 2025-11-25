@@ -33,7 +33,7 @@ bool ManagerTipoAnalisis::comprobar(int idTipoAnalisis) {
         return true;
     }
     else {
-        std::cout << "\nATENCION: ID Tipo Analisis no existente.\n" << std::endl;
+        std::cout << "\nATENCION: ID Tipo Analisis no existente.\n" ;
         return false;
     }
 }
@@ -59,15 +59,15 @@ void ManagerTipoAnalisis::mostrarTodos(){
     TipoAnalisis regTipoAnalisis;
     int cantidadTipoAnalisis = _repo.cantidadRegistros();
 
-    std::cout << "ID\tTipo\t\tTiempo estimado\tPrecio\tDatos\n\n";
+    std::cout << "ID\tTipo\t\tTiempo estimado\tPrecio\t\tDatos\n\n";
 
     for(int i=0; i<cantidadTipoAnalisis; i++) {
         regTipoAnalisis = _repo.leer(i);
 
             std::cout << regTipoAnalisis.getID() << "\t";
-            std::cout << regTipoAnalisis.getNombreAnalisis() << "\t\t";
+            std::cout << regTipoAnalisis.getNombreAnalisis() << "\t";
             std::cout << regTipoAnalisis.getTiempoResultado() << " dias\t";
-            std::cout << "\t$ " << regTipoAnalisis.getPrecio() << "\t";
+            std::cout << "\t$ " << regTipoAnalisis.getPrecio() << "\t\t";
             (regTipoAnalisis.getEliminado())? std::cout << "Eliminado\n" : std::cout << "Existente\n";
     }
 }

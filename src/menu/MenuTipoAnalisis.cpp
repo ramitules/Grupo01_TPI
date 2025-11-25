@@ -139,6 +139,7 @@ void MenuTipoAnalisis::ejecutarOpcion(){
                 break;
             }
             if (!mTipoAnalisis.comprobar(idTipoAnalisis)) {
+                std::cout << std::endl;
                 pausa();
                 break;
             }
@@ -155,9 +156,9 @@ void MenuTipoAnalisis::ejecutarOpcion(){
             }
 
             if (mTipoAnalisis.eliminar(tipoAnalisis)){
-                std::cout << "\nELIMINACION EXITOSA. \n";
+                std::cout << "\nELIMINACION EXITOSA.";
             } else {
-                std::cout << "\nELIMINACION CANCELADA. \n";
+                std::cout << "\nELIMINACION CANCELADA.";
             }
             pausa();
             break;

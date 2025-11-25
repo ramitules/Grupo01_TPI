@@ -79,11 +79,49 @@ bool ManagerTurno::cargar(){
     std::cout << "El paciente se atendera ahora? s/n: ";
     std::cin >> opc;
 
+
     if (opc == 's') {
         ManagerProtocolo mProtocolo;
-        int id_proto = mProtocolo.iniciar(proximoID);
-        mProtocolo.cargarAnalisis(mProtocolo.getRepositorio().leer(id_proto));
+
+        Protocolo protocolo;
+        protocolo.setIdTurno(proximoID);
+
+        if (mProtocolo.chequearTurno(protocolo)) {
+            std::cout << "\nATENCION: El turno ingresado ya tiene un Protocolo iniciado\n";
+            menuVolver();
+            return false;
+        }
+
+        //int id_proto = mProtocolo.iniciar(proximoID);
+
+        if (mProtocolo.iniciar(protocolo)) {
+            std::cout << "\nPROTOCOLO INICIADO.\n";
+            pausa();
+        } else {
+            std::cout << "\nPROTOCOLO CANCELADO.";
+            pausa();
+            return false;
+        }
+
+        std::cout << "\nDesea cargar los estudios ahora s/n: ";
+        std::cin >> opc;
+
+        if (opc != 's') {
+            //CARGA CANCELADA
+            menuVolver();
+            return false;
+        }
+
+        if (mProtocolo.cargarAnalisis(protocolo)) {
+            std::cout << "\nANALISIS CARGADOS EXITOSAMENTE\n" ;
+        } else {
+            std::cout << "\nCARGA DE ANALISIS CANCELADA\n" ;
+            menuVolver();
+            return false;
+        }
+
         // Obtener importe sumando todos los analisis por protocolos
+
         Protocolo auxProto;
         AnalisisProtocolo auxAP;
         ManagerAnalisisProtocolo mAP;
@@ -638,8 +676,44 @@ bool ManagerTurno::actualizar(Turno turno){
 
     if (opc == 's') {
         ManagerProtocolo mProtocolo;
-        int id_proto = mProtocolo.buscarTurno(turno.getID());
-        mProtocolo.cargarAnalisis(mProtocolo.getRepositorio().leer(id_proto));
+
+        Protocolo protocolo;
+        protocolo.setIdTurno(turno.getID());
+
+        if (mProtocolo.chequearTurno(protocolo)) {
+            std::cout << "\nATENCION: El turno ingresado ya tiene un Protocolo iniciado\n";
+            menuVolver();
+            return false;
+        }
+
+        //int id_proto = mProtocolo.iniciar(proximoID);
+
+        if (mProtocolo.iniciar(protocolo)) {
+            std::cout << "\nPROTOCOLO INICIADO.\n";
+            pausa();
+        } else {
+            std::cout << "\nPROTOCOLO CANCELADO.";
+            pausa();
+            return false;
+        }
+
+        std::cout << "\nDesea cargar los estudios ahora s/n: ";
+        std::cin >> opc;
+
+        if (opc != 's') {
+            //CARGA CANCELADA
+            menuVolver();
+            return false;
+        }
+
+        if (mProtocolo.cargarAnalisis(protocolo)) {
+            std::cout << "\nANALISIS CARGADOS EXITOSAMENTE\n" ;
+        } else {
+            std::cout << "\nCARGA DE ANALISIS CANCELADA\n" ;
+            menuVolver();
+            return false;
+        }
+
         // Obtener importe sumando todos los analisis por protocolos
         Protocolo auxProto;
         ManagerAnalisisProtocolo mAP;

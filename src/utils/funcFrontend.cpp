@@ -15,6 +15,16 @@ void buscando(){
     std::cout << "\n";
 }
 
+void pausa() {
+    std::cout << "Presione una tecla para continuar...";
+    rlutil::anykey();
+}
+
+void menuVolver() {
+    std::cout << "\nVOLVIENDO AL MENU. ";
+    pausa();
+}
+
 
 void separador(){
     std::string separador = "";

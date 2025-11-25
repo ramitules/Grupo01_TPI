@@ -46,7 +46,7 @@ bool ManagerAnalisisProtocolo::cargar(int idProtocolo) {
     while (true) {
         int idTipoAnalisis;
 
-        std::cout << "CARGAR ID del analisis (0 para terminar): ";
+        std::cout << "\nCARGAR ID del analisis (0 para terminar): ";
         std::cin >> idTipoAnalisis;
 
         if (idTipoAnalisis == 0) {
@@ -83,7 +83,7 @@ void ManagerAnalisisProtocolo::mostrarTodos(int idProtocolo){
     int resultadoDias = -1;
     int total = 0;
 
-    std::cout << "\nID\tTipo\tTiempo estimado\tPrecio solicitud\n";
+    std::cout << "\nID\tTipo\t\t     Tiempo estimado\tPrecio solicitud\n";
 
     for (int i=0; i<cantidadAnalisisProtocolo; i++) {
         regAnalisisProtocolo = _repo.leer(i);
@@ -92,9 +92,9 @@ void ManagerAnalisisProtocolo::mostrarTodos(int idProtocolo){
             regTipoAnalisis = regAnalisisProtocolo.getTipoAnalisis();
 
             std::cout << regTipoAnalisis.getID() << "\t" ;
-            std::cout << regTipoAnalisis.getNombreAnalisis() << "\t";
+            std::cout << regTipoAnalisis.getNombreAnalisis() << "\t\t     ";
             std::cout << regTipoAnalisis.getTiempoResultado() << " dias\t";
-            std::cout << "\t$ " << regAnalisisProtocolo.getPrecioSolicitud() << "\n\n";
+            std::cout << "\t$ " << regAnalisisProtocolo.getPrecioSolicitud() << "\n";
 
             total += regTipoAnalisis.getPrecio();
             if (regTipoAnalisis.getTiempoResultado() > resultadoDias) {
@@ -102,8 +102,8 @@ void ManagerAnalisisProtocolo::mostrarTodos(int idProtocolo){
             }
         }
     }
-    std::cout << "PRECIO FINAL: $" << total << "\n";
-    std::cout << "RESULTADOS en " << resultadoDias << " dia(s)\n\n" ;
+    std::cout << "\nPRECIO ESTIMADO: $" << total << "\n";
+    std::cout << "\nRESULTADOS en " << resultadoDias << " dia(s)\n\n" ;
 }
 
 ArchivoAnalisisProtocolo ManagerAnalisisProtocolo::getRepositorio(){

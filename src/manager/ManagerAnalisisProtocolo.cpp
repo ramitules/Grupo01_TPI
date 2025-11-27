@@ -1,15 +1,17 @@
 #include "manager/ManagerAnalisisProtocolo.h"
 #include "manager/ManagerTipoAnalisis.h"
+#include "manager/ManagerProtocolo.h"
 #include "archivo/ArchivoAnalisisProtocolo.h"
+#include "Protocolo.h"
 #include "AnalisisProtocolo.h"
 
 ManagerAnalisisProtocolo::ManagerAnalisisProtocolo(){};
 
-bool ManagerAnalisisProtocolo::comprobar(int idProtocolo) {
+bool ManagerAnalisisProtocolo::comprobar(int idProtocolo, int idTipoAnalisis) {
     AnalisisProtocolo regAnalisisProtocolo;
     int cantidadAnalisisProtocolo = _repo.cantidadRegistros();
 
-    if (cantidadAnalisisProtocolo <= 0) {
+    if (cantidadAnalisisProtocolo == 0) {
         std::cout << "\nRegistro vacio.\n" << std::endl;
         return false;
     }
@@ -21,26 +23,26 @@ bool ManagerAnalisisProtocolo::comprobar(int idProtocolo) {
     for (int i=0; i<cantidadAnalisisProtocolo; i++) {
         regAnalisisProtocolo = _repo.leer(i);
 
-        if (regAnalisisProtocolo.getIdProtocolo() == idProtocolo) {
+        if (regAnalisisProtocolo.getIdProtocolo() == idProtocolo && regAnalisisProtocolo.getIdTipoAnalisis()==idTipoAnalisis) {
             return true;
         }
     }
-
-    std::cout << "\nATENCION: El Protocolo no tiene estudios cargados.\n" << std::endl;
     return false;
 }
 
 bool ManagerAnalisisProtocolo::cargar(int idProtocolo) {
     std::cin.ignore(100, '\n');
 
+    ManagerProtocolo mProtocolo;
     ManagerTipoAnalisis mTipoAnalisis;
     ManagerAnalisisProtocolo mAnalisisProtocolo;
     TipoAnalisis regTipoAnalisis;
     AnalisisProtocolo regAnalisisProtocolo;
+    bool analisisCargados = false;
 
     char opc;
 
-    std::cout << "\nAnalisis para agregar al protocolo: \n" << std::endl;
+    std::cout << "\nAnalisis disponibles para agregar al protocolo \n" << std::endl;
     mTipoAnalisis.mostrarTodos();
 
     while (true) {
@@ -50,38 +52,57 @@ bool ManagerAnalisisProtocolo::cargar(int idProtocolo) {
         std::cin >> idTipoAnalisis;
 
         if (idTipoAnalisis == 0) {
-            return false;
+            if (analisisCargados) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         if (mTipoAnalisis.comprobar(idTipoAnalisis)) {
             regTipoAnalisis = mTipoAnalisis.seleccionar(idTipoAnalisis);
+        } else {
+            continue;
+        }
 
-            std::cout << "CONFIRMAR: agregar " << regTipoAnalisis.getNombreAnalisis() << " al Protocolo? s/n: ";
-            std::cin >> opc;
+        if (mAnalisisProtocolo.comprobar(idProtocolo,idTipoAnalisis)) {
+            std::cout << "\n\tYa se encuentra cargado este analisis al Protocolo\n";
+            analisisCargados = true;
+            continue;
+        }
 
-            if (opc == 's') {
-                regAnalisisProtocolo.setIdProtocolo(idProtocolo);
-                regAnalisisProtocolo.setIdTipoAnalisis(regTipoAnalisis.getID());
-                regAnalisisProtocolo.setPrecioSolicitud(regTipoAnalisis.getPrecio());
+        //Comprobar que no este cargado
 
-                if (_repo.guardar(regAnalisisProtocolo)){
-                    std::cout << "El Analisis se ha agregado correctamente.\n\n";
-                } else {
-                    std::cout << "Ocurrio un error al intentar agregar el analisis.\n\n";
-                }
+        std::cout << "CONFIRMAR: agregar " << regTipoAnalisis.getNombreAnalisis() << " al Protocolo? s/n: ";
+        std::cin >> opc;
+
+        if (opc == 's') {
+            regAnalisisProtocolo.setIdProtocolo(idProtocolo);
+            regAnalisisProtocolo.setIdTipoAnalisis(regTipoAnalisis.getID());
+            regAnalisisProtocolo.setPrecioSolicitud(regTipoAnalisis.getPrecio());
+
+            if (_repo.guardar(regAnalisisProtocolo)){
+                std::cout << "\n\tEl Analisis se ha agregado correctamente.\n";
+                analisisCargados = true;
+            } else {
+                std::cout << "Ocurrio un error al intentar agregar el analisis.\n";
             }
         }
-        continue;
     }
 }
 
-void ManagerAnalisisProtocolo::mostrarTodos(int idProtocolo){
+void ManagerAnalisisProtocolo::mostrarTodos(int idProtocolo) {
     ManagerTipoAnalisis mTipoAnalisis;
+    ManagerProtocolo mProtocolo;
     AnalisisProtocolo regAnalisisProtocolo;
+    Protocolo protocolo;
     TipoAnalisis regTipoAnalisis;
+
     int cantidadAnalisisProtocolo = _repo.cantidadRegistros();
     int resultadoDias = -1;
     int total = 0;
+
+    protocolo = mProtocolo.seleccionar(idProtocolo);
 
     std::cout << "\nID\tTipo\t\t     Tiempo estimado\tPrecio solicitud\n";
 
@@ -102,8 +123,16 @@ void ManagerAnalisisProtocolo::mostrarTodos(int idProtocolo){
             }
         }
     }
-    std::cout << "\nPRECIO ESTIMADO: $" << total << "\n";
-    std::cout << "\nRESULTADOS en " << resultadoDias << " dia(s)\n\n" ;
+
+    if (protocolo.getEstado()) {
+        std::cout << "\nPROTOCOLO FINALIZADO\n" ;
+        std::cout << "\n\tPRECIO FINAL: $" << total ;
+        std::cout << "\n\tRESULTADOS en " << resultadoDias << " dia(s)\n" ;
+    } else {
+        std::cout << "\nPROTOCOLO PENDIENTE\n" ;
+        std::cout << "\n\tPRECIO ESTIMADO (SOLICITUD): $" << total ;
+        std::cout << "\n\tPLAZO ESTIMADO PARA LOS RESULTADOS: " << resultadoDias << " dia(s)\n" ;
+    }
 }
 
 ArchivoAnalisisProtocolo ManagerAnalisisProtocolo::getRepositorio(){

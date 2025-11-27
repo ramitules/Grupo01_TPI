@@ -83,55 +83,68 @@ void MenuProtocolo::ejecutarOpcion(){
 
             if (mProtocolo.comprobar()) {
                 mProtocolo.mostrarTodos();
-
-                std::cout << "ID del Protocolo donde cargar los estudios: ";
-                std::cin >> idProtocolo;
-
-                if (idProtocolo==0) {
-                    menuVolver();
-                    break;
-                }
-
-                if (mProtocolo.comprobar(idProtocolo)) {
-                    protocolo = mProtocolo.seleccionar(idProtocolo);
-
-                    if (protocolo.getEliminado()) {
-                        std::cout << "\nATENCION: El protocolo no existe.\n";
-                        menuVolver();
-                        break;
-                    }
-
-                    if (protocolo.getEstado()) {
-                        std::cout << "\nATENCION: El protocolo esta finalizado.\n";
-                        menuVolver();
-                        break;
-                    }
-
-                    if (!protocolo.getAnalisis()) {
-                        std::cout << "\nATENCION: El protocolo ya tiene los estudios cargados\n";
-                        mAnalisisProtocolo.mostrarTodos(protocolo.getId());
-                        menuVolver();
-                        break;
-                    }
-
-                    rlutil::cls();
-                    std::cout << getNombreMenu() << ": " << _opciones[1] << "\t(Ingrese 0 para SALIR)\n";
-                    std::cout << "==============================\n";
-                } else {
-                    menuVolver();
-                    break;
-                }
-
-                if (mAnalisisProtocolo.cargar(protocolo.getId())) {
-                    std::cout << "\nCARGA EXITOSA. ";
-                } else {
-                    std::cout << "\nCARGA CANCELADA. ";
-                }
-                pausa();
+            }else {
+                menuVolver();
                 break;
             }
-            system("pause");
-            break;
+
+            std::cout << "ID del Protocolo donde cargar los estudios: ";
+            std::cin >> idProtocolo;
+
+            if (idProtocolo==0) {
+                menuVolver();
+                break;
+            }
+
+            if (mProtocolo.comprobar(idProtocolo)) {
+                protocolo = mProtocolo.seleccionar(idProtocolo);
+            }else {
+                menuVolver();
+                break;
+            }
+
+            if (protocolo.getEstado()) {
+                std::cout << "\nATENCION: El protocolo esta finalizado.\n";
+                menuVolver();
+                break;
+            }
+            //CAMBIO DE PANTALLA
+
+            rlutil::cls();
+
+            std::cout << getNombreMenu() << ": " << _opciones[1] << "\t(Ingrese 0 para SALIR)\n";
+            std::cout << "==============================\n";
+
+            mProtocolo.mostrar(protocolo);
+
+            if (protocolo.getAnalisis()) {
+                std::cout << "\nATENCION: El protocolo ingresado ya tiene analisis cargados.\n\nDesea continuar agregando...? s/n ";
+                std::cin >> confirmar;
+
+                if (confirmar != 's') {
+                    menuVolver();
+                    break;
+                }
+            }
+
+            std::cout << "\nCONFIRMADO: Se agregaran estudios al protocolo." ;
+            pausa();
+
+            rlutil::cls();
+
+            std::cout << getNombreMenu() << ": " << _opciones[1] << "\t(Ingrese 0 para SALIR)\n";
+            std::cout << "==============================\n";
+
+            if (mProtocolo.cargarAnalisis(protocolo)) {
+                std::cout << "\nCARGA FINALIZADA: El protocolo esta disponible para ser asignado\n";
+                menuVolver();
+                break;
+            } else {
+                std::cout << "\nEl Protocolo continua pendiente para la carga de los estudios\n";
+                menuVolver();
+                break;
+            }
+        break;
         case 3:
             std::cout << getNombreMenu() << ": " << _opciones[2] << "\t(Ingrese 0 para SALIR)\n";
             std::cout << "==============================\n";
@@ -149,10 +162,6 @@ void MenuProtocolo::ejecutarOpcion(){
 
                 if (mProtocolo.comprobar(idProtocolo)) {
                     protocolo = mProtocolo.seleccionar(idProtocolo);
-                    rlutil::cls();
-                    std::cout << getNombreMenu() << ": " << _opciones[2] << "\t(Ingrese 0 para SALIR)\n";
-                    std::cout << "==============================\n";
-                    mProtocolo.mostrar(protocolo);
 
                 }else {
                     menuVolver();
@@ -174,7 +183,6 @@ void MenuProtocolo::ejecutarOpcion(){
 
             mProtocolo.mostrarTodos();
 
-
             if (mProtocolo.comprobar()) {
                 std::cout << "Ingrese el ID a finalizar: ";
                 std::cin >> idProtocolo;
@@ -187,10 +195,16 @@ void MenuProtocolo::ejecutarOpcion(){
                 if (mProtocolo.comprobar(idProtocolo)) {
                     protocolo = mProtocolo.seleccionar(idProtocolo);
 
+                    rlutil::cls();
+
+                    std::cout << getNombreMenu() << ": " << _opciones[3] << "\t(Ingrese 0 para SALIR)\n";
+                    std::cout << "==============================\n";
+
+
                     mProtocolo.finalizar(protocolo);
                 }
             }
-            system("pause");
+            menuVolver();
             break;
         case 5:
             std::cout << getNombreMenu() << ": " << _opciones[4] << "\t(Ingrese 0 para SALIR)\n";
@@ -219,7 +233,8 @@ void MenuProtocolo::ejecutarOpcion(){
                     }
                 }
             }
-            system("pause");
+            std::cout << std::endl;
+            pausa();
             break;
         case 6:
             std::cout << getNombreMenu() << ": " << _opciones[5] << "\t(Ingrese 0 para SALIR)\n";

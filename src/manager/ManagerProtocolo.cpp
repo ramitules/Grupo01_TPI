@@ -47,7 +47,9 @@ Protocolo ManagerProtocolo::seleccionar(int idProtocolo) {
 }
 
 void ManagerProtocolo::mostrar(Protocolo protocolo) {
-    std::cout << "\nID\tTurno\tEstado\t\tSala\tEnfermero\tDatos\n\n" ;
+    ManagerAnalisisProtocolo mAnalisisProtocolo;
+
+    std::cout << "\nID\tTurno\tEstado\t\tSala\tEnfermero\tDatos\n" ;
     std::cout << protocolo.getId() << "\t" ;
     std::cout << protocolo.getIdTurno() << "\t";
     (protocolo.getEstado()) ? std::cout << "Finalizado\t" : std::cout << "Pendiente\t";
@@ -60,7 +62,15 @@ void ManagerProtocolo::mostrar(Protocolo protocolo) {
         std::cout << protocolo.getEnfermero().getNombre() << " " << protocolo.getEnfermero().getApellido() << "\t" ;
     }
     (protocolo.getEliminado())? std::cout << "Eliminado\n" : std::cout << "Existente\n";
-    std::cout << "\nObservaciones: " << protocolo.getObservaciones() << "\n";
+    if (protocolo.getEstado()) {
+        std::cout << "\nObservaciones: " << protocolo.getObservaciones() << "\n";
+    }
+    if (protocolo.getAnalisis()) {
+        std::cout << "\nESTUDIOS CARGADOS EN EL PROTOCOLO\n";
+        mAnalisisProtocolo.mostrarTodos(protocolo.getId());
+    }else {
+        std::cout << "\nPROTOCOLO SIN ESTUDIOS CARGADOS\n";
+    }
 }
 
 bool ManagerProtocolo::mostrarTodos(){
@@ -168,15 +178,22 @@ bool ManagerProtocolo::asignar(Protocolo protocolo){
         return false;
     }
 
-    mProtocolo.mostrar(protocolo);
+    if (!protocolo.getAnalisis()) {
+        std::cout << "\nATENCION: El protocolo no tiene estudios cargados. No se puede asignar.\n";
+        return false;
+    }
 
-    std::cout << "CLINICA - Enfermeros habilitados para asignar\n";
+    std::cout << "\nCLINICA - Enfermeros habilitados para asignar\n\n";
 
     mEnfermero.mostrarTodos();
 
     while (true) {
-        std::cout << "Seleccionar Enfermero (x DNI): ";
+        std::cout << "\nSeleccionar Enfermero (x DNI): ";
         std::cin >> dniEnfermero;
+
+        if (dniEnfermero == 0) {
+            return false;
+        }
 
         enfermero = protocolo.getEnfermero();
         pos = archivoEnfermero.getPos(dniEnfermero);
@@ -193,23 +210,27 @@ bool ManagerProtocolo::asignar(Protocolo protocolo){
 
     std::cout << "\nAsignar sala de atencion: ";
     std::cin >> sala;
+
+    if (sala == 0) {
+        return false;
+    }
+
     protocolo.setSala(sala);
 
-    std::cout << "CONFIRMAR: Modificar los datos s/n: ";
+    std::cout << "\nCONFIRMAR: Asignar el protocolo s/n: ";
     std::cin >> opc;
-    std::cout << "\n";
 
     if (opc != 's') {
-        std::cout << "ATENCION: No se modificaron los datos\n\n";
+        std::cout << "\nATENCION: No se asigno el protocolo\n";
         return false;
     }
 
     if (_repo.modificar(protocolo, protocolo.getId()-1)) {
-        std::cout << "El protocolo se ha asignado correctamente\n\n";
         return true;
+    }else {
+        std::cout << "Ocurrio un error al intentar asignar el protocolo.\n\n";
     }
 
-    std::cout << "Ocurrio un error al intentar asignar EL protocolo.\n\n";
     return false;
 }
 
@@ -221,35 +242,46 @@ bool ManagerProtocolo::finalizar(Protocolo protocolo){
     char opc;
     int pos;
 
+    if (protocolo.getEliminado()==true) {
+        std::cout << "\nATENCION: El protocolo no existe\n" ;
+        return false;
+    }
+
+    if (protocolo.getEstado()!=false) {
+        std::cout << "\nATENCION: El protocolo ya esta finalizado\n";
+        return false;
+    }
+
+    if (protocolo.getSala()==0) {
+        std::cout << "\nATENCION: El protocolo no se ha asignado.\n";
+        return false;
+    }
+
     mProtocolo.mostrar(protocolo);
 
-
     std::cin.ignore(100, '\n');
-    std::cout << "Agregar observacion: ";
+    std::cout << "\nFINALIZANDO PROTOCOLO - Agregar observacion: ";
     std::getline(std::cin, observaciones);
-    std::cout << std::endl;
 
-    std::cout << "CONFIRMAR: Finalizar Protocolo s/n: ";
+    std::cout << "\nCONFIRMAR: Finalizar Protocolo s/n: ";
     std::cin >> opc;
-    std::cout << "\n";
 
     protocolo.setObservaciones(observaciones.c_str());
     protocolo.setEstado(true);
 
     if (opc != 's') {
-        std::cout << "ATENCION: No se finalizo el Protocolo\n\n";
+        std::cout << "\nATENCION: No se finalizo el Protocolo\n";
         return false;
     }
 
     if (_repo.modificar(protocolo, protocolo.getId()-1)) {
-        std::cout << "El protocolo se ha finalizado correctamente\n\n";
+        std::cout << "\nEl protocolo se ha finalizado correctamente\n";
         return true;
     }
 
     std::cout << "Ocurrio un error al finalizar asignar protocolo.\n\n";
     return false;
 }
-
 
 bool ManagerProtocolo::eliminar(Protocolo protocolo){
     char opc;

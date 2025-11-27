@@ -1,4 +1,6 @@
 #include "archivo/ArchivoAnalisisProtocolo.h"
+#include "archivo/ArchivoTipoAnalisis.h"
+
 
 ArchivoAnalisisProtocolo::ArchivoAnalisisProtocolo(): Archivo("archivoAnalisisProtocolo.dat", "base_de_datos") {
 };
@@ -169,4 +171,18 @@ int ArchivoAnalisisProtocolo::getPos(int id){
     fclose(pFile);
     
     return pos;
+}
+
+bool ArchivoAnalisisProtocolo::existe(int idProtocolo, int idTipoAnalisis){
+    AnalisisProtocolo* aux = this->leerTodos();
+    const int CANTIDAD = this->cantidadRegistros();
+
+    for (int i = 0; i < CANTIDAD; i++){
+        if (aux[i].getIdProtocolo() == idProtocolo && aux[i].getIdTipoAnalisis() == idTipoAnalisis){
+            delete[] aux;
+            return true;
+        }
+    }
+    delete[] aux;
+    return false;
 }

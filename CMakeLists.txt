@@ -15,10 +15,10 @@ set(SOURCES
     main.cpp
     src/Protocolo.cpp
     src/Enfermero.cpp
-    src/paciente.cpp
+    src/Paciente.cpp
     src/Persona.cpp
-    src/tipoAnalisis.cpp
-    src/turno.cpp
+    src/TipoAnalisis.cpp
+    src/Turno.cpp
     src/ObraSocial.cpp
     src/AnalisisProtocolo.cpp
     src/archivo/Archivo.cpp

@@ -1,6 +1,8 @@
 #include "manager/ManagerTipoAnalisis.h"
 #include <string>
 #include <iomanip>
+#include <algorithm>
+#include <cstring>
 
 ManagerTipoAnalisis::ManagerTipoAnalisis(){};
 
@@ -19,10 +21,9 @@ bool ManagerTipoAnalisis::comprobar(int idTipoAnalisis) {
         return true;
     }
 
-    regTipoAnalisis = _repo.leer(idTipoAnalisis-1);
+    regTipoAnalisis = _repo.leer(_repo.getPos(idTipoAnalisis));
 
-    if (idTipoAnalisis==regTipoAnalisis.getID() && regTipoAnalisis.getEliminado()!=true) {
-        //std::cout << "Tipo de Analisis encontrado";
+    if (idTipoAnalisis==regTipoAnalisis.getID() && !regTipoAnalisis.getEliminado()) {
         return true;
     }
     else {
@@ -36,8 +37,90 @@ bool ManagerTipoAnalisis::comprobar(int idTipoAnalisis) {
 TipoAnalisis ManagerTipoAnalisis::seleccionar(int idTipoAnalisis) {
     TipoAnalisis regTipoAnalisis;
 
-    regTipoAnalisis = _repo.leer(idTipoAnalisis-1);
+    regTipoAnalisis = _repo.leer(_repo.getPos(idTipoAnalisis));
     return regTipoAnalisis;
+}
+
+std::string ManagerTipoAnalisis::mostrarCabecera(int anchoID, int anchoNombreAnalisis, int anchoPrecio, int anchoTiempo){
+    // -- Mostrar tabla --
+    std::cout << std::left; // Alinear a la izquierda
+
+    // Linea horizontal
+    std::string linea = "+" + std::string(anchoID + 2, '-') + 
+                        "+" + std::string(anchoNombreAnalisis + 2, '-') + 
+                        "+" + std::string(anchoPrecio + 2, '-') + 
+                        "+" + std::string(anchoTiempo + 2, '-') + "+\n";
+    // Cabeceras
+    std::cout << linea;
+    std::cout << "| " << std::setw(anchoID) << "ID" << " | "
+              << std::setw(anchoNombreAnalisis) << "Nombre Analisis" << " | "
+              << std::setw(anchoPrecio) << "Precio" << " | "
+              << std::setw(anchoTiempo) << "Tiempo" << " |\n";
+    std::cout << linea;
+
+    return linea;
+}
+
+void ManagerTipoAnalisis::mostrarUno(TipoAnalisis tipoAnalisis){
+    // -- Calcular ancho maximo --
+    int anchoID = 5;  
+    int anchoNombreAnalisis = 6;
+    int anchoPrecio = 8;
+    int anchoTiempo = 9;
+
+    anchoID = std::max(anchoID, (int)std::to_string(tipoAnalisis.getID()).length());
+    anchoNombreAnalisis = std::max(anchoNombreAnalisis, (int)strlen(tipoAnalisis.getNombreAnalisis()));
+    anchoPrecio = std::max(anchoPrecio, (int)std::to_string(tipoAnalisis.getPrecio()).length() + 3);
+    anchoTiempo = std::max(anchoTiempo, (int)std::to_string(tipoAnalisis.getTiempoResultado()).length());
+
+    std::string linea = mostrarCabecera(anchoID, anchoNombreAnalisis, anchoPrecio, anchoTiempo);
+
+    std::cout << "| " << std::setw(anchoID) << tipoAnalisis.getID() << " | "
+              << std::setw(anchoNombreAnalisis) << tipoAnalisis.getNombreAnalisis() << " | "
+              << std::setw(anchoPrecio) << tipoAnalisis.getPrecio() << " | "
+              << std::setw(anchoTiempo) << tipoAnalisis.getTiempoResultado() << " |\n";
+
+    std::cout << linea;
+}
+
+void ManagerTipoAnalisis::mostrarVarios(TipoAnalisis* tipoAnalisis, const int cantidad) {
+    if (cantidad == 0) {
+        std::cout << "No hay tipos de analisis para mostrar.\n";
+        return;
+    }
+
+    // -- Calcular ancho maximo de columnas --
+    int anchoID = 5;
+    int anchoNombreAnalisis = 6;
+    int anchoPrecio = 8;
+    int anchoTiempo = 9;
+
+    for(int i=0; i<cantidad; i++) {
+        if (tipoAnalisis[i].getEliminado()) {
+            continue;
+        }
+
+        anchoID = std::max(anchoID, (int)std::to_string(tipoAnalisis[i].getID()).length());
+        anchoNombreAnalisis = std::max(anchoNombreAnalisis, (int)strlen(tipoAnalisis[i].getNombreAnalisis()));
+        anchoPrecio = std::max(anchoPrecio, (int)std::to_string(tipoAnalisis[i].getPrecio()).length() + 3);
+        anchoTiempo = std::max(anchoTiempo, (int)std::to_string(tipoAnalisis[i].getTiempoResultado()).length());
+    }
+
+    std::string linea = mostrarCabecera(anchoID, anchoNombreAnalisis, anchoPrecio, anchoTiempo);
+
+    // Datos
+    for(int i=0; i<cantidad; i++){
+        if (tipoAnalisis[i].getEliminado()) {
+            continue;
+        }
+        
+        std::cout << "| " << std::setw(anchoID) << tipoAnalisis[i].getID() << " | " 
+                  << std::setw(anchoNombreAnalisis) << tipoAnalisis[i].getNombreAnalisis() << " | "
+                  << std::setw(anchoPrecio) << std::fixed << std::setprecision(2) << tipoAnalisis[i].getPrecio() << " | "
+                  << std::setw(anchoTiempo) << tipoAnalisis[i].getTiempoResultado() << " |\n";
+    }
+
+    std::cout << linea;
 }
 
 void ManagerTipoAnalisis::mostrar(TipoAnalisis tipoAnalisis){
@@ -49,25 +132,11 @@ void ManagerTipoAnalisis::mostrar(TipoAnalisis tipoAnalisis){
 }
 
 bool ManagerTipoAnalisis::mostrarTodos(){
-    TipoAnalisis regTipoAnalisis;
-    int cantidadTipoAnalisis = _repo.cantidadRegistros();
-
-    std::cout << "ID\tTipo\t\tTiempo estimado\tPrecio\n\n";
-
-    for(int i=0; i<cantidadTipoAnalisis; i++){
-        regTipoAnalisis = _repo.leer(i);
-
-        if (regTipoAnalisis.getEliminado()) {
-            continue;
-        }
-
-        std::cout << regTipoAnalisis.getID() << "\t";
-        std::cout << regTipoAnalisis.getNombreAnalisis() << "\t\t";
-        std::cout << regTipoAnalisis.getTiempoResultado() << " dias\t";
-        std::cout << "\t$ " << regTipoAnalisis.getPrecio() << "\n";
-    }
+    const int CANTIDAD = _repo.cantidadRegistros();
+    TipoAnalisis* todos = _repo.leerTodos();
     
-    std::cout << std::endl;
+    mostrarVarios(todos, CANTIDAD);
+    delete[] todos;
     return true;
 }
 
@@ -89,6 +158,16 @@ bool ManagerTipoAnalisis::cargar(){
         system("pause");
         return false;
     }
+
+    for (int i = 0; i < _repo.cantidadRegistros(); ++i) {
+        TipoAnalisis existeTipoAnalisis = _repo.leer(i);
+        if (!existeTipoAnalisis.getEliminado() && existeTipoAnalisis.getNombreAnalisis() == nombre) {
+            std::cout << "ATENCION: Ya existe un tipo de analisis con ese nombre.\n";
+            system("pause");
+            return false;
+        }
+    }
+
 
     std::cout << "Tiempo del resultado (dias): ";
     std::cin >> tiempoResultado;
@@ -265,4 +344,8 @@ bool ManagerTipoAnalisis::eliminar(TipoAnalisis tipoAnalisis){
 
     std::cout << "\nATENCION: No se eliminaron los datos.\n\n";
     return false;
+}
+
+ArchivoTipoAnalisis ManagerTipoAnalisis::getRepositorio(){
+    return _repo;
 }

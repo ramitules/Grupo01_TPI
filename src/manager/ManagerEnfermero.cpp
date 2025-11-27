@@ -5,6 +5,7 @@
 #include "utils/funcFrontend.h"
 #include <algorithm>
 #include <iomanip>
+#include <cstring>
 
 
 ManagerEnfermero::ManagerEnfermero(){};
@@ -28,7 +29,7 @@ bool ManagerEnfermero::comprobar(int dniEnfermero) {
     int posicion = _repo.getPos(dniEnfermero);
     regEnfermero = _repo.leer(posicion);
 
-    if (dniEnfermero==regEnfermero.getDNI() && regEnfermero.getEliminado()!=true) {
+    if (dniEnfermero==regEnfermero.getDNI() && !regEnfermero.getEliminado()) {
         //std::cout << "Enfermero";
         return true;
     }

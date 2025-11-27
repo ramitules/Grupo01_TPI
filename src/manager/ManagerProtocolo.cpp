@@ -5,6 +5,8 @@
 #include "Protocolo.h"
 #include "utils/funcFrontend.h"
 #include "archivo/ArchivoProtocolo.h"
+#include <algorithm>
+#include <iomanip>
 
 ManagerProtocolo::ManagerProtocolo(){};
 
@@ -23,9 +25,9 @@ bool ManagerProtocolo::comprobar(int idProtocolo) {
         return true;
     }
 
-    regProtocolo = _repo.leer(idProtocolo-1);
+    regProtocolo = _repo.leer(_repo.getPos(idProtocolo));
 
-    if (idProtocolo==regProtocolo.getId() && regProtocolo.getEliminado()!=true) {
+    if (idProtocolo==regProtocolo.getId() && !regProtocolo.getEliminado()) {
         //std::cout << "Protocolo encontrado";
         return true;
     }
@@ -38,46 +40,90 @@ bool ManagerProtocolo::comprobar(int idProtocolo) {
 //RETORNA EL OBJETO CON EL ID SELECCIONADO
 
 Protocolo ManagerProtocolo::seleccionar(int idProtocolo) {
-    Protocolo regProtocolo;
-
-    regProtocolo = _repo.leer(idProtocolo-1);
-    return regProtocolo;
+    return _repo.leer(_repo.getPos(idProtocolo));
 }
 
-void ManagerProtocolo::mostrar(Protocolo protocolo){
+std::string ManagerProtocolo::mostrarCabecera(const int observaciones){
+    // -- Mostrar tabla --
+    std::cout << std::left; // Alinear a la izquierda
 
-    std::cout << "\nID\tTurno\tEstado\tSala\tEnfermero\n" << std::endl;
-    std::cout << protocolo.getId() << "\t" ;
-    std::cout << protocolo.getIdTurno() << "\t";
-    std::cout << protocolo.getEstado() << "\t";
-    std::cout << protocolo.getSala() << "\t";
-    std::cout << protocolo.getEnfermero().getNombre() << " " << protocolo.getEnfermero().getApellido() << "\n\n";
-    std::cout << "Observaciones: " << protocolo.getObservaciones() << "\n";
+    // Linea horizontal
+    std::string linea = "+" + std::string(5, '-') +                 // ID
+                        "+" + std::string(10, '-') +                // ID Turno
+                        "+" + std::string(15, '-') +                // DNI enfermero
+                        "+" + std::string(6, '-') +                 // Sala
+                        "+" + std::string(observaciones + 2, '-') + 
+                        "+" + std::string(15, '-') + "+\n";
+    // Cabeceras
+    std::cout << linea;
+    std::cout << "| " << std::setw(3) << "ID" << " | "
+              << std::setw(10) << "ID Turno" << " | "
+              << std::setw(15) << "DNI enfermero" << " | "
+              << std::setw(6) << "Sala" << " | "
+              << std::setw(observaciones) << "Observaciones" << " | "
+              << std::setw(15) << "Estado" << " |\n";
+    std::cout << linea;
+
+    return linea;
+}
+
+void ManagerProtocolo::mostrarUno(Protocolo protocolo){
+    int anchoObservaciones = std::max((int)std::string("Observaciones").length(), (int)strlen(protocolo.getObservaciones()));
+
+    std::string linea = mostrarCabecera(anchoObservaciones);
+
+    std::cout << "| " << std::setw(3) << protocolo.getId() << " | "
+              << std::setw(10) << protocolo.getIdTurno() << " | "
+              << std::setw(15) << protocolo.getDniEnfermero() << " | "
+              << std::setw(6) << protocolo.getSala() << " | "
+              << std::setw(anchoObservaciones) << protocolo.getObservaciones() << " | "
+              << std::setw(15) << (protocolo.getEstado() ? "Completado" : "No completado") << " | "
+              << std::setw(11) << protocolo.getEliminado() << " |\n";
+    std::cout << linea;
+}
+
+void ManagerProtocolo::mostrarVarios(Protocolo* protocolos, const int cantidad){
+    if (cantidad == 0) {
+        std::cout << "No hay protocolos para mostrar.\n";
+        return;
+    }
+
+    int anchoObservaciones = (int)std::string("Observaciones").length();
+
+    for(int i=0; i<cantidad; i++){
+        if (protocolos[i].getEliminado()) {
+            continue;
+        }
+
+        anchoObservaciones = std::max(anchoObservaciones, (int)strlen(protocolos[i].getObservaciones()));
+    }
+    
+    std::string linea = mostrarCabecera(anchoObservaciones);
+
+    // Datos
+    for (int i=0; i<cantidad; i++) {
+        if (protocolos[i].getEliminado()) {
+            continue;
+        }
+
+        std::cout << "| " << std::setw(3) << protocolos[i].getId() << " | "
+                  << std::setw(10) << protocolos[i].getIdTurno() << " | "
+                  << std::setw(15) << protocolos[i].getDniEnfermero() << " | "
+                  << std::setw(6) << protocolos[i].getSala() << " | "
+                  << std::setw(anchoObservaciones) << protocolos[i].getObservaciones() << " | "
+                  << std::setw(13) << (protocolos[i].getEstado() ? "Completado" : "No completado") << " | "
+                  << std::setw(11) << protocolos[i].getEliminado() << " |\n";
+    }
+    std::cout << linea;
 }
 
 bool ManagerProtocolo::mostrarTodos(){
-    Protocolo regProtocolo;
-    int cantidadProtocolo = _repo.cantidadRegistros();
+    Protocolo* protocolos = _repo.leerTodos();
+    int cantidadProtocolos = _repo.cantidadRegistros();
 
-    //ATENCION: Observaciones solo en el metodo mostrar
+    mostrarVarios(protocolos, cantidadProtocolos);
 
-    std::cout << "ID\tTurno\tEstado\tSala\tEnfermero" << std::endl;
-
-    for(int i=0; i<cantidadProtocolo; i++){
-        regProtocolo = _repo.leer(i);
-
-        if (regProtocolo.getEliminado()!=true) {
-
-            std::cout << regProtocolo.getId() << "\t" ;
-            std::cout << regProtocolo.getIdTurno() << "\t";
-            std::cout << regProtocolo.getEstado() << "\t";
-            std::cout << regProtocolo.getSala() << "\t";
-            std::cout << regProtocolo.getEnfermero().getNombre() << "\n";
-
-            //PENDIENTE CONDICION: Enfermero sin asignar
-        }
-    }
-    std::cout << std::endl;
+    delete[] protocolos;
     return true;
 }
 
@@ -96,7 +142,7 @@ int ManagerProtocolo::buscarTurno(int idTurno) {
 
             std::cout  << "El turno ya tiene un protocolo iniciado.\n\n";
 
-            this->mostrar(regProtocolo);
+            this->mostrarUno(regProtocolo);
 
             return idProtocolo;
         }
@@ -112,9 +158,6 @@ int ManagerProtocolo::buscarTurno(int idTurno) {
 int ManagerProtocolo::iniciar(int idTurno) {
     Protocolo protocolo;
     int auxTurno;
-
-    ManagerProtocolo mProtocolo;
-    ManagerAnalisisProtocolo mAnalisisProtocolo;
 
     auxTurno = this->buscarTurno(idTurno);
 
@@ -150,18 +193,14 @@ int ManagerProtocolo::iniciar(int idTurno) {
 }
 
 bool ManagerProtocolo::asignar(Protocolo protocolo){
-    ManagerProtocolo mProtocolo;
     ManagerEnfermero mEnfermero;
-    ArchivoEnfermero archivoEnfermero;
-    Enfermero enfermero;
     int dniEnfermero;
     int sala;
     char opc;
-    int pos;
 
-    mProtocolo.mostrar(protocolo);
+    this->mostrarUno(protocolo);
 
-    if (protocolo.getEstado()==1) {
+    if (protocolo.getEstado()) {
         std::cout << "\n\nProtocolo ya cerrado\n";
         return false;
     }
@@ -171,27 +210,32 @@ bool ManagerProtocolo::asignar(Protocolo protocolo){
     mEnfermero.mostrarTodos();
 
     while (true) {
-        std::cout << "Seleccionar Enfermero (x DNI): ";
+        std::cout << "Seleccionar enfermero (por DNI): ";
         std::cin >> dniEnfermero;
 
-        enfermero = protocolo.getEnfermero();
-        pos = archivoEnfermero.getPos(dniEnfermero);
-
-        if (mEnfermero.comprobar(dniEnfermero)) {
-            enfermero = mEnfermero.seleccionar(dniEnfermero);
-            protocolo.setDniEnfermero(enfermero.getDNI());
+        if (mEnfermero.getRepositorio().getPos(dniEnfermero) != -1) {
+            protocolo.setDniEnfermero(dniEnfermero);
             break;
         }
         else {
-            std::cout << "Dni no valido";
+            std::cout << "DNI no valido";
         }
     }
 
-    std::cout << "\nAsignar sala de atencion: ";
-    std::cin >> sala;
-    protocolo.setSala(sala);
+    while (true) {
+        std::cout << "\nAsignar sala de atencion: ";
+        std::cin >> sala;
 
-    std::cout << "CONFIRMAR: Modificar los datos s/n: ";
+        if (sala > 0 && sala < 20) {
+            protocolo.setSala(sala);
+            break;
+        }
+        else {
+            std::cout << "Numero de sala invalido. Intente nuevamente.\n";
+        }
+    }
+
+    std::cout << "CONFIRMAR: Modificar los datos? s/n: ";
     std::cin >> opc;
     std::cout << "\n";
 
@@ -200,12 +244,12 @@ bool ManagerProtocolo::asignar(Protocolo protocolo){
         return false;
     }
 
-    if (_repo.modificar(protocolo, protocolo.getId()-1)) {
+    if (_repo.modificar(protocolo, _repo.getPos(protocolo.getId()))) {
         std::cout << "El protocolo se ha asignado correctamente\n\n";
         return true;
     }
 
-    std::cout << "Ocurrio un error al intentar asignar EL protocolo.\n\n";
+    std::cout << "Ocurrio un error al intentar asignar el protocolo.\n\n";
     return false;
 }
 
@@ -217,14 +261,12 @@ bool ManagerProtocolo::cargarAnalisis(Protocolo protocolo) {
 }
 
 bool ManagerProtocolo::finalizar(Protocolo protocolo){
-    ManagerProtocolo mProtocolo;
     ManagerEnfermero mEnfermero;
 
     std::string observaciones;
     char opc;
-    int pos;
 
-    mProtocolo.mostrar(protocolo);
+    this->mostrarUno(protocolo);
 
 
     std::cin.ignore(100, '\n');
@@ -232,7 +274,7 @@ bool ManagerProtocolo::finalizar(Protocolo protocolo){
     std::getline(std::cin, observaciones);
     std::cout << std::endl;
 
-    std::cout << "CONFIRMAR: Finalizar Protocolo s/n: ";
+    std::cout << "CONFIRMAR: Finalizar protocolo? s/n: ";
     std::cin >> opc;
     std::cout << "\n";
 
@@ -240,16 +282,16 @@ bool ManagerProtocolo::finalizar(Protocolo protocolo){
     protocolo.setEstado(true);
 
     if (opc != 's') {
-        std::cout << "ATENCION: No se finalizo el Protocolo\n\n";
+        std::cout << "ATENCION: No se finalizo el protocolo\n\n";
         return false;
     }
 
-    if (_repo.modificar(protocolo, protocolo.getId()-1)) {
+    if (_repo.modificar(protocolo, _repo.getPos(protocolo.getId()))) {
         std::cout << "El protocolo se ha finalizado correctamente\n\n";
         return true;
     }
 
-    std::cout << "Ocurrio un error al finalizar asignar protocolo.\n\n";
+    std::cout << "Ocurrio un error al finalizar el protocolo.\n\n";
     return false;
 }
 
@@ -263,11 +305,11 @@ bool ManagerProtocolo::eliminar(Protocolo protocolo){
 
     if (opc == 's') {
         protocolo.setEliminado(true);
-        if (_repo.modificar(protocolo,protocolo.getId()-1)){
+        if (_repo.modificar(protocolo, _repo.getPos(protocolo.getId()))) {
             std::cout << "\nSe ha eliminado correctamente.\n\n";
             return true;
         } else {
-            std::cout << "\nATENCION: Error al intentar eliminar el Protocolo.\n\n";
+            std::cout << "\nATENCION: Error al intentar eliminar el protocolo.\n\n";
             return false;
         }
     }

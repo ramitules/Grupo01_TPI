@@ -106,7 +106,7 @@ void MenuProtocolo::ejecutarOpcion(){
                 std::cin >> idProtocolo;
 
                 if (mProtocolo.comprobar(idProtocolo)) {
-                    mProtocolo.mostrar(mProtocolo.seleccionar(idProtocolo));
+                    mProtocolo.mostrarUno(mProtocolo.seleccionar(idProtocolo));
 
                     if (mAnalisisProtocolo.comprobar(idProtocolo)) {
                         mAnalisisProtocolo.mostrarTodos(idProtocolo);
@@ -132,7 +132,7 @@ void MenuProtocolo::ejecutarOpcion(){
                 if (mProtocolo.comprobar(idProtocolo)) {
                     protocolo = mProtocolo.seleccionar(idProtocolo);
 
-                    mProtocolo.mostrar(protocolo);
+                    mProtocolo.mostrarUno(protocolo);
 
                     mProtocolo.eliminar(protocolo);
                 }

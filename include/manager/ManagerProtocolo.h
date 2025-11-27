@@ -16,7 +16,9 @@ class ManagerProtocolo{
         int buscarTurno(int idTurno);
         bool cargarAnalisis(Protocolo protocolo);
         bool asignar(Protocolo protocolo);
-        void mostrar(Protocolo protocolo);
+        std::string mostrarCabecera(const int observaciones);
+        void mostrarUno(Protocolo protocolo);
+        void mostrarVarios(Protocolo* protocolos, const int cantidad);
         bool mostrarTodos();
         bool finalizar(Protocolo protocolo);
         bool eliminar(Protocolo protocolo);

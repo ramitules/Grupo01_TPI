@@ -44,10 +44,7 @@ void MenuPrincipal::ejecutarOpcion(){
         std::cin >> opc;
         if (opc == 's') {
             ManagerTurno mTurno;
-            mTurno.actualizarImportes();
-            std::cout << "Importes actualizados correctamente.\n";
-            std::cout << "Presione ENTER para continuar";
-            rlutil::anykey();
+            mTurno.actualizarImportesSeleccionados();
         }
         MenuTurno menu;
         menu.buclePrincipal();

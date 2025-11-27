@@ -2,6 +2,8 @@
 #include "manager/ManagerTipoAnalisis.h"
 #include "archivo/ArchivoAnalisisProtocolo.h"
 #include "AnalisisProtocolo.h"
+#include <algorithm>
+#include <iomanip>
 
 ManagerAnalisisProtocolo::ManagerAnalisisProtocolo(){};
 
@@ -34,7 +36,6 @@ bool ManagerAnalisisProtocolo::cargar(int idProtocolo) {
     std::cin.ignore(100, '\n');
 
     ManagerTipoAnalisis mTipoAnalisis;
-    ManagerAnalisisProtocolo mAnalisisProtocolo;
     TipoAnalisis regTipoAnalisis;
     AnalisisProtocolo regAnalisisProtocolo;
 
@@ -43,9 +44,10 @@ bool ManagerAnalisisProtocolo::cargar(int idProtocolo) {
     std::cout << "\nAnalisis para agregar al protocolo: \n" << std::endl;
     mTipoAnalisis.mostrarTodos();
 
-    while (true) {
-        int idTipoAnalisis;
+    int idTipoAnalisis = 0;
+    int pos;
 
+    while (true) {
         std::cout << "CARGAR ID del analisis (0 para terminar): ";
         std::cin >> idTipoAnalisis;
 
@@ -53,8 +55,19 @@ bool ManagerAnalisisProtocolo::cargar(int idProtocolo) {
             return false;
         }
 
-        if (mTipoAnalisis.comprobar(idTipoAnalisis)) {
-            regTipoAnalisis = mTipoAnalisis.seleccionar(idTipoAnalisis);
+        if (mTipoAnalisis.getRepositorio().getPos(idTipoAnalisis) != -1) {
+            if (mTipoAnalisis.getRepositorio().leer(pos).getEliminado()) {
+                std::cout << "ATENCION: El analisis no se encuentra disponible. Intente nuevamente.\n";
+                continue;
+            }
+
+            if (_repo.existe(idProtocolo, idTipoAnalisis)) {
+                std::cout << "ATENCION: El analisis ya se encuentra en el protocolo. Intente nuevamente.\n";
+                continue;
+            }
+
+            pos = mTipoAnalisis.getRepositorio().getPos(idTipoAnalisis);
+            regTipoAnalisis = mTipoAnalisis.getRepositorio().leer(pos);
 
             std::cout << "CONFIRMAR: agregar " << regTipoAnalisis.getNombreAnalisis() << " al Protocolo? s/n: ";
             std::cin >> opc;
@@ -75,35 +88,122 @@ bool ManagerAnalisisProtocolo::cargar(int idProtocolo) {
     }
 }
 
+std::string ManagerAnalisisProtocolo::mostrarCabecera(int anchoID, int anchoTipoAnalisis, int anchoPrecioSoli, int anchoResultados){
+    // -- Mostrar tabla --
+    std::cout << std::left; // Alinear a la izquierda
+
+    std::string linea = "+" + std::string(anchoID + 2, '-') +
+                        "+" + std::string(anchoTipoAnalisis + 2, '-') +
+                        "+" + std::string(anchoPrecioSoli + 2, '-') +
+                        "+" + std::string(anchoResultados + 2, '-') +
+                        "+\n";
+
+    std::cout << linea;
+    std::cout << "| " << std::setw(anchoID) << "ID Protocolo" << " | " 
+              << std::setw(anchoTipoAnalisis) << "ID Tipo Analisis" << " | " 
+              << std::setw(anchoPrecioSoli) << "Precio solicitud" << " | " 
+              << std::setw(anchoResultados) << "Resultados" << " |\n";
+    std::cout << linea;
+
+    return linea;
+}
+
+    void ManagerAnalisisProtocolo::mostrarUno(AnalisisProtocolo analisisProtocolo){
+    int anchoResultados = std::max((int)strlen("Resultados"), (int)strlen(analisisProtocolo.getResultado()));
+    int anchoID = std::max((int)strlen("ID Protocolo"), (int)strlen(std::to_string(analisisProtocolo.getIdProtocolo()).c_str()));
+    int anchoTipoAnalisis = std::max((int)strlen("ID Tipo Analisis"), (int)strlen(std::to_string(analisisProtocolo.getIdTipoAnalisis()).c_str()));
+    int anchoPrecioSoli = std::max((int)strlen("Precio solicitud"), (int)strlen(std::to_string(analisisProtocolo.getPrecioSolicitud()).c_str()));
+
+    std::string linea = mostrarCabecera(anchoID, anchoTipoAnalisis, anchoPrecioSoli, anchoResultados);
+    
+    std::cout << "| " << std::setw(anchoID) << analisisProtocolo.getIdProtocolo() << " | " 
+              << std::setw(anchoTipoAnalisis) << analisisProtocolo.getIdTipoAnalisis() << " | " 
+              << std::setw(anchoPrecioSoli) << analisisProtocolo.getPrecioSolicitud() << " | " 
+              << std::setw(anchoResultados) << analisisProtocolo.getResultado() << " |\n";
+    
+    std::cout << linea;
+}
+
+void ManagerAnalisisProtocolo::mostrarVarios(AnalisisProtocolo* analisisProtocolos, const int cantidad){
+    if (cantidad == 0) {
+        std::cout << "\nATENCION: No hay analisis cargados.\n";
+        return;
+    }
+
+    int anchoResultados = strlen("Resultados");
+    int anchoID = strlen("ID Protocolo");
+    int anchoTipoAnalisis = strlen("ID Tipo Analisis");
+    int anchoPrecioSoli = strlen("Precio solicitud");
+
+    for (int i=0; i<cantidad; i++) {
+        if (analisisProtocolos[i].getEliminado()) {
+            continue;
+        }
+
+        anchoID = std::max(anchoID, (int)strlen(std::to_string(analisisProtocolos[i].getIdProtocolo()).c_str()));
+        anchoTipoAnalisis = std::max(anchoTipoAnalisis, (int)strlen(std::to_string(analisisProtocolos[i].getIdTipoAnalisis()).c_str()));
+        anchoPrecioSoli = std::max(anchoPrecioSoli, (int)strlen(std::to_string(analisisProtocolos[i].getPrecioSolicitud()).c_str()));
+        anchoResultados = std::max(anchoResultados, (int)strlen(analisisProtocolos[i].getResultado()));
+    }
+
+    std::string linea = mostrarCabecera(anchoID, anchoTipoAnalisis, anchoPrecioSoli, anchoResultados);
+
+    for (int i=0; i<cantidad; i++) {
+        if (analisisProtocolos[i].getEliminado()) {
+            continue;
+        }
+        
+        std::cout << "| " << std::setw(anchoID) << analisisProtocolos[i].getIdProtocolo() << " | " 
+                  << std::setw(anchoTipoAnalisis) << analisisProtocolos[i].getIdTipoAnalisis() << " | " 
+                  << std::setw(anchoPrecioSoli) << analisisProtocolos[i].getPrecioSolicitud() << " | " 
+                  << std::setw(anchoResultados) << analisisProtocolos[i].getResultado() << " |\n";
+    }
+    std::cout << linea;
+}
+
 void ManagerAnalisisProtocolo::mostrarTodos(int idProtocolo){
-    ManagerTipoAnalisis mTipoAnalisis;
-    AnalisisProtocolo regAnalisisProtocolo;
-    TipoAnalisis regTipoAnalisis;
-    int cantidadAnalisisProtocolo = _repo.cantidadRegistros();
+    AnalisisProtocolo regAP;
+    TipoAnalisis regTA;
     int resultadoDias = -1;
     int total = 0;
+    int cantidad = 0;
+    bool* indices = new bool[_repo.cantidadRegistros()] {false};
 
-    std::cout << "\nID\tTipo\tTiempo estimado\tPrecio solicitud\n";
+    for (int i=0; i<_repo.cantidadRegistros(); i++) {
+        regAP = _repo.leer(i);
 
-    for (int i=0; i<cantidadAnalisisProtocolo; i++) {
-        regAnalisisProtocolo = _repo.leer(i);
+        if (idProtocolo!=regAP.getIdProtocolo()) {
+            continue;
+        }
 
-        if (idProtocolo==regAnalisisProtocolo.getIdProtocolo()) {
-            regTipoAnalisis = regAnalisisProtocolo.getTipoAnalisis();
+        cantidad++;
+        indices[i] = true;
 
-            std::cout << regTipoAnalisis.getID() << "\t" ;
-            std::cout << regTipoAnalisis.getNombreAnalisis() << "\t";
-            std::cout << regTipoAnalisis.getTiempoResultado() << " dias\t";
-            std::cout << "\t$ " << regAnalisisProtocolo.getPrecioSolicitud() << "\n\n";
+        regTA = regAP.getTipoAnalisis();
 
-            total += regTipoAnalisis.getPrecio();
-            if (regTipoAnalisis.getTiempoResultado() > resultadoDias) {
-                resultadoDias = regTipoAnalisis.getTiempoResultado();
-            }
+        total += regTA.getPrecio();
+        if (regTA.getTiempoResultado() > resultadoDias) {
+            resultadoDias = regTA.getTiempoResultado();
         }
     }
+
+    AnalisisProtocolo* analisisProtocolos = new AnalisisProtocolo[cantidad];
+    int j = 0;
+    for (int i=0; i<_repo.cantidadRegistros(); i++) {
+        if (indices[i]) {
+            regAP = _repo.leer(i);
+            analisisProtocolos[j] = regAP;
+            j++;
+        }
+    }
+
+    mostrarVarios(analisisProtocolos, cantidad);
+
     std::cout << "PRECIO FINAL: $" << total << "\n";
     std::cout << "RESULTADOS en " << resultadoDias << " dia(s)\n\n" ;
+
+    delete[] indices;
+    delete[] analisisProtocolos;
 }
 
 ArchivoAnalisisProtocolo ManagerAnalisisProtocolo::getRepositorio(){

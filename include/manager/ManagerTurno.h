@@ -28,6 +28,7 @@ class ManagerTurno{
         void busquedaPaciente();
 
         void actualizarImportes();
+        void actualizarImportesSeleccionados();
         
         ArchivoTurno getRepositorio();
 };

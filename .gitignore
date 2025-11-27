@@ -15,6 +15,13 @@
 *.json
 *.o
 build
+CMakeFiles
+CMakeCache.txt
+CMakeOutput.log
+CMakeError.log
+cmake_install.cmake
+sistema_gestion
+Makefile
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

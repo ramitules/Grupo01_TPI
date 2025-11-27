@@ -5,6 +5,7 @@
 #include "utils/funcFrontend.h"
 #include <algorithm>
 #include <iomanip>
+#include <cstring>
 
 
 ManagerObraSocial::ManagerObraSocial(){};
@@ -43,11 +44,11 @@ bool ManagerObraSocial::cargar(){
         std::cout << "Ingrese el telefono de la obra social: ";
         std::cin >> telefono;
 
-        if (telefono > 1000000000 && telefono < 1600000000) {
+        if (telefono >= 1100000000 && telefono <= 1599999999) {
             break;
         }
 
-        std::cout << "Intente nuevamente. Asegurese que sea un numero de 10 digitos.\n";
+        std::cout << "Intente nuevamente. Asegurese que sea un numero de 10 digitos (11-15...).\n";
     }
 
     std::cin.ignore(100, '\n');
@@ -326,11 +327,11 @@ bool ManagerObraSocial::actualizar(ObraSocial obraSocial){
             std::cout << "Ingrese el telefono de la obra social: ";
             std::cin >> tel;
 
-            if (tel > 1000000000 && tel < 1600000000) {
+            if (tel >= 1100000000 && tel <= 1599999999) {
                 break;
             }
 
-            std::cout << "Intente nuevamente. Asegurese que sea un numero de 10 digitos.\n";
+            std::cout << "Intente nuevamente. Asegurese que sea un numero de 10 digitos (11-15...).\n";
         }
 
         obraSocial.setTelefono(tel);

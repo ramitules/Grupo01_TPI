@@ -6,6 +6,7 @@
 #include "utils/funcFrontend.h"
 #include <algorithm>
 #include <iomanip>
+#include <cstring>
 
 
 ManagerPaciente::ManagerPaciente(){};
@@ -491,14 +492,22 @@ bool ManagerPaciente::actualizar(Paciente& paciente){
     if (opc != 's') {
         int numOpc;
 
-        std::cout << "Ingrese el numero de ID de la nueva obra social: ";
-        mObraSocial.mostrarTodos(true);
-        std::cin >> numOpc;
+        while (true) {
+            std::cout << "Ingrese el numero de ID de la nueva obra social (0 para cancelar): ";
+            mObraSocial.mostrarTodos(true);
+            std::cin >> numOpc;
 
-        if (mObraSocial.getRepositorio().getPos(numOpc) == -1) {
-            std::cout << "El ID ingresado no existe. Se conserva la obra social anterior.\n";
-        } else {
-            paciente.setCodigoObraSocial(numOpc);
+            if (numOpc == 0) {
+                std::cout << "Se conserva la obra social anterior.\n";
+                break;
+            }
+
+            if (mObraSocial.getRepositorio().getPos(numOpc) != -1) {
+                paciente.setCodigoObraSocial(numOpc);
+                break;
+            } else {
+                std::cout << "El ID ingresado no existe. Intente nuevamente.\n";
+            }
         }
     }
 

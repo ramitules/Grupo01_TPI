@@ -1,4 +1,6 @@
 #include "manager/ManagerPersona.h"
+#include "archivo/ArchivoPaciente.h"
+#include "archivo/ArchivoEnfermero.h"
 #include "utils/ManagerFecha.h"
 #include "utils/rlutil.h"
 #include <iostream>
@@ -12,6 +14,9 @@ Persona ManagerPersona::cargar(int dni){
     int telefono;
     ManagerFecha fecha;
 
+    ArchivoPaciente aPaciente;
+    ArchivoEnfermero archivoEnfermero;
+
     if (dni == 0) {
         while (true) {
             std::cout << "Ingrese el DNI: ";
@@ -24,6 +29,36 @@ Persona ManagerPersona::cargar(int dni){
             std::cout << "Intente nuevamente. Asegurese que sea un numero entre un millon y cien millones.\n";
         }
     }
+    
+    // Corroborar que el DNI no exista tanto en pacientes como en enfermeros
+    for(int i=0; i<aPaciente.cantidadRegistros(); i++) {
+        if (aPaciente.leer(i).getDNI() == dni) {
+            std::cout << "ATENCION: El DNI ya existe. Sobreescribir? s/n: ";
+            char opc;
+            std::cin >> opc;
+
+            if (opc == 's') {
+                break;
+            } else {
+                return aPaciente.leer(i);
+            }
+        }
+    }
+
+    for(int i=0; i<archivoEnfermero.cantidadRegistros(); i++) {
+        if (archivoEnfermero.leer(i).getDNI() == dni) {
+            std::cout << "ATENCION: El DNI ya existe. Sobreescribir? s/n: ";
+            char opc;
+            std::cin >> opc;
+
+            if (opc == 's') {
+                break;
+            } else {
+                return archivoEnfermero.leer(i);
+            }
+        }
+    }
+
     std::cin.ignore(100, '\n');
 
     std::cout << "Ingrese el nombre: ";
@@ -51,11 +86,11 @@ Persona ManagerPersona::cargar(int dni){
         std::cout << "Ingrese el telefono: ";
         std::cin >> telefono;
 
-        if (telefono > 1000000000 && telefono < 1600000000) {
+        if (telefono >= 1100000000 && telefono <= 1599999999) {
             break;
         }
 
-        std::cout << "Intente nuevamente. Asegurese que sea un numero celular de 10 digitos.\n";
+        std::cout << "Intente nuevamente. Asegurese que sea un numero celular de 10 digitos (11-15...).\n";
     }
 
     std::cout << "Ingrese la fecha de nacimiento:\n";
@@ -133,8 +168,8 @@ void ManagerPersona::actualizar(Persona& persona){
         std::cout << "Ingrese el telefono: ";
         std::cin >> telefono;
 
-        if (telefono < 1000000000 || telefono > 1600000000) {
-            std::cout << "Numero invalido. Se conserva el telefono anterior.\n";
+        if (telefono < 1100000000 || telefono > 1599999999) {
+            std::cout << "Numero invalido (debe ser 11-15...). Se conserva el telefono anterior.\n";
         } else {
             persona.setTelefono(telefono);
         }

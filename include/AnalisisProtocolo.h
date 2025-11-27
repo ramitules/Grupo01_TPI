@@ -1,7 +1,6 @@
 #pragma once
 #include "Protocolo.h"
 #include <cstring>
-
 #include "TipoAnalisis.h"
 
 class AnalisisProtocolo{

@@ -10,7 +10,7 @@ Hora ManagerHora::cargar(){
     time_t timestamp = time(nullptr);
     struct tm datetime = *localtime(&timestamp);
 
-    int hora, minuto, segundo;
+    int hora, minuto;
     
     while (true) {
         std::cout << "Hora (0-23 | -1 para hora actual): ";

@@ -16,6 +16,7 @@ class ArchivoAnalisisProtocolo: public Archivo {
         bool guardarVarios(AnalisisProtocolo* analisisProtocolos, int cantidad);
         bool modificar(AnalisisProtocolo analisisProtocolo, int pos);
         bool eliminar(int pos);
+        bool existe(int idProtocolo, int idTipoAnalisis);
 
         int cantidadRegistros();
 };

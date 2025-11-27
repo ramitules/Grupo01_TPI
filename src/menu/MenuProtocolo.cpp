@@ -40,7 +40,7 @@ void MenuProtocolo::ejecutarOpcion(){
             std:: cin >> idTurno;
 
             mProtocolo.iniciar(idTurno);
-            system("pause");
+            std::cin.get();
             break;
         case 2:
             std::cout << getNombreMenu() << ": " << _opciones[1] << "\n";
@@ -56,7 +56,7 @@ void MenuProtocolo::ejecutarOpcion(){
                     mAnalisisProtocolo.cargar(idProtocolo);
                 }
             }
-            system("pause");
+            std::cin.get();
             break;
             case 3:
             std::cout << getNombreMenu() << ": " << _opciones[2] << "\n";
@@ -75,7 +75,7 @@ void MenuProtocolo::ejecutarOpcion(){
 
                 }
             }
-            system("pause");
+            std::cin.get();
             break;
         case 4:
             std::cout << getNombreMenu() << ": " << _opciones[3] << "\n";
@@ -93,7 +93,7 @@ void MenuProtocolo::ejecutarOpcion(){
                     mProtocolo.finalizar(protocolo);
                 }
             }
-            system("pause");
+            std::cin.get();
             break;
         case 5:
             std::cout << getNombreMenu() << ": " << _opciones[4] << "\n";
@@ -113,13 +113,13 @@ void MenuProtocolo::ejecutarOpcion(){
                     }
                 }
             }
-            system("pause");
+            std::cin.get();
             break;
         case 6:
             std::cout << getNombreMenu() << ": " << _opciones[5] << "\n";
             std::cout << "==============================\n";
             mProtocolo.mostrarTodos();
-            system("pause");
+            std::cin.get();
             break;
         case 7:
             std::cout << getNombreMenu() << ": " << _opciones[6] << "\n";
@@ -137,7 +137,7 @@ void MenuProtocolo::ejecutarOpcion(){
                     mProtocolo.eliminar(protocolo);
                 }
             }
-            system("pause");
+            std::cin.get();
             break;
 
         default:

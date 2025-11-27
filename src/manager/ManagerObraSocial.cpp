@@ -1,7 +1,7 @@
 #include "manager/ManagerObraSocial.h"
 #include "manager/ManagerPaciente.h"
 #include "Paciente.h"
-#include "utils/rlutil.h"
+
 #include "utils/funcFrontend.h"
 #include <algorithm>
 #include <iomanip>
@@ -57,12 +57,12 @@ bool ManagerObraSocial::cargar(){
 
     if (_repo.guardar(obraSocial)) {
         std::cout << "La obra social se ha guardado correctamente. Presione ENTER para continuar\n";
-        rlutil::anykey();
+        std::cin.get();
         return true;
     }
 
     std::cout << "Ocurrio un error al intentar guardar la obra social. Presione ENTER para continuar\n";
-    rlutil::anykey();
+    std::cin.get();
     return false;
 }
 
@@ -201,7 +201,7 @@ void ManagerObraSocial::ordenadosNombre(){
     // Finalizar
     delete[] obrasSociales;
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 void ManagerObraSocial::agrupadosPacientes(){
@@ -262,7 +262,7 @@ void ManagerObraSocial::agrupadosPacientes(){
     delete[] indicesPacientes;
 
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 
@@ -341,12 +341,12 @@ bool ManagerObraSocial::actualizar(ObraSocial obraSocial){
 
     if (_repo.modificar(obraSocial, _repo.getPos(obraSocial.getID()))) {
         std::cout << "La obra social se ha modificado correctamente. Presione ENTER para continuar.\n";
-        rlutil::anykey();
+        std::cin.get();
         return true;
     }
 
     std::cout << "Ocurrio un error al intentar modificar la obra social. Presione ENTER para continuar.\n";
-    rlutil::anykey();
+    std::cin.get();
     return false;
 }
 
@@ -360,11 +360,11 @@ bool ManagerObraSocial::eliminar(ObraSocial obraSocial){
         obraSocial.setEliminado(true);
         if (_repo.modificar(obraSocial, _repo.getPos(obraSocial.getID()))) {
             std::cout << "La obra social se ha eliminado correctamente. Presione ENTER para continuar.\n";
-            rlutil::anykey();
+            std::cin.get();
             return true;
         }
         std::cout << "Ocurrio un error al intentar eliminar la obra social. Presione ENTER para continuar.\n";
-        rlutil::anykey();
+        std::cin.get();
         return false;
     }
 

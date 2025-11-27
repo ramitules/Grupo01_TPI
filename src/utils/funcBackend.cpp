@@ -120,7 +120,7 @@ void restaurarBackup(){
         tm_local = std::localtime(&stAP.st_mtime);
     } else {
         std::cout << "No se ha encontrado ninguna copia de seguridad. Presione ENTER para continuar.\n";
-        rlutil::anykey();
+        std::cin.get();
         return;
     }
     

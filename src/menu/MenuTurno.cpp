@@ -1,6 +1,6 @@
 #include "menu/MenuTurno.h"
 #include "manager/ManagerTurno.h"
-#include "utils/rlutil.h"
+
 #include <iostream>
 
 
@@ -31,7 +31,7 @@ void MenuTurno::ejecutarOpcion(){
     if (_opcionSeleccionada == 4) {
         mTurno.mostrarTodos();
         std::cout << "Presione ENTER para continuar";
-        rlutil::anykey();
+        std::cin.get();
         return;
     }
 
@@ -77,7 +77,7 @@ void MenuTurno::ejecutarOpcion(){
 
         if (posTurno == -1) {
             std::cout << "El turno no existe. Presione ENTER para volver.\n";
-            rlutil::anykey();
+            std::cin.get();
             return;
         }
     }

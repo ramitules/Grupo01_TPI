@@ -31,7 +31,7 @@ void MenuTipoAnalisis::ejecutarOpcion(){
             std::cout << "==============================\n";
 
             mTipoAnalisis.cargar();
-            system("pause");
+            std::cin.get();
             break;
         case 2:
             std::cout << getNombreMenu() << ": " << _opciones[1] << "\n";
@@ -41,7 +41,7 @@ void MenuTipoAnalisis::ejecutarOpcion(){
                 mTipoAnalisis.mostrarTodos();
             }
 
-            system("pause");
+            std::cin.get();
             break;
         case 3:
             std::cout << getNombreMenu() << ": " << _opciones[2] << "\n";
@@ -59,7 +59,7 @@ void MenuTipoAnalisis::ejecutarOpcion(){
                 }
             }
 
-            system("pause");
+            std::cin.get();
             break;
         case 4:
             std::cout << getNombreMenu() << ": " << _opciones[3] << "\n";
@@ -76,7 +76,7 @@ void MenuTipoAnalisis::ejecutarOpcion(){
                     mTipoAnalisis.eliminar(tipoAnalisis);
                 }
             }
-            system("pause");
+            std::cin.get();
             break;
         default:
             std::cout << "Intente nuevamente\n";

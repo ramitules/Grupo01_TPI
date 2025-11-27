@@ -1,6 +1,6 @@
 #include <fstream>
 #include <sstream>
-#include "utils/rlutil.h"
+
 #include "csv/CSVTurno.h"
 #include "archivo/ArchivoTurno.h"
 
@@ -15,7 +15,7 @@ void CSVTurno::guardar(Turno turno) {
 
     if (!out.is_open()) {
         std::cout << "No se pudo abrir el archivo en la ruta " << _ruta << "\n. Presione ENTER para salir.";
-        rlutil::anykey();
+        std::cin.get();
         exit(0);
     }
 
@@ -46,7 +46,7 @@ void CSVTurno::guardarTodos() {
 
     if (!out.is_open()) {
         std::cout << "No se pudo abrir el archivo en la ruta " << _ruta << ".\nPresione ENTER para salir.";
-        rlutil::anykey();
+        std::cin.get();
         exit(0);
     }
     
@@ -71,7 +71,7 @@ void CSVTurno::guardarTodos() {
 Turno CSVTurno::leerRegistro(int nroRegistro) {
     if (nroRegistro <= 1) {
         std::cout << "Número de registro inválido. Presione ENTER para salir.";
-        rlutil::anykey();
+        std::cin.get();
         exit(0);
     }
 
@@ -80,13 +80,13 @@ Turno CSVTurno::leerRegistro(int nroRegistro) {
     std::ifstream archivo(_ruta);
     if (!archivo.is_open()) {
         std::cout << "No se pudo abrir el archivo en la ruta " << _ruta << "\n. Presione ENTER para salir.";
-        rlutil::anykey();
+        std::cin.get();
         exit(0);
     }
 
     if (archivoVacio()) {
         std::cout << "El archivo está vacío. Presione ENTER para salir.";
-        rlutil::anykey();
+        std::cin.get();
         exit(0);
     }
 
@@ -134,7 +134,7 @@ Turno* CSVTurno::leerTodo() {
     std::ifstream archivo(_ruta);
     if (!archivo.is_open()) {
         std::cout << "No se pudo abrir el archivo en la ruta " << _ruta << "\n. Presione ENTER para salir.";
-        rlutil::anykey();
+        std::cin.get();
         exit(0);
     }
 

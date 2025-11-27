@@ -1,6 +1,6 @@
 #include "menu/MenuEnfermero.h"
 #include "manager/ManagerEnfermero.h"
-#include "utils/rlutil.h"
+
 #include <iostream>
 
 
@@ -31,7 +31,7 @@ void MenuEnfermero::ejecutarOpcion(){
     if (_opcionSeleccionada == 4) {
         mEnf.mostrarTodos();
         std::cout << "Presione ENTER para continuar";
-        rlutil::anykey();
+        std::cin.get();
         return;
     }
 
@@ -77,7 +77,7 @@ void MenuEnfermero::ejecutarOpcion(){
 
         if (posEnfermero == -1) {
             std::cout << "El enfermero no existe. Presione ENTER para volver.\n";
-            rlutil::anykey();
+            std::cin.get();
             return;
         }
     }

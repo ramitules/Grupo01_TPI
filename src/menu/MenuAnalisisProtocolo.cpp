@@ -38,7 +38,7 @@ void MenuAnalisisProtocolo::ejecutarOpcion(){
                     mAnalisisProtocolo.cargar(idProtocolo);
                 }
             }
-            system("pause");
+            std::cin.get();
             break;
         case 2:
             std::cout << getNombreMenu() << ": " << _opciones[1] << "\n";
@@ -51,7 +51,7 @@ void MenuAnalisisProtocolo::ejecutarOpcion(){
                 mAnalisisProtocolo.mostrarTodos(idProtocolo);
             }
 
-            system("pause");
+            std::cin.get();
             break;
         default:
             std::cout << "Intente nuevamente\n";

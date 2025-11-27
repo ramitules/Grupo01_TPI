@@ -1,7 +1,7 @@
 #include "manager/ManagerEnfermero.h"
 #include "manager/ManagerPersona.h"
 #include "utils/ManagerFecha.h"
-#include "utils/rlutil.h"
+
 #include "utils/funcFrontend.h"
 #include <algorithm>
 #include <iomanip>
@@ -68,12 +68,12 @@ bool ManagerEnfermero::cargar(int dniEnfermero){
 
     if (_repo.guardar(enfermero)) {
         std::cout << "El enfermero se ha guardado correctamente. Presione ENTER para continuar\n";
-        rlutil::anykey();
+        std::cin.get();
         return true;
     }
 
     std::cout << "Ocurrio un error al intentar guardar el enfermero. Presione ENTER para continuar\n";
-    rlutil::anykey();
+    std::cin.get();
     return false;
 }
 
@@ -238,7 +238,7 @@ void ManagerEnfermero::ordenadosApellido() {
     // Finalizar
     delete[] enfermeros;
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 void ManagerEnfermero::ordenadosDNI() {
@@ -271,7 +271,7 @@ void ManagerEnfermero::ordenadosDNI() {
     // Finalizar
     delete[] enfermeros;
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 void ManagerEnfermero::ordenadosAntiguedad() {
@@ -304,7 +304,7 @@ void ManagerEnfermero::ordenadosAntiguedad() {
     // Finalizar
     delete[] enfermeros;
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 bool ManagerEnfermero::actualizar(Enfermero& enfermero){
@@ -338,12 +338,12 @@ bool ManagerEnfermero::actualizar(Enfermero& enfermero){
     
     if (_repo.modificar(enfermero, _repo.getPos(enfermero.getDNI()))) {
         std::cout << "El enfermero se ha modificado correctamente. Presione ENTER para continuar.\n";
-        rlutil::anykey();
+        std::cin.get();
         return true;
     }
 
     std::cout << "Ocurrio un error al intentar modificar el enfermero. Presione ENTER para continuar.\n";
-    rlutil::anykey();
+    std::cin.get();
     return false;
 }
 
@@ -357,7 +357,7 @@ bool ManagerEnfermero::eliminar(Enfermero& enfermero){
         enfermero.setEliminado(true);
         if (_repo.modificar(enfermero, _repo.getPos(enfermero.getDNI()))) {
             std::cout << "El enfermero se ha eliminado correctamente. Presione ENTER para continuar.\n";
-            rlutil::anykey();
+            std::cin.get();
             return true;
         }
     }

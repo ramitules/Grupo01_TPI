@@ -45,7 +45,7 @@ void MenuInformes::ejecutarOpcion(){
     }
     
     std::cout << "Opcion no implementada aun.\n";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 void MenuInformes::informeAnalisisPorObraSocial() {
@@ -73,7 +73,7 @@ void MenuInformes::informeAnalisisPorObraSocial() {
     ArchivoObraSocial archivoObraSocial;
     if (archivoObraSocial.getPos(idObraSocial) == -1) {
         std::cout << "ID de Obra Social no valido.\n";
-        rlutil::anykey();
+        std::cin.get();
         return;
     }
 
@@ -181,7 +181,7 @@ void MenuInformes::informeAnalisisPorObraSocial() {
     delete[] tiposAnalisis;
 
     std::cout << "\nPresione ENTER para continuar...";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 void MenuInformes::informePacientesPorObraSocial() {
@@ -308,7 +308,7 @@ void MenuInformes::informePacientesPorObraSocial() {
     delete[] contadoresPorOS;
 
     std::cout << "\nPresione ENTER para continuar...";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 void MenuInformes::informeFacturacionMensualPorObraSocial() {
@@ -328,7 +328,7 @@ void MenuInformes::informeFacturacionMensualPorObraSocial() {
 
     if (turnos == nullptr || cantidadTurnos == 0) {
         std::cout << "No hay turnos registrados.\n";
-        rlutil::anykey();
+        std::cin.get();
         return;
     }
     std::map<std::string, float> facturacionPorObraSocial;
@@ -369,7 +369,7 @@ void MenuInformes::informeFacturacionMensualPorObraSocial() {
               << std::right << std::setw(15) << std::fixed << std::setprecision(2) << totalGeneral << "\n";
 
     std::cout << "\nPresione ENTER para continuar...";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 void MenuInformes::informeFacturacionMensualTotal() {
@@ -390,7 +390,7 @@ void MenuInformes::informeFacturacionMensualTotal() {
 
     if (turnos == nullptr || cantidadTurnos == 0) {
         std::cout << "No hay turnos registrados.\n";
-        rlutil::anykey();
+        std::cin.get();
         return;
     }
 
@@ -417,7 +417,7 @@ void MenuInformes::informeFacturacionMensualTotal() {
     std::cout << "----------------------------------------------\n";
 
     std::cout << "\nPresione ENTER para continuar...";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 void MenuInformes::informeAnalisisPorTipo() {
@@ -519,5 +519,5 @@ void MenuInformes::informeAnalisisPorTipo() {
     delete[] tiposAnalisis;
 
     std::cout << "\nPresione ENTER para continuar...";
-    rlutil::anykey();
+    std::cin.get();
 }

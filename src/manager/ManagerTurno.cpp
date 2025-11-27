@@ -4,7 +4,7 @@
 #include "manager/ManagerTurno.h"
 #include "utils/ManagerFecha.h"
 #include "utils/ManagerHora.h"
-#include "utils/rlutil.h"
+
 #include "utils/funcFrontend.h"
 #include "Paciente.h"
 #include <algorithm>
@@ -64,7 +64,7 @@ bool ManagerTurno::cargar(){
             if (!mPaciente.cargar(dniPaciente)) {
                 std::cout << "No se pudo cargar el paciente. El turno no sera guardado.\n";
                 std::cout << "Presione ENTER para continuar\n";
-                rlutil::anykey();
+                std::cin.get();
                 return false;
             }
         } else {
@@ -81,33 +81,7 @@ bool ManagerTurno::cargar(){
 
     if (opc == 's') {
         ManagerProtocolo mProtocolo;
-        int id_proto = mProtocolo.iniciar(proximoID);
-        mProtocolo.cargarAnalisis(mProtocolo.getRepositorio().leer(id_proto));
-        // Obtener importe sumando todos los analisis por protocolos
-        Protocolo auxProto;
-        AnalisisProtocolo auxAP;
-        ManagerAnalisisProtocolo mAP;
-
-        bool* indices = new bool[mProtocolo.getRepositorio().cantidadRegistros()] {false};
-
-        for (int i = 0; i < mProtocolo.getRepositorio().cantidadRegistros(); i ++) {
-
-            auxProto = mProtocolo.getRepositorio().leer(i);
-
-            if (auxProto.getIdTurno() == proximoID) {
-
-                for (int j = 0; j < mAP.getRepositorio().cantidadRegistros(); j ++) {
-
-                    auxAP = mAP.getRepositorio().leer(j);
-
-                    if (auxAP.getIdProtocolo() == auxProto.getId()){
-                        importe += auxAP.getTipoAnalisis().getPrecio();
-                    }
-                }
-            }
-        }
-        delete[] indices;
-        
+        mProtocolo.iniciar(proximoID);
     } else {
         std::cin.ignore(100, '\n');
 
@@ -123,12 +97,12 @@ bool ManagerTurno::cargar(){
 
     if (_repo.guardar(turno)) {
         std::cout << "El turno se ha guardado correctamente. Presione ENTER para continuar\n";
-        rlutil::anykey();
+        std::cin.get();
         return true;
     }
 
     std::cout << "Ocurrio un error al intentar guardar el turno. Presione ENTER para continuar\n";
-    rlutil::anykey();
+    std::cin.get();
     return false;
 }
 
@@ -275,7 +249,7 @@ void ManagerTurno::ordenadosFecha(){
     // Finalizar
     delete[] turnos;
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 void ManagerTurno::agrupadosPaciente(){
@@ -339,7 +313,7 @@ void ManagerTurno::agrupadosPaciente(){
     delete[] indicesPacientes;
 
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 void ManagerTurno::busquedaFecha(){
@@ -449,7 +423,7 @@ void ManagerTurno::busquedaFecha(){
     delete[] indicesTurnos;
 
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 void ManagerTurno::busquedaPaciente(){
@@ -547,7 +521,7 @@ void ManagerTurno::busquedaPaciente(){
     }
 
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 
     delete[] turnos;
     delete[] indices;
@@ -620,7 +594,7 @@ void ManagerTurno::actualizarImportesSeleccionados() {
         delete[] turnos;
         delete[] candidatos;
         std::cout << "Presione ENTER para continuar";
-        rlutil::anykey();
+        std::cin.get();
         return;
     }
 
@@ -712,7 +686,7 @@ void ManagerTurno::actualizarImportesSeleccionados() {
     delete[] turnos;
     delete[] candidatos;
     std::cout << "Operacion finalizada. Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 bool ManagerTurno::actualizar(Turno turno){
@@ -790,12 +764,12 @@ bool ManagerTurno::actualizar(Turno turno){
 
     if (_repo.modificar(turno, _repo.getPos(turno.getID()))) {
         std::cout << "El turno se ha modificado correctamente. Presione ENTER para continuar.\n";
-        rlutil::anykey();
+        std::cin.get();
         return true;
     }
 
     std::cout << "Ocurrio un error al intentar modificar el turno. Presione ENTER para continuar.\n";
-    rlutil::anykey();
+    std::cin.get();
     return false;
 }
 
@@ -810,7 +784,7 @@ bool ManagerTurno::eliminar(Turno turno) {
         turno.setEliminado(true);
         if (_repo.modificar(turno, _repo.getPos(turno.getID()))) {
             std::cout << "El turno se ha eliminado correctamente. Presione ENTER para continuar.\n";
-            rlutil::anykey();
+            std::cin.get();
             return true;
         };
 
@@ -825,7 +799,7 @@ bool ManagerTurno::eliminar(Turno turno) {
         }
         */
         std::cout << "Ocurrio un error al intentar eliminar el turno. Presione ENTER para continuar.\n";
-        rlutil::anykey();
+        std::cin.get();
         return false;
     }
 

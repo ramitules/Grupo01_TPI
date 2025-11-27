@@ -155,7 +155,7 @@ bool ManagerTipoAnalisis::cargar(){
     std::getline(std::cin, nombre);
     if (nombre == "") {
         std::cout << "No se puede continuar sin un nombre de tipo de analisis.\n";
-        system("pause");
+        std::cin.get();
         return false;
     }
 
@@ -163,7 +163,7 @@ bool ManagerTipoAnalisis::cargar(){
         TipoAnalisis existeTipoAnalisis = _repo.leer(i);
         if (!existeTipoAnalisis.getEliminado() && existeTipoAnalisis.getNombreAnalisis() == nombre) {
             std::cout << "ATENCION: Ya existe un tipo de analisis con ese nombre.\n";
-            system("pause");
+            std::cin.get();
             return false;
         }
     }
@@ -173,7 +173,7 @@ bool ManagerTipoAnalisis::cargar(){
     std::cin >> tiempoResultado;
     if (tiempoResultado <= 0) {
         std::cout << "No se puede continuar, plazo minimo de 1 dia.\n";
-        system("pause");
+        std::cin.get();
         return false;
     }
 
@@ -182,7 +182,7 @@ bool ManagerTipoAnalisis::cargar(){
     std::cout << "\n";
     if (precio <= 0) {
         std::cout << "No se puede continuar sin un precio mayor a 0.\n";
-        system("pause");
+        std::cin.get();
         return false;
     }
 

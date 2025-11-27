@@ -2,7 +2,7 @@
 #include "manager/ManagerPersona.h"
 #include "manager/ManagerObraSocial.h"
 #include "utils/ManagerFecha.h"
-#include "utils/rlutil.h"
+
 #include "utils/funcFrontend.h"
 #include <algorithm>
 #include <iomanip>
@@ -49,12 +49,12 @@ bool ManagerPaciente::cargar(int dniPaciente){
 
     if (_repo.guardar(paciente)) {
         std::cout << "El paciente se ha guardado correctamente. Presione ENTER para continuar\n";
-        rlutil::anykey();
+        std::cin.get();
         return true;
     }
 
     std::cout << "Ocurrio un error al intentar guardar el paciente. Presione ENTER para continuar\n";
-    rlutil::anykey();
+    std::cin.get();
     return false;
 }
 
@@ -227,7 +227,7 @@ void ManagerPaciente::ordenadosApellido() {
     // Finalizar
     delete[] pacientes;
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 void ManagerPaciente::ordenadosDNI() {
@@ -260,7 +260,7 @@ void ManagerPaciente::ordenadosDNI() {
     // Finalizar
     delete[] pacientes;
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 void ManagerPaciente::ordenadosEdad() {
@@ -293,7 +293,7 @@ void ManagerPaciente::ordenadosEdad() {
     // Finalizar
     delete[] pacientes;
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 void ManagerPaciente::ordenadosObraSocial() {
@@ -326,7 +326,7 @@ void ManagerPaciente::ordenadosObraSocial() {
     // Finalizar
     delete[] pacientes;
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 void ManagerPaciente::busquedaDNI(){
@@ -416,7 +416,7 @@ void ManagerPaciente::busquedaDNI(){
     }
 
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 
     delete[] pacientes;
     delete[] indices;
@@ -471,7 +471,7 @@ void ManagerPaciente::busquedaObraSocial(){
     }
 
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 
     delete[] pacientes;
     delete[] indices;
@@ -513,12 +513,12 @@ bool ManagerPaciente::actualizar(Paciente& paciente){
 
     if (_repo.modificar(paciente, _repo.getPos(paciente.getDNI()))) {
         std::cout << "El paciente se ha modificado correctamente. Presione ENTER para continuar.\n";
-        rlutil::anykey();
+        std::cin.get();
         return true;
     }
 
     std::cout << "Ocurrio un error al intentar modificar el paciente. Presione ENTER para continuar.\n";
-    rlutil::anykey();
+    std::cin.get();
     return false;
 }
 
@@ -530,12 +530,12 @@ bool ManagerPaciente::eliminar(Paciente& paciente){
 
     if (_repo.modificar(paciente, _repo.getPos(paciente.getDNI()))) {
         std::cout << "El paciente se ha eliminado correctamente. Presione ENTER para continuar.\n";
-        rlutil::anykey();
+        std::cin.get();
         return true;
     };
 
     std::cout << "Ocurrio un error al intentar eliminar el paciente. Presione ENTER para continuar.\n";
-    rlutil::anykey();
+    std::cin.get();
     return false;
 }
 

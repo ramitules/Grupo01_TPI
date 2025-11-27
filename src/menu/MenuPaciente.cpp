@@ -1,6 +1,6 @@
 #include "menu/MenuPaciente.h"
 #include "manager/ManagerPaciente.h"
-#include "utils/rlutil.h"
+
 #include <iostream>
 
 
@@ -31,7 +31,7 @@ void MenuPaciente::ejecutarOpcion(){
     if (_opcionSeleccionada == 4) {
         mPaciente.mostrarTodos();
         std::cout << "Presione ENTER para continuar";
-        rlutil::anykey();
+        std::cin.get();
         return;
     }
 
@@ -78,7 +78,7 @@ void MenuPaciente::ejecutarOpcion(){
 
         if (posPaciente == -1) {
             std::cout << "El paciente no existe. Presione ENTER para volver.\n";
-            rlutil::anykey();
+            std::cin.get();
             return;
         }
     }

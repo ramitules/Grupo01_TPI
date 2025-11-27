@@ -22,14 +22,14 @@ void ListadosAnalisis::ejecutarOpcion(){
 
     if (_opcionSeleccionada == 1) {
         mTipoAnalisis.listadoXvalor();
-        system("pause");
+        std::cin.get();
         return;
     }
 
     if (_opcionSeleccionada == 2) {
 
         mTipoAnalisis.listadoXnombre();
-        system("pause");
+        std::cin.get();
         return;
     }
 }

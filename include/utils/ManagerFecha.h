@@ -11,5 +11,8 @@ class ManagerFecha{
         Fecha cargar();
         std::string mostrar(Fecha fecha);
 
+
         Fecha* rangoFechas(Fecha desde, const int DIAS);
+        Fecha sumarDias(Fecha fecha, int dias);
 };
+

@@ -131,5 +131,5 @@ Fecha& Fecha::operator++(){
         }
     }
 
-    return *this;  // Referencia a la fecha ya modificada
-};
+    return *this;
+}

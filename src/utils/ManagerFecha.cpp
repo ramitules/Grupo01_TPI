@@ -51,7 +51,7 @@ Fecha ManagerFecha::cargar(){
             break;
         }
 
-        if (anio > 1900 && anio < 2026){
+        if (anio > 1900 && anio < 2027){
             break;
         }
 
@@ -96,4 +96,12 @@ Fecha* ManagerFecha::rangoFechas(Fecha desde, const int DIAS){
     }
 
     return fechas;
+}
+
+Fecha ManagerFecha::sumarDias(Fecha fecha, int dias) {
+    Fecha fechaAux = fecha;
+    for (int i = 0; i < dias; i++) {
+        ++ fechaAux;
+    }
+    return fechaAux;
 }

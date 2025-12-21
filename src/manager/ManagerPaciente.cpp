@@ -10,6 +10,13 @@
 
 ManagerPaciente::ManagerPaciente(){};
 
+Paciente ManagerPaciente::seleccionar(int dniPaciente) {
+    int posicionPaciente = _repo.getPos(dniPaciente);
+    Paciente regPaciente = _repo.leer(posicionPaciente);
+
+    return regPaciente;
+}
+
 bool ManagerPaciente::cargar(int dniPaciente){
     int codigoObraSocial = 1;
     bool opcValida = false;
@@ -47,12 +54,12 @@ bool ManagerPaciente::cargar(int dniPaciente){
     Paciente paciente(persona, codigoObraSocial);
 
     if (_repo.guardar(paciente)) {
-        std::cout << "El paciente se ha guardado correctamente. Presione ENTER para continuar\n";
+        std::cout << "\nEl paciente se ha guardado correctamente. Presione ENTER para continuar\n";
         rlutil::anykey();
         return true;
     }
 
-    std::cout << "Ocurrio un error al intentar guardar el paciente. Presione ENTER para continuar\n";
+    std::cout << "\nOcurrio un error al intentar guardar el paciente. Presione ENTER para continuar\n";
     rlutil::anykey();
     return false;
 }
@@ -491,8 +498,8 @@ bool ManagerPaciente::actualizar(Paciente& paciente){
     if (opc != 's') {
         int numOpc;
 
-        std::cout << "Ingrese el numero de ID de la nueva obra social: ";
         mObraSocial.mostrarTodos(true);
+        std::cout << "\nIngrese el numero de ID de la nueva obra social: ";
         std::cin >> numOpc;
 
         if (mObraSocial.getRepositorio().getPos(numOpc) == -1) {

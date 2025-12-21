@@ -7,4 +7,11 @@ class MenuInformes: public Menu {
         MenuInformes();
 
         void ejecutarOpcion() override;
+
+    private:
+        void informeFacturacionMensualPorObraSocial();
+        void informeFacturacionMensualTotal();
+        void informeAnalisisPorTipo();
+        void informePacientesPorObraSocial();
+        void informeAnalisisPorObraSocial();
 };

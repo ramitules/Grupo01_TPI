@@ -4,6 +4,12 @@
 #include "archivo/ArchivoAnalisisProtocolo.h"
 #include "Protocolo.h"
 #include "AnalisisProtocolo.h"
+#include "utils/Fecha.h"
+#include "utils/ManagerFecha.h"
+#include "archivo/ArchivoTurno.h"
+#include "manager/ManagerPaciente.h"
+#include "manager/ManagerTurno.h"
+
 
 ManagerAnalisisProtocolo::ManagerAnalisisProtocolo(){};
 
@@ -71,6 +77,7 @@ bool ManagerAnalisisProtocolo::cargar(int idProtocolo) {
             continue;
         }
 
+
         //Comprobar que no este cargado
 
         std::cout << "CONFIRMAR: agregar " << regTipoAnalisis.getNombreAnalisis() << " al Protocolo? s/n: ";
@@ -84,6 +91,16 @@ bool ManagerAnalisisProtocolo::cargar(int idProtocolo) {
             if (_repo.guardar(regAnalisisProtocolo)){
                 std::cout << "\n\tEl Analisis se ha agregado correctamente.\n";
                 analisisCargados = true;
+
+                //Buscar el turno del Protocolo y actualizar el importe
+                ManagerTurno mTurno;
+
+                if (mTurno.actualizarImporte(regAnalisisProtocolo)) {
+                    std::cout << "\tSe modifico el importe en el turno";
+                }
+                else {
+                    std::cout << "\tNo se modifico el importe en el turno";
+                }
             } else {
                 std::cout << "Ocurrio un error al intentar agregar el analisis.\n";
             }
@@ -95,16 +112,17 @@ void ManagerAnalisisProtocolo::mostrarTodos(int idProtocolo) {
     ManagerTipoAnalisis mTipoAnalisis;
     ManagerProtocolo mProtocolo;
     AnalisisProtocolo regAnalisisProtocolo;
-    Protocolo protocolo;
+    Protocolo protocolo = mProtocolo.seleccionar(idProtocolo);
     TipoAnalisis regTipoAnalisis;
 
     int cantidadAnalisisProtocolo = _repo.cantidadRegistros();
     int resultadoDias = -1;
-    int total = 0;
+    int precioProtocolo = 0;
+    std::string estadoProtocolo = (protocolo.getEstado())? "FINALIZADO" : "PENDIENTE";
 
-    protocolo = mProtocolo.seleccionar(idProtocolo);
+    //MOSTRAR LOS ESTUDIOS CARGADOS EN EL PROTOCOLO
 
-    std::cout << "\nID\tTipo\t\t     Tiempo estimado\tPrecio solicitud\n";
+    std::cout << "\n\tID\tTipo\t\tTiempo estimado\tPrecio solicitud\n";
 
     for (int i=0; i<cantidadAnalisisProtocolo; i++) {
         regAnalisisProtocolo = _repo.leer(i);
@@ -112,26 +130,72 @@ void ManagerAnalisisProtocolo::mostrarTodos(int idProtocolo) {
         if (idProtocolo==regAnalisisProtocolo.getIdProtocolo()) {
             regTipoAnalisis = regAnalisisProtocolo.getTipoAnalisis();
 
-            std::cout << regTipoAnalisis.getID() << "\t" ;
-            std::cout << regTipoAnalisis.getNombreAnalisis() << "\t\t     ";
+            std::cout << "\t" << regTipoAnalisis.getID() << "\t" ;
+            std::cout << regTipoAnalisis.getNombreAnalisis() << "\t     ";
             std::cout << regTipoAnalisis.getTiempoResultado() << " dias\t";
-            std::cout << "\t$ " << regAnalisisProtocolo.getPrecioSolicitud() << "\n";
+            std::cout << "$ " << regAnalisisProtocolo.getPrecioSolicitud() << "\n";
 
-            total += regTipoAnalisis.getPrecio();
+            precioProtocolo += regTipoAnalisis.getPrecio();
+
             if (regTipoAnalisis.getTiempoResultado() > resultadoDias) {
                 resultadoDias = regTipoAnalisis.getTiempoResultado();
             }
         }
     }
 
+    std::cout << "\n\tPrecio del Protocolo: $" << precioProtocolo;
+    std::cout << "\n\tEstado: " << estadoProtocolo << std::endl;
+
+    ManagerTurno mTurno;
+    ManagerPaciente mPaciente;
+    Turno regTurno;
+
+    //BUSCAR AL PACIENTE: mediante el DNI del paciente en el archivo turno
+    int posicionTurno;
+    int dniPaciente;
+
+    posicionTurno = mTurno.getRepositorio().getPos(protocolo.getIdTurno());
+    dniPaciente = mTurno.getRepositorio().leer(posicionTurno).getDniPaciente();
+
+    //CALCULAR EL PRECIO PARA EL PACIENTE DEL PROTOCOLO: chequear la obra social mediante el objeto Paciente
+
+    int posicionPaciente;
+    Paciente regPaciente;
+    int cobertura;
+    std::string nombreObraSocial;
+
+    posicionPaciente = mPaciente.getRepositorio().getPos(dniPaciente);
+    regPaciente = mPaciente.getRepositorio().leer(posicionPaciente);
+    cobertura = regPaciente.getObraSocial().getCobertura();
+    nombreObraSocial = regPaciente.getObraSocial().getNombre();
+
+    float precioPaciente = precioProtocolo * (100 - cobertura) / 100;
+
+    //Fechas
+    ManagerFecha mFecha;
+    Fecha fechaTurno;
+    Fecha fechaResultados;
+
+    regTurno = mTurno.getRepositorio().leer(posicionTurno);
+    fechaTurno = regTurno.getFechaAtencion();
+    fechaResultados = mFecha.sumarDias(fechaTurno, resultadoDias);
+
     if (protocolo.getEstado()) {
-        std::cout << "\nPROTOCOLO FINALIZADO\n" ;
-        std::cout << "\n\tPRECIO FINAL: $" << total ;
-        std::cout << "\n\tRESULTADOS en " << resultadoDias << " dia(s)\n" ;
+        std::cout << "\n\tCOBERTURA: " << nombreObraSocial << " (" << cobertura << "%)" ;
+        std::cout << "\n\tPRECIO FINAL: $" << precioPaciente ;
+        std::cout << "\n\tFECHA DEL TURNO: " ;
+        std::cout << fechaTurno.to_str();
+        std::cout << "\n\tRESULTADOS en " << resultadoDias << " dia(s)" ;
+        std::cout << "\n\tDISPONIBLE PARA RETIRAR: ";
+        std::cout << fechaResultados.to_str() << std::endl;
     } else {
-        std::cout << "\nPROTOCOLO PENDIENTE\n" ;
-        std::cout << "\n\tPRECIO ESTIMADO (SOLICITUD): $" << total ;
-        std::cout << "\n\tPLAZO ESTIMADO PARA LOS RESULTADOS: " << resultadoDias << " dia(s)\n" ;
+        std::cout << "\n\tCOBERTURA: " << precioPaciente ;
+        std::cout << "\n\tPRECIO ESTIMADO (SOLICITUD): $" << precioPaciente ;
+        std::cout << "\n\tFECHA DEL TURNO: " ;
+        std::cout << fechaTurno.to_str();
+        std::cout << "\n\tRESULTADOS en " << resultadoDias << " dia(s)" ;
+        std::cout << "\n\tDISPONIBLE PARA RETIRAR: ";
+        std::cout << fechaResultados.to_str() << std::endl;
     }
 }
 

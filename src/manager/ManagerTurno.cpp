@@ -5,6 +5,8 @@
 #include "utils/ManagerFecha.h"
 #include "utils/ManagerHora.h"
 #include "utils/rlutil.h"
+#include "Protocolo.h"
+#include "Turno.h"
 #include "utils/funcFrontend.h"
 #include "Paciente.h"
 #include <algorithm>
@@ -12,6 +14,13 @@
 
 
 ManagerTurno::ManagerTurno(){};
+
+Turno ManagerTurno::seleccionar(int idTurno) {
+    Turno regTurno;
+
+    regTurno = _repo.leer(idTurno-1);
+    return regTurno;
+}
 
 bool ManagerTurno::cargar(){
     std::cin.ignore(100, '\n');
@@ -39,11 +48,11 @@ bool ManagerTurno::cargar(){
             std::cin >> dniPaciente;
         }
 
-        if (dniPaciente > 10000000 && dniPaciente < 99999999) {
+        if (dniPaciente >= 1000000 && dniPaciente <= 99999999) {
             break;
         }
 
-        std::cout << "Intente nuevamente. Asegurese que sea un numero de 8 digitos.\n";
+        std::cout << "Intente nuevamente. Asegurese que sea un numero de 8 digitos (1M - 100M).\n";
     }
 
     // Chequear si el paciente ya existe en la base de datos
@@ -64,7 +73,7 @@ bool ManagerTurno::cargar(){
             if (!mPaciente.cargar(dniPaciente)) {
                 std::cout << "No se pudo cargar el paciente. El turno no sera guardado.\n";
                 std::cout << "Presione ENTER para continuar\n";
-                rlutil::anykey();
+                std::cin.get();
                 return false;
             }
         } else {
@@ -74,100 +83,37 @@ bool ManagerTurno::cargar(){
         }
     }
 
-    opc = 'n';
-
-    std::cout << "El paciente se atendera ahora? s/n: ";
+    std::cout << "\nEl paciente se atendera ahora? s/n: ";
     std::cin >> opc;
-
 
     if (opc == 's') {
         ManagerProtocolo mProtocolo;
-
         Protocolo protocolo;
         protocolo.setIdTurno(proximoID);
 
-        if (mProtocolo.chequearTurno(protocolo)) {
-            std::cout << "\nATENCION: El turno ingresado ya tiene un Protocolo iniciado\n";
-            menuVolver();
-            return false;
-        }
-
-        //int id_proto = mProtocolo.iniciar(proximoID);
-
-        if (mProtocolo.iniciar(protocolo)) {
-            std::cout << "\nPROTOCOLO INICIADO.\n";
-            pausa();
-        } else {
-            std::cout << "\nPROTOCOLO CANCELADO.";
-            pausa();
-            return false;
-        }
-
-        std::cout << "\nDesea cargar los estudios ahora s/n: ";
-        std::cin >> opc;
-
-        if (opc != 's') {
-            //CARGA CANCELADA
-            menuVolver();
-            return false;
-        }
-
-        if (mProtocolo.cargarAnalisis(protocolo)) {
-            std::cout << "\nANALISIS CARGADOS EXITOSAMENTE\n" ;
-        } else {
-            std::cout << "\nCARGA DE ANALISIS CANCELADA\n" ;
-            menuVolver();
-            return false;
-        }
-
-        // Obtener importe sumando todos los analisis por protocolos
-
-        Protocolo auxProto;
-        AnalisisProtocolo auxAP;
-        ManagerAnalisisProtocolo mAP;
-
-        bool* indices = new bool[mProtocolo.getRepositorio().cantidadRegistros()] {false};
-
-        for (int i = 0; i < mProtocolo.getRepositorio().cantidadRegistros(); i ++) {
-
-            auxProto = mProtocolo.getRepositorio().leer(i);
-
-            if (auxProto.getIdTurno() == proximoID) {
-
-                for (int j = 0; j < mAP.getRepositorio().cantidadRegistros(); j ++) {
-
-                    auxAP = mAP.getRepositorio().leer(j);
-
-                    if (auxAP.getIdProtocolo() == auxProto.getId()){
-                        importe += auxAP.getTipoAnalisis().getPrecio();
-                    }
-                }
-            }
-        }
-        delete[] indices;
-        
+        mProtocolo.iniciar(protocolo);
     } else {
         std::cin.ignore(100, '\n');
 
         fechaAtencion = mFecha.cargar();
         horaAtencion = mHora.cargar();
-
-        std::cout << "Ingrese a continuacion el importe a cobrar: $";
-        std::cin >> importe;
-        std::cin.ignore(100, '\n');
     }
+
+    //opc = 'n';
 
     Turno turno(proximoID, dniPaciente, fechaAtencion, horaAtencion, importe);
+    bool guardadoOK = _repo.guardar(turno);
 
-    if (_repo.guardar(turno)) {
-        std::cout << "El turno se ha guardado correctamente. Presione ENTER para continuar\n";
-        rlutil::anykey();
+    if (guardadoOK) {
+        std::cout << "\nEl turno se ha iniciado correctamente. ";
+        pausa();
+
         return true;
+    } else {
+        std::cout << "\nOcurrio un error al intentar guardar el turno. ";
+        std::cin.get();
+        return false;
     }
-
-    std::cout << "Ocurrio un error al intentar guardar el turno. Presione ENTER para continuar\n";
-    rlutil::anykey();
-    return false;
 }
 
 std::string ManagerTurno::mostrarCabecera(const int anchoPaciente, const int anchoFecha, const int anchoImporte) {
@@ -219,6 +165,7 @@ void ManagerTurno::mostrarUno(Turno turno){
               << std::setw(anchoFecha) << turno.getFechaAtencion().to_str() << " | "
               << std::setw(13) << turno.getHoraAtencion().to_str() << " | "
               << "$ " << std::setw(anchoImporte - 2) << std::fixed << std::setprecision(2) << turno.getImporte() << " |\n";
+    std::cout << linea;
 }
 
 void ManagerTurno::mostrarVarios(Turno* turnos, const int cantidad) {
@@ -230,7 +177,7 @@ void ManagerTurno::mostrarVarios(Turno* turnos, const int cantidad) {
     // -- Calcular ancho maximo de columnas --
     int anchoPaciente = 8; // Largo minimo "Paciente"
     int anchoFecha = 14;   // Largo minimo "Fecha Atencion"
-    int anchoImporte = 7;  // Largo minimo "Importe"
+    int anchoImporte = 11;  // Largo minimo "Importe"
     std::string nombreCompleto;
     std::string precioStr;
 
@@ -312,7 +259,7 @@ void ManagerTurno::ordenadosFecha(){
     // Finalizar
     delete[] turnos;
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 void ManagerTurno::agrupadosPaciente(){
@@ -376,7 +323,7 @@ void ManagerTurno::agrupadosPaciente(){
     delete[] indicesPacientes;
 
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 void ManagerTurno::busquedaFecha(){
@@ -486,7 +433,7 @@ void ManagerTurno::busquedaFecha(){
     delete[] indicesTurnos;
 
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 }
 
 void ManagerTurno::busquedaPaciente(){
@@ -584,7 +531,7 @@ void ManagerTurno::busquedaPaciente(){
     }
 
     std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    std::cin.get();
 
     delete[] turnos;
     delete[] indices;
@@ -624,6 +571,138 @@ void ManagerTurno::actualizarImportes(){
     delete[] turnos;
 }
 
+/*
+void ManagerTurno::actualizarImportesSeleccionados() {
+    const int CANTIDAD = _repo.cantidadRegistros();
+    Turno* turnos = _repo.leerTodos();
+    ManagerProtocolo mProtocolo;
+    ManagerAnalisisProtocolo mAP;
+    Fecha hoy; // Fecha actual por defecto
+
+    // 1. Filtrar turnos candidatos
+    bool* candidatos = new bool[CANTIDAD] {false};
+    int totalCandidatos = 0;
+
+    for (int i = 0; i < CANTIDAD; i++) {
+        if (turnos[i].getEliminado()) continue;
+
+        // Verificar fecha futura
+        if (turnos[i].getFechaAtencion() > hoy || turnos[i].getFechaAtencion() == hoy) {
+            // Verificar protocolo no terminado (estado = false)
+            int idProtocolo = mProtocolo.seleccionar(turnos[i].getID());
+
+            if (idProtocolo != -1) {
+                Protocolo proto = mProtocolo.seleccionar(idProtocolo);
+                if (!proto.getEstado()) {
+                    candidatos[i] = true;
+                    totalCandidatos++;
+                }
+            }
+        }
+    }
+
+    if (totalCandidatos == 0) {
+        std::cout << "No hay turnos pendientes de actualizacion (fecha futura y protocolo abierto).\n";
+        delete[] turnos;
+        delete[] candidatos;
+        std::cout << "Presione ENTER para continuar";
+        std::cin.get();
+        return;
+    }
+
+    // 2. Mostrar candidatos
+    std::cout << "Turnos disponibles para actualizar importes:\n";
+    Turno* turnosMostrar = new Turno[totalCandidatos];
+    int idx = 0;
+    for (int i = 0; i < CANTIDAD; i++) {
+        if (candidatos[i]) {
+            turnosMostrar[idx++] = turnos[i];
+        }
+    }
+    mostrarVarios(turnosMostrar, totalCandidatos);
+    delete[] turnosMostrar;
+
+    // 3. Pedir seleccion al usuario
+    std::cout << "\nIngrese los ID de los turnos a actualizar, separados por coma (ej: 1, 3, 5): ";
+    std::string input;
+    std::getline(std::cin, input); // Usar getline para leer toda la linea
+
+    // 4. Parsear y validar input
+    std::string idStr;
+    for (size_t i = 0; i < input.length(); i++) {
+        if (input[i] == ',') {
+            if (!idStr.empty()) {
+                int id = std::stoi(idStr);
+                // Buscar el turno con ese ID y actualizarlo si es candidato
+                bool encontrado = false;
+
+                for (int j = 0; j < CANTIDAD; j++) {
+                    if (turnos[j].getID() == id && candidatos[j]) {
+                        // Actualizar importe
+                        float nuevoImporte = 0.0f;
+                        int idProto = mProtocolo.buscarTurno(id);
+                        // Recalcular importe
+                         for (int k = 0; k < mAP.getRepositorio().cantidadRegistros(); k ++) {
+                            if (mAP.getRepositorio().leer(k).getIdProtocolo() == idProto){
+                                nuevoImporte += mAP.getRepositorio().leer(k).getTipoAnalisis().getPrecio();
+                            }
+                        }
+
+                        turnos[j].setImporte(nuevoImporte);
+                        _repo.modificar(turnos[j], _repo.getPos(id));
+                        
+                        std::cout << "Turno ID " << id << " actualizado. Nuevo importe: $" << nuevoImporte << "\n";
+                        encontrado = true;
+                        break;
+                    }
+                }
+                if (!encontrado) {
+                    std::cout << "ID " << id << " no valido o no corresponde a un turno actualizable.\n";
+                }
+                idStr = "";
+            }
+        } else if (isdigit(input[i])) {
+            idStr += input[i];
+        }
+    }
+    // Procesar el ultimo ID si existe
+    if (!idStr.empty()) {
+        int id = std::stoi(idStr);
+        bool encontrado = false;
+        
+        for (int j = 0; j < CANTIDAD; j++) {
+            if (turnos[j].getID() == id && candidatos[j]) {
+                 // Actualizar importe
+                float nuevoImporte = 0.0f;
+                int idProto = mProtocolo.buscarTurno(id);
+
+                for (int k = 0; k < mAP.getRepositorio().cantidadRegistros(); k ++) {
+                    if (mAP.getRepositorio().leer(k).getIdProtocolo() == idProto){
+                        nuevoImporte += mAP.getRepositorio().leer(k).getTipoAnalisis().getPrecio();
+                    }
+                }
+
+                turnos[j].setImporte(nuevoImporte);
+                _repo.modificar(turnos[j], _repo.getPos(id));
+
+                std::cout << "Turno ID " << id << " actualizado. Nuevo importe: $" << nuevoImporte << "\n";
+                encontrado = true;
+                break;
+            }
+        }
+        if (!encontrado) {
+             std::cout << "ID " << id << " no valido o no corresponde a un turno actualizable.\n";
+        }
+    }
+
+    delete[] turnos;
+    delete[] candidatos;
+    std::cout << "Operacion finalizada. Presione ENTER para continuar";
+    std::cin.get();
+}
+
+*/
+
 bool ManagerTurno::actualizar(Turno turno){
     std::cin.ignore(100, '\n');
 
@@ -631,7 +710,7 @@ bool ManagerTurno::actualizar(Turno turno){
     ManagerHora mHora;
 
     int dniPaciente;
-    float importe = 0.0f;
+    float importe = 0.0;
     char opc = 'n';
 
     // Carga de paciente. Comienza con DNI
@@ -644,11 +723,11 @@ bool ManagerTurno::actualizar(Turno turno){
             break;
         }
 
-        if (dniPaciente > 10000000 && dniPaciente < 99999999) {
+        if (dniPaciente >= 1000000 && dniPaciente <= 99999999) {
             break;
         }
 
-        std::cout << "Intente nuevamente. Asegurese que sea un numero de 8 digitos.\n";
+        std::cout << "Intente nuevamente. Asegurese que sea un numero de 8 digitos (1M - 100M).\n";
     }
 
     turno.setDniPaciente(dniPaciente);
@@ -671,77 +750,53 @@ bool ManagerTurno::actualizar(Turno turno){
         turno.setHoraAtencion(mHora.cargar());
     }
 
-    std::cout << "El paciente se atendera ahora? s/n: ";
-    std::cin >> opc;
-
-    if (opc == 's') {
-        ManagerProtocolo mProtocolo;
-
-        Protocolo protocolo;
-        protocolo.setIdTurno(turno.getID());
-
-        if (mProtocolo.chequearTurno(protocolo)) {
-            std::cout << "\nATENCION: El turno ingresado ya tiene un Protocolo iniciado\n";
-            menuVolver();
-            return false;
-        }
-
-        //int id_proto = mProtocolo.iniciar(proximoID);
-
-        if (mProtocolo.iniciar(protocolo)) {
-            std::cout << "\nPROTOCOLO INICIADO.\n";
-            pausa();
-        } else {
-            std::cout << "\nPROTOCOLO CANCELADO.";
-            pausa();
-            return false;
-        }
-
-        std::cout << "\nDesea cargar los estudios ahora s/n: ";
-        std::cin >> opc;
-
-        if (opc != 's') {
-            //CARGA CANCELADA
-            menuVolver();
-            return false;
-        }
-
-        if (mProtocolo.cargarAnalisis(protocolo)) {
-            std::cout << "\nANALISIS CARGADOS EXITOSAMENTE\n" ;
-        } else {
-            std::cout << "\nCARGA DE ANALISIS CANCELADA\n" ;
-            menuVolver();
-            return false;
-        }
-
-        // Obtener importe sumando todos los analisis por protocolos
-        Protocolo auxProto;
-        ManagerAnalisisProtocolo mAP;
-
-        bool* indices = new bool[mProtocolo.getRepositorio().cantidadRegistros()] {false};
-        for (int i = 0; i < mProtocolo.getRepositorio().cantidadRegistros(); i ++) {
-            auxProto = mProtocolo.getRepositorio().leer(i);
-            if (auxProto.getIdTurno() == turno.getID()) {
-                for (int j = 0; j < mAP.getRepositorio().cantidadRegistros(); j ++) {
-                    if (mAP.getRepositorio().leer(j).getIdProtocolo() == auxProto.getId()){
-                        importe += mAP.getRepositorio().leer(j).getTipoAnalisis().getPrecio();
-                    }
-                }
-            }
-        }
-        delete[] indices;
-        
-    }
-
     if (_repo.modificar(turno, _repo.getPos(turno.getID()))) {
         std::cout << "El turno se ha modificado correctamente. Presione ENTER para continuar.\n";
-        rlutil::anykey();
+        std::cin.get();
         return true;
     }
 
     std::cout << "Ocurrio un error al intentar modificar el turno. Presione ENTER para continuar.\n";
-    rlutil::anykey();
+    std::cin.get();
     return false;
+}
+
+bool ManagerTurno::actualizarImporte(AnalisisProtocolo analisisProtocolo) {
+
+    int idProtocolo = analisisProtocolo.getIdProtocolo();
+
+    //Selecciono el protocolo correspondiente
+
+    ManagerProtocolo mProtocolo;
+    Protocolo protocolo = mProtocolo.seleccionar(idProtocolo);
+
+    //Selecciono el turno del protocolo
+
+    ManagerTurno mTurno;
+    int idTurno = protocolo.getIdTurno();
+    Turno turno = mTurno.seleccionar(protocolo.getIdTurno());
+    int posicionTurno = mTurno.getRepositorio().getPos(idTurno);
+
+    //Selecciono el paciente del turno y tomo la cobertura de obra social
+
+    ManagerPaciente mPaciente;
+    Paciente paciente = mPaciente.seleccionar(turno.getDniPaciente());
+    int cobertura = paciente.getObraSocial().getCobertura();
+
+    //Modifico el importe del protocolo en el turno
+
+    int precioAnalisis = analisisProtocolo.getPrecioSolicitud();
+    int importeModificado = turno.getImporte() + precioAnalisis * (100 - cobertura) /100 ;
+    turno.setImporte(importeModificado);
+
+    //Guardo el turno en archivo
+
+    if (mTurno.getRepositorio().modificar(turno, posicionTurno)) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 bool ManagerTurno::eliminar(Turno turno) {
@@ -755,7 +810,7 @@ bool ManagerTurno::eliminar(Turno turno) {
         turno.setEliminado(true);
         if (_repo.modificar(turno, _repo.getPos(turno.getID()))) {
             std::cout << "El turno se ha eliminado correctamente. Presione ENTER para continuar.\n";
-            rlutil::anykey();
+            std::cin.get();
             return true;
         };
 
@@ -770,7 +825,7 @@ bool ManagerTurno::eliminar(Turno turno) {
         }
         */
         std::cout << "Ocurrio un error al intentar eliminar el turno. Presione ENTER para continuar.\n";
-        rlutil::anykey();
+        std::cin.get();
         return false;
     }
 

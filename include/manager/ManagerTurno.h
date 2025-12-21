@@ -1,5 +1,6 @@
 #pragma once
 #include "archivo/ArchivoTurno.h"
+#include "AnalisisProtocolo.h"
 
 
 class ManagerTurno{
@@ -9,6 +10,7 @@ class ManagerTurno{
     public:
         ManagerTurno();
 
+        Turno seleccionar(int idTurno);
         bool cargar();
         void mostrarUno(Turno turno);
         void mostrarVarios(Turno* turnos, const int cantidad);
@@ -17,6 +19,8 @@ class ManagerTurno{
         void mostrarTodos();
         bool eliminar(Turno turno);
         bool actualizar(Turno turno);
+        bool actualizarImporte(AnalisisProtocolo analisisProtocolo);
+
 
         // Ordena todos los turnos existentes y los muestra por pantalla
         void ordenadosFecha();
@@ -28,6 +32,7 @@ class ManagerTurno{
         void busquedaPaciente();
 
         void actualizarImportes();
+        void actualizarImportesSeleccionados();
         
         ArchivoTurno getRepositorio();
 };

@@ -189,7 +189,7 @@ void ManagerAnalisisProtocolo::mostrarTodos(int idProtocolo) {
         std::cout << "\n\tDISPONIBLE PARA RETIRAR: ";
         std::cout << fechaResultados.to_str() << std::endl;
     } else {
-        std::cout << "\n\tCOBERTURA: " << precioPaciente ;
+        std::cout << "\n\tCOBERTURA: " << nombreObraSocial << " (" << cobertura << "%)" ;
         std::cout << "\n\tPRECIO ESTIMADO (SOLICITUD): $" << precioPaciente ;
         std::cout << "\n\tFECHA DEL TURNO: " ;
         std::cout << fechaTurno.to_str();

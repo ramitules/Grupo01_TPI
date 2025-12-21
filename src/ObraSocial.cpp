@@ -2,14 +2,15 @@
 #include <iostream>
 #include <cstring>
 
-ObraSocial::ObraSocial(): _id(0), _nombre(""), _nombreContacto(""), _telefono(0), _email(""), _eliminado(false) {};
+ObraSocial::ObraSocial(): _id(0), _nombre(""), _nombreContacto(""), _telefono(0), _email(""),_cobertura(0), _eliminado(false) {};
 
-ObraSocial::ObraSocial(int id, const char nombre[], const char nombreContacto[], int telefono, const char email[]){
+ObraSocial::ObraSocial(int id, const char nombre[], const char nombreContacto[], int telefono, const char email[], int cobertura){
     setID(id);
     setNombre(nombre);
     setNombreContacto(nombreContacto);
     setTelefono(telefono);
     setEmail(email);
+    setCobertura(cobertura);
     setEliminado(false);
 }
 
@@ -37,6 +38,10 @@ void ObraSocial::setEmail(const char email[]){
     _email[sizeof(_email) - 1] = '\0'; // Asegura la terminación nula
 }
 
+void ObraSocial::setCobertura(int cobertura) {
+    _cobertura = cobertura;
+}
+
 void ObraSocial::setEliminado(bool eliminado) {
     _eliminado = eliminado;
 }
@@ -60,6 +65,10 @@ int ObraSocial::getTelefono(){
 
 const char* ObraSocial::getEmail(){
     return _email;
+}
+
+int ObraSocial::getCobertura() {
+    return _cobertura;
 }
 
 bool ObraSocial::getEliminado() {

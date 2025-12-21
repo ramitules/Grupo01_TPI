@@ -13,7 +13,7 @@ class ManagerObraSocial{
         void mostrarUno(ObraSocial obraSocial);
         void mostrarVarios(ObraSocial* obrasSociales, const int cantidad);
         /// @return linea separadora para cabeceras y limites superior/inferior
-        std::string mostrarCabecera(const int anchoNombre, const int anchoContacto, const int anchoTelefono, const int anchoEmail);
+        std::string mostrarCabecera(const int anchoNombre, const int anchoContacto, const int anchoTelefono, const int anchoEmail, const int anchoCobertura);
         void mostrarTodos(bool claveValor = false);
         bool eliminar(ObraSocial obraSocial);
         bool actualizar(ObraSocial obraSocial);

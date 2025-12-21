@@ -8,11 +8,12 @@ class ObraSocial{
         char _nombreContacto[50];
         int _telefono;
         char _email[110];
+        int _cobertura;
         bool _eliminado;
         
     public:
         ObraSocial();
-        ObraSocial(int id, const char nombre[], const char nombreContacto[], int telefono, const char email[]);
+        ObraSocial(int id, const char nombre[], const char nombreContacto[], int telefono, const char email[], int cobertura);
 
         //SETTERS
         void setID(int id);
@@ -20,6 +21,7 @@ class ObraSocial{
         void setNombreContacto(const char nombreContacto[]);
         void setTelefono(int telefono);
         void setEmail(const char email[]);
+        void setCobertura(int cobertura);
         void setEliminado(bool eliminado);
 
         //GETTERS
@@ -28,5 +30,6 @@ class ObraSocial{
         const char* getNombreContacto();
         int getTelefono();
         const char* getEmail();
+        int getCobertura();
         bool getEliminado();
 };

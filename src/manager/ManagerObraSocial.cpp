@@ -13,7 +13,7 @@ bool ManagerObraSocial::cargar(){
     std::cin.ignore(100, '\n');
 
     int proximoID = _repo.cantidadRegistros() + 1;
-    int telefono;
+    int telefono, cobertura;
     std::string nombre;
     std::string nombreContacto;
     std::string email;
@@ -50,12 +50,23 @@ bool ManagerObraSocial::cargar(){
         std::cout << "Intente nuevamente. Asegurese que sea un numero de 10 digitos.\n";
     }
 
+    while (true) {
+        std::cout << "Ingrese el porcentaje de cobertura de la obra social: ";
+        std::cin >> cobertura;
+
+        if (cobertura >= 0 && cobertura <=100) {
+            break;
+        }
+
+        std::cout << "Intente nuevamente. Asegurese que sea un valor entre 0 y 100.\n";
+    }
+
     std::cin.ignore(100, '\n');
 
-    ObraSocial obraSocial(proximoID, nombre.c_str(), nombreContacto.c_str(), telefono, email.c_str());
+    ObraSocial obraSocial(proximoID, nombre.c_str(), nombreContacto.c_str(), telefono, email.c_str(), cobertura);
 
     if (_repo.guardar(obraSocial)) {
-        std::cout << "La obra social se ha guardado correctamente. Presione ENTER para continuar\n";
+        std::cout << "\nLa obra social se ha guardado correctamente. Presione ENTER para continuar\n";
         rlutil::anykey();
         return true;
     }
@@ -65,7 +76,7 @@ bool ManagerObraSocial::cargar(){
     return false;
 }
 
-std::string ManagerObraSocial::mostrarCabecera(const int anchoNombre, const int anchoContacto, const int anchoTelefono, const int anchoEmail){
+std::string ManagerObraSocial::mostrarCabecera(const int anchoNombre, const int anchoContacto, const int anchoTelefono, const int anchoEmail, const int anchoCobertura){
     // -- Mostrar tabla --
     std::cout << std::left; // Alinear a la izquierda
 
@@ -74,14 +85,16 @@ std::string ManagerObraSocial::mostrarCabecera(const int anchoNombre, const int 
                         "+" + std::string(anchoNombre + 2, '-') + 
                         "+" + std::string(anchoContacto + 2, '-') + 
                         "+" + std::string(anchoTelefono + 2, '-') +
-                        "+" + std::string(anchoEmail + 2, '-') + "+\n";
+                        "+" + std::string(anchoEmail + 2, '-') +
+                        "+" + std::string(anchoCobertura + 2, '-') + "+\n";
     // Cabeceras
     std::cout << linea;
     std::cout << "| " << std::setw(3) << "ID" << " | " 
               << std::setw(anchoNombre) << "Nombre" << " | "
               << std::setw(anchoContacto) << "Contacto" << " | "
               << std::setw(anchoTelefono) << "Telefono" << " | "
-              << std::setw(anchoEmail) << "Email" << " |\n";
+              << std::setw(anchoEmail) << "Email" << " | "
+              << std::setw(anchoCobertura) << "Cobertura (%)" << " |\n";
     std::cout << linea;
 
     return linea;
@@ -93,19 +106,21 @@ void ManagerObraSocial::mostrarUno(ObraSocial obraSocial){
     int anchoContacto = 9;          // Minimo 9 (Contacto)
     const int anchoTelefono = 10;   // Constante
     int anchoEmail = 5;             // Minimo 5 (Email)
+    const int anchoCobertura = 13;
 
     anchoNombre = std::max(anchoNombre, (int)strlen(obraSocial.getNombre()));
     anchoContacto = std::max(anchoContacto, (int)strlen(obraSocial.getNombreContacto()));
     anchoEmail = std::max(anchoEmail, (int)strlen(obraSocial.getEmail()));
 
-    std::string linea = mostrarCabecera(anchoNombre, anchoContacto, anchoTelefono, anchoEmail);
+    std::string linea = mostrarCabecera(anchoNombre, anchoContacto, anchoTelefono, anchoEmail, anchoCobertura);
 
     // Datos
     std::cout << "| " << std::setw(3) << obraSocial.getID() << " | "
               << std::setw(anchoNombre) << obraSocial.getNombre() << " | "
               << std::setw(anchoContacto) << obraSocial.getNombreContacto() << " | "
               << std::setw(anchoTelefono) << obraSocial.getTelefono() << " | "
-              << std::setw(anchoEmail) << obraSocial.getEmail() << " |\n";
+              << std::setw(anchoEmail) << obraSocial.getEmail() << " | "
+              << std::setw(anchoCobertura) << obraSocial.getCobertura() << " |\n";
     std::cout << linea;
 }
 
@@ -120,6 +135,7 @@ void ManagerObraSocial::mostrarVarios(ObraSocial* obrasSociales, const int canti
     int anchoContacto = 9;          // Minimo 9 (Contacto)
     const int anchoTelefono = 10;   // Constante
     int anchoEmail = 5;             // Minimo 5 (Email)
+    const int anchoCobertura = 13;
 
     for(int i=0; i<cantidad; i++) {
         if (obrasSociales[i].getEliminado()) {
@@ -131,7 +147,7 @@ void ManagerObraSocial::mostrarVarios(ObraSocial* obrasSociales, const int canti
         anchoEmail = std::max(anchoEmail, (int)strlen(obrasSociales[i].getEmail()));
     }
 
-    std::string linea = mostrarCabecera(anchoNombre, anchoContacto, anchoTelefono, anchoEmail);
+    std::string linea = mostrarCabecera(anchoNombre, anchoContacto, anchoTelefono, anchoEmail, anchoCobertura);
 
     // Datos
     for(int i=0; i<cantidad; i++){
@@ -140,10 +156,11 @@ void ManagerObraSocial::mostrarVarios(ObraSocial* obrasSociales, const int canti
         }
 
         std::cout << "| " << std::setw(3) << obrasSociales[i].getID() << " | "
-                  << std::setw(anchoNombre) << obrasSociales[i].getNombre() << " | "
-                  << std::setw(anchoContacto) << obrasSociales[i].getNombreContacto() << " | "
-                  << std::setw(anchoTelefono) << obrasSociales[i].getTelefono() << " | "
-                  << std::setw(anchoEmail) << obrasSociales[i].getEmail() << " |\n";
+                        << std::setw(anchoNombre) << obrasSociales[i].getNombre() << " | "
+                        << std::setw(anchoContacto) << obrasSociales[i].getNombreContacto() << " | "
+                        << std::setw(anchoTelefono) << obrasSociales[i].getTelefono() << " | "
+                        << std::setw(anchoEmail) << obrasSociales[i].getEmail() << " | "
+                        << std::setw(anchoCobertura) << obrasSociales[i].getCobertura() << " |\n";
     }
 
     std::cout << linea;
@@ -271,7 +288,7 @@ bool ManagerObraSocial::actualizar(ObraSocial obraSocial){
     std::string aux;
     char opc = 'n';
 
-    std::cout << "El nombre de la obra social sera la misma? s/n: ";
+    std::cout << "\nEl nombre de la obra social sera la misma? s/n: ";
     std::cin >> opc;
 
     if (opc != 's') {
@@ -334,6 +351,26 @@ bool ManagerObraSocial::actualizar(ObraSocial obraSocial){
         }
 
         obraSocial.setTelefono(tel);
+    }
+
+    std::cout << "El porcentaje de cobertura de la obra social sera el mismo? s/n: ";
+    std::cin >> opc;
+
+    if (opc != 's') {
+        std::cin.ignore(100, '\n');
+        int cobertura = 0;
+        while (true) {
+            std::cout << "Ingrese el porcentaje de cobertura de la obra social: ";
+            std::cin >> cobertura;
+
+            if (cobertura >= 0 && cobertura <= 100) {
+                break;
+            }
+
+            std::cout << "Intente nuevamente. Asegurese que sea un valor entre 0 y 100.\n";
+        }
+
+        obraSocial.setCobertura(cobertura);
     }
 
     std::cin.ignore(100, '\n');

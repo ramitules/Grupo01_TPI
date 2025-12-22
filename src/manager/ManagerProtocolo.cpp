@@ -95,17 +95,20 @@ void ManagerProtocolo::mostrarVarios(Protocolo *protocolo, int cantidad){
     std::cout << "\nID\tTurno\tEstado\t\tSala\tEnfermero\tDatos\n\n" ;
 
     for(int i=0; i<cantidad; i++){
-        //if (regProtocolo.getEliminado()!=true) {
+
+        if (protocolo[i].getEliminado()) {
+            continue;
+        }
 
         std::cout << protocolo[i].getId() << "\t" ;
         std::cout << protocolo[i].getIdTurno() << "\t";
         (protocolo[i].getEstado()) ? std::cout << "Finalizado\t" : std::cout << "Pendiente\t";
         if (protocolo[i].getSala() == 0) {
             std::cout << protocolo[i].getSala() << "\t";
-            std::cout << "[Sin asignar]\t";
+            std::cout << "[Sin asignar]\n";
         } else {
             std::cout << protocolo[i].getSala() << "\t";
-            std::cout << protocolo[i].getEnfermero().getNombre() << " " << protocolo[i].getEnfermero().getApellido() << "\t" ;
+            std::cout << protocolo[i].getEnfermero().getNombre() << " " << protocolo[i].getEnfermero().getApellido() << "\n" ;
         }
         (protocolo[i].getEliminado())? std::cout << "Eliminado\n" : std::cout << "Existente\n";
     }
@@ -118,26 +121,29 @@ bool ManagerProtocolo::mostrarTodos(){
 
     //ATENCION: Observaciones solo en el metodo mostrar
 
-    std::cout << "\nID\tTurno\tEstado\t\tSala\tEnfermero\tDatos\n\n" ;
+    std::cout << "\nID\tTurno\tEstado\t\tSala\tEnfermero\n\n" ;
 
     for(int i=0; i<cantidadProtocolo; i++){
         regProtocolo = _repo.leer(i);
 
-        //if (regProtocolo.getEliminado()!=true) {
+        if (regProtocolo.getEliminado() == true) {
+            continue;
+        }
 
-            std::cout << regProtocolo.getId() << "\t" ;
-            std::cout << regProtocolo.getIdTurno() << "\t";
-            (regProtocolo.getEstado()) ? std::cout << "Finalizado\t" : std::cout << "Pendiente\t";
-            if (regProtocolo.getSala() == 0) {
-                std::cout << regProtocolo.getSala() << "\t";
-                std::cout << "[Sin asignar]\t";
-            } else {
-                std::cout << regProtocolo.getSala() << "\t";
-                std::cout << regProtocolo.getEnfermero().getNombre() << " " << regProtocolo.getEnfermero().getApellido() << "\t" ;
-            }
-            (regProtocolo.getEliminado())? std::cout << "Eliminado\n" : std::cout << "Existente\n";
+        std::cout << regProtocolo.getId() << "\t" ;
+        std::cout << regProtocolo.getIdTurno() << "\t";
+        (regProtocolo.getEstado()) ? std::cout << "Finalizado\t" : std::cout << "Pendiente\t";
+        if (regProtocolo.getSala() == 0) {
+            std::cout << regProtocolo.getSala() << "\t";
+            std::cout << "[Sin asignar]\n";
+        } else {
+            std::cout << regProtocolo.getSala() << "\t";
+            std::cout << regProtocolo.getEnfermero().getNombre() << " " << regProtocolo.getEnfermero().getApellido() << "\n" ;
+        }
     }
     std::cout << std::endl;
+    ManagerTurno mTurno;
+
     return true;
 }
 
@@ -202,7 +208,6 @@ bool ManagerProtocolo::cargarAnalisis(Protocolo protocolo) {
 bool ManagerProtocolo::asignar(Protocolo protocolo){
     ManagerProtocolo mProtocolo;
     ManagerEnfermero mEnfermero;
-    ArchivoEnfermero archivoEnfermero;
     Enfermero enfermero;
     int dniEnfermero;
     int sala;
@@ -224,6 +229,8 @@ bool ManagerProtocolo::asignar(Protocolo protocolo){
         return false;
     }
 
+    rlutil::cls();
+
     std::cout << "\nCLINICA - Enfermeros habilitados para asignar\n\n";
 
     mEnfermero.mostrarTodos();
@@ -236,20 +243,20 @@ bool ManagerProtocolo::asignar(Protocolo protocolo){
             return false;
         }
 
-        enfermero = protocolo.getEnfermero();
-        pos = archivoEnfermero.getPos(dniEnfermero);
+        if (mEnfermero.comprobar(dniEnfermero) == false) {
+            continue;
+        }
 
-        if (mEnfermero.comprobar(dniEnfermero)) {
-            enfermero = mEnfermero.seleccionar(dniEnfermero);
-            protocolo.setDniEnfermero(enfermero.getDNI());
-            break;
+        enfermero = mEnfermero.seleccionar(dniEnfermero);
+
+        if (enfermero.getHabilitado() == false){
+            std::cout << "\n\tEnfermero no habilitado\n";
+            continue;
         }
-        else {
-            std::cout << "Dni no valido";
-        }
+        break;
     }
 
-    std::cout << "\nAsignar sala de atencion: ";
+    std::cout << "Asignar sala de atencion: ";
     std::cin >> sala;
 
     if (sala == 0) {
@@ -258,12 +265,14 @@ bool ManagerProtocolo::asignar(Protocolo protocolo){
 
     protocolo.setSala(sala);
 
-    std::cout << "\nCONFIRMAR: Asignar el protocolo s/n: ";
+    std::cout << "\t\nCONFIRMAR: Asignar el protocolo s/n: ";
     std::cin >> opc;
 
     if (opc != 's') {
         std::cout << "\nATENCION: No se asigno el protocolo\n";
         return false;
+    } else {
+        protocolo.setDniEnfermero(enfermero.getDNI());
     }
 
     if (_repo.modificar(protocolo, protocolo.getId()-1)) {
@@ -271,7 +280,6 @@ bool ManagerProtocolo::asignar(Protocolo protocolo){
     }else {
         std::cout << "Ocurrio un error al intentar asignar el protocolo.\n\n";
     }
-
     return false;
 }
 

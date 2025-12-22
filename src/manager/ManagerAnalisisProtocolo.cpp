@@ -80,7 +80,7 @@ bool ManagerAnalisisProtocolo::cargar(int idProtocolo) {
 
         //Comprobar que no este cargado
 
-        std::cout << "CONFIRMAR: agregar " << regTipoAnalisis.getNombreAnalisis() << " al Protocolo? s/n: ";
+        std::cout << "\tCONFIRMAR: agregar " << regTipoAnalisis.getNombreAnalisis() << " al Protocolo? s/n: ";
         std::cin >> opc;
 
         if (opc == 's') {
@@ -99,13 +99,14 @@ bool ManagerAnalisisProtocolo::cargar(int idProtocolo) {
                     std::cout << "\tSe modifico el importe en el turno";
                 }
                 else {
-                    std::cout << "\tNo se modifico el importe en el turno";
+                    std::cout << "\tNo se modifico el importe en el turno\n";
                 }
             } else {
                 std::cout << "Ocurrio un error al intentar agregar el analisis.\n";
             }
         }
     }
+
 }
 
 void ManagerAnalisisProtocolo::mostrarTodos(int idProtocolo) {
@@ -182,7 +183,7 @@ void ManagerAnalisisProtocolo::mostrarTodos(int idProtocolo) {
 
     if (protocolo.getEstado()) {
         std::cout << "\n\tCOBERTURA: " << nombreObraSocial << " (" << cobertura << "%)" ;
-        std::cout << "\n\tPRECIO FINAL: $" << precioPaciente ;
+        std::cout << "\n\tPRECIO PACIENTE: $" << precioPaciente ;
         std::cout << "\n\tFECHA DEL TURNO: " ;
         std::cout << fechaTurno.to_str();
         std::cout << "\n\tRESULTADOS en " << resultadoDias << " dia(s)" ;
@@ -190,7 +191,7 @@ void ManagerAnalisisProtocolo::mostrarTodos(int idProtocolo) {
         std::cout << fechaResultados.to_str() << std::endl;
     } else {
         std::cout << "\n\tCOBERTURA: " << nombreObraSocial << " (" << cobertura << "%)" ;
-        std::cout << "\n\tPRECIO ESTIMADO (SOLICITUD): $" << precioPaciente ;
+        std::cout << "\n\tPRECIO ESTIMADO PACIENTE(SOLICITUD): $" << precioPaciente ;
         std::cout << "\n\tFECHA DEL TURNO: " ;
         std::cout << fechaTurno.to_str();
         std::cout << "\n\tRESULTADOS en " << resultadoDias << " dia(s)" ;

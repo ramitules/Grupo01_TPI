@@ -358,7 +358,7 @@ void ConsultasAnalisis::busquedaxObraSocial() {
     int contadorProtocolos = 0;
 
     for (int i = 0; i < cantidadProtocolos; i++) {
-        if (archivoProtocolo[i].getEliminado() || archivoProtocolo[i].getEstado() == false) {
+        if (archivoProtocolo[i].getEliminado() == true || archivoProtocolo[i].getEstado() != true) {
             continue;
         }
         for (int j = 0; j < contadorTurnos; j++) {

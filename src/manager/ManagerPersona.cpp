@@ -156,6 +156,7 @@ bool ManagerPersona::eliminar(Persona& persona){
     char opc;
 
     std::cout << "Seguro que desea eliminar a esta persona? s/n: ";
+    std::cin.ignore(1000, '\n');
     std::cin >> opc;
 
     if (opc == 's') {

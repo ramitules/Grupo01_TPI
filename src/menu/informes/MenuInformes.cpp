@@ -43,8 +43,7 @@ void MenuInformes::ejecutarOpcion(){
     if (_opcionSeleccionada == 2) {
         informeAnalisisPorObraSocial();
     }
-    
-    std::cout << "Opcion no implementada aun.\n";
+
     std::cin.get();
 }
 

@@ -95,7 +95,16 @@ bool ManagerTurno::cargar(){
     } else {
         std::cin.ignore(100, '\n');
 
-        fechaAtencion = mFecha.cargar();
+        while (true) {
+            fechaAtencion = mFecha.cargar();
+            Fecha actual;
+            if (fechaAtencion < actual) {
+                std::cout << "\n\tATENCION: Ingrese una fecha actual \n" << std::endl;
+                continue;
+            }
+            break;
+        }
+
         horaAtencion = mHora.cargar();
     }
 
@@ -105,7 +114,7 @@ bool ManagerTurno::cargar(){
     bool guardadoOK = _repo.guardar(turno);
 
     if (guardadoOK) {
-        std::cout << "\nEl turno se ha iniciado correctamente. ";
+        std::cout << "\nCONFIRMADO: El turno se ha iniciado correctamente con el ID " << turno.getID() << "\n" << std::endl;
         pausa();
 
         return true;
@@ -116,7 +125,7 @@ bool ManagerTurno::cargar(){
     }
 }
 
-std::string ManagerTurno::mostrarCabecera(const int anchoPaciente, const int anchoFecha, const int anchoImporte) {
+std::string ManagerTurno::mostrarCabecera(const int anchoPaciente, const int anchoFecha, const int anchoImporte, const int anchoObraSocial, const int anchoEstado) {
     // -- Mostrar tabla --
     std::cout << std::left; // Alinear a la izquierda
 
@@ -125,14 +134,20 @@ std::string ManagerTurno::mostrarCabecera(const int anchoPaciente, const int anc
                         "+" + std::string(anchoPaciente + 2, '-') + 
                         "+" + std::string(anchoFecha + 2, '-') + 
                         "+" + std::string(15, '-') +
-                        "+" + std::string(anchoImporte + 2, '-') + "+\n";
+                        "+" + std::string(anchoImporte + 2, '-') +
+                        "+" + std::string(anchoObraSocial + 1, '-') +
+                        "+" + std::string(anchoEstado + 2, '-') + "+\n";
+
     // Cabeceras
     std::cout << linea;
     std::cout << "| " << std::setw(3) << "ID" << " | " 
               << std::setw(anchoPaciente) << "Paciente" << " | "
               << std::setw(anchoFecha) << "Fecha atencion" << " | "
               << std::setw(13) << "Hora atencion" << " | "
-              << std::setw(anchoImporte) << "Importe" << " |\n";
+              << std::setw(anchoImporte) << "Importe" << " | "
+              << std::setw(anchoImporte) << "Obra Social" << "   |"
+              << std::setw(anchoImporte) << " Estado " << "     |\n";
+
     std::cout << linea;
 
     return linea;
@@ -146,19 +161,25 @@ void ManagerTurno::mostrarUno(Turno turno){
     int anchoPaciente = 8; // Largo minimo "Paciente"
     int anchoFecha = 14;   // Largo minimo "Fecha Atencion"
     int anchoImporte = 7;  // Largo minimo "Importe"
+    int anchoObraSocial = 14;
+    int anchoEstado = 10;
     std::string nombreCompleto;
     std::string precioStr;
+    std::string nombreObraSocial;
+    std::string estado;
 
     nombreCompleto = turno.getPaciente().getNombre();
     nombreCompleto += " ";
     nombreCompleto += turno.getPaciente().getApellido();
+    nombreObraSocial = turno.getPaciente().getObraSocial().getNombre();
 
     anchoPaciente = std::max(anchoPaciente, (int)nombreCompleto.length());
     anchoFecha = std::max(anchoFecha, (int)turno.getFechaAtencion().to_str().length());
     precioStr = std::to_string((int)turno.getImporte()) + ".00";
     anchoImporte = std::max(anchoImporte, (int)precioStr.length());
+    anchoObraSocial = std::max(anchoObraSocial, (int)nombreObraSocial.length());
 
-    std::string linea = mostrarCabecera(anchoPaciente, anchoFecha, anchoImporte);
+    std::string linea = mostrarCabecera(anchoPaciente, anchoFecha, anchoImporte, anchoObraSocial, anchoEstado);
 
     std::cout << "| " << std::setw(3) << turno.getID() << " | " 
               << std::setw(anchoPaciente) << nombreCompleto << " | "
@@ -178,8 +199,12 @@ void ManagerTurno::mostrarVarios(Turno* turnos, const int cantidad) {
     int anchoPaciente = 8; // Largo minimo "Paciente"
     int anchoFecha = 14;   // Largo minimo "Fecha Atencion"
     int anchoImporte = 11;  // Largo minimo "Importe"
+    int anchoObraSocial = 14;
+    int anchoEstado = 10;
     std::string nombreCompleto;
     std::string precioStr;
+    std::string nombreObraSocial;
+    std::string estado;
 
     for(int i=0; i<cantidad; i++) {
         if (turnos[i].getEliminado()) {
@@ -188,14 +213,24 @@ void ManagerTurno::mostrarVarios(Turno* turnos, const int cantidad) {
         nombreCompleto = turnos[i].getPaciente().getNombre();
         nombreCompleto += " ";
         nombreCompleto += turnos[i].getPaciente().getApellido();
+        nombreObraSocial = turnos[i].getPaciente().getObraSocial().getNombre();
+
+        ManagerProtocolo mProtocolo;
+        Protocolo protocolo = mProtocolo.seleccionarxTurno(turnos[i].getID());
+        bool estadoProtocolo = protocolo.getEstado();
+        std::string estado = "";
+
+        estado = (estadoProtocolo) ? "Finalizado" : "Pendiente";
 
         anchoPaciente = std::max(anchoPaciente, (int)nombreCompleto.length());
         anchoFecha = std::max(anchoFecha, (int)turnos[i].getFechaAtencion().to_str().length());
         precioStr = std::to_string((int)turnos[i].getImporte()) + ".00";
         anchoImporte = std::max(anchoImporte, (int)precioStr.length());
+        anchoObraSocial = std::max(anchoObraSocial, (int)nombreObraSocial.length());
+        anchoEstado = std::max(anchoObraSocial, (int)estado.length());
     }
 
-    std::string linea = mostrarCabecera(anchoPaciente, anchoFecha, anchoImporte);
+    std::string linea = mostrarCabecera(anchoPaciente, anchoFecha, anchoImporte, anchoObraSocial, anchoEstado);
 
     // Datos
     for(int i=0; i<cantidad; i++){
@@ -206,12 +241,20 @@ void ManagerTurno::mostrarVarios(Turno* turnos, const int cantidad) {
         nombreCompleto = turnos[i].getPaciente().getNombre();
         nombreCompleto += " ";
         nombreCompleto += turnos[i].getPaciente().getApellido();
+        nombreObraSocial = turnos[i].getPaciente().getObraSocial().getNombre();
+
+        ManagerProtocolo mProtocolo;
+        Protocolo protocolo = mProtocolo.seleccionarxTurno(turnos[i].getID());
+        bool estadoProtocolo = protocolo.getEstado();
+        estado = (estadoProtocolo) ? "Finalizado" : "Pendiente";
         
         std::cout << "| " << std::setw(3) << turnos[i].getID() << " | " 
                   << std::setw(anchoPaciente) << nombreCompleto << " | "
                   << std::setw(anchoFecha) << turnos[i].getFechaAtencion().to_str() << " | "
                   << std::setw(13) << turnos[i].getHoraAtencion().to_str() << " | "
-                  << "$ " << std::setw(anchoImporte - 2) << std::fixed << std::setprecision(2) << turnos[i].getImporte() << " |\n";
+                  << "$ " << std::setw(anchoImporte - 2) << std::fixed << std::setprecision(2) << turnos[i].getImporte() << " |"
+                  << std::setw(anchoObraSocial) << nombreObraSocial << " | "
+                  << std::setw(anchoEstado) << estado << " |\n";
     }
 
     std::cout << linea;
@@ -777,7 +820,7 @@ bool ManagerTurno::actualizarImporte(AnalisisProtocolo analisisProtocolo) {
     Turno turno = mTurno.seleccionar(protocolo.getIdTurno());
     int posicionTurno = mTurno.getRepositorio().getPos(idTurno);
 
-    //Selecciono el paciente del turno y tomo la cobertura de obra social
+    //Selecciono el paciente del turno y tomo la cobertura de obra social (no hace falta la cobertura)
 
     ManagerPaciente mPaciente;
     Paciente paciente = mPaciente.seleccionar(turno.getDniPaciente());
@@ -786,7 +829,7 @@ bool ManagerTurno::actualizarImporte(AnalisisProtocolo analisisProtocolo) {
     //Modifico el importe del protocolo en el turno
 
     int precioAnalisis = analisisProtocolo.getPrecioSolicitud();
-    int importeModificado = turno.getImporte() + precioAnalisis * (100 - cobertura) /100 ;
+    int importeModificado = turno.getImporte() + precioAnalisis ;
     turno.setImporte(importeModificado);
 
     //Guardo el turno en archivo

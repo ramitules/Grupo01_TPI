@@ -15,7 +15,7 @@ class ManagerTurno{
         void mostrarUno(Turno turno);
         void mostrarVarios(Turno* turnos, const int cantidad);
         /// @return linea separadora para cabeceras y limites superior/inferior
-        std::string mostrarCabecera(const int anchoPaciente, const int anchoFecha, const int anchoImporte);
+        std::string mostrarCabecera(const int anchoPaciente, const int anchoFecha, const int anchoImporte, const int anchoObraSocial, const int estado);
         void mostrarTodos();
         bool eliminar(Turno turno);
         bool actualizar(Turno turno);

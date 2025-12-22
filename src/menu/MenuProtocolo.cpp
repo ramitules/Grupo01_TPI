@@ -4,6 +4,7 @@
 #include "utils/funcFrontend.h"
 #include <iostream>
 #include "manager/ManagerAnalisisProtocolo.h"
+#include "manager/ManagerTurno.h"
 #include "utils/rlutil.h"
 
 
@@ -26,6 +27,7 @@ MenuProtocolo::MenuProtocolo(): Menu(8, "Menu Protocolo"){
 void MenuProtocolo::ejecutarOpcion(){
     ManagerProtocolo mProtocolo;
     ManagerAnalisisProtocolo mAnalisisProtocolo;
+    ManagerTurno mTurno;
     Protocolo protocolo;
     int idProtocolo;
     int idTurno;
@@ -36,9 +38,9 @@ void MenuProtocolo::ejecutarOpcion(){
             return;
         case 1:
             std::cout << getNombreMenu() << ": " << _opciones[0] << "\t(Ingrese 0 para SALIR)\n";
-            std::cout << "==============================\n";
+            std::cout << "==============================\n\n";
 
-            //PENDIENTE MOSTRAR TURNOS SIN INICIAR
+            mTurno.mostrarTodos();
 
             protocolo = Protocolo();
 
@@ -63,6 +65,7 @@ void MenuProtocolo::ejecutarOpcion(){
 
             if (mProtocolo.chequearTurno(protocolo)) {
                 std::cout << "\nATENCION: El turno ingresado ya tiene un Protocolo iniciado\n";
+                protocolo = mProtocolo.seleccionarxTurno(idTurno);
                 mProtocolo.mostrar(protocolo);
                 std::cout << std::endl;
                 menuVolver();
@@ -118,7 +121,7 @@ void MenuProtocolo::ejecutarOpcion(){
             mProtocolo.mostrar(protocolo);
 
             if (protocolo.getAnalisis()) {
-                std::cout << "\nATENCION: El protocolo ingresado ya tiene analisis cargados.\n\nDesea continuar agregando...? s/n ";
+                std::cout << "\nATENCION: El protocolo ingresado ya tiene analisis cargados.\n\n\tDesea continuar agregando...? s/n ";
                 std::cin >> confirmar;
 
                 if (confirmar != 's') {
@@ -127,7 +130,7 @@ void MenuProtocolo::ejecutarOpcion(){
                 }
             }
 
-            std::cout << "\nCONFIRMADO: Se agregaran estudios al protocolo." ;
+            std::cout << "\nCONFIRMADO: Se agregaran estudios al protocolo. \n" << std::endl ;
             pausa();
 
             rlutil::cls();
@@ -162,7 +165,6 @@ void MenuProtocolo::ejecutarOpcion(){
 
                 if (mProtocolo.comprobar(idProtocolo)) {
                     protocolo = mProtocolo.seleccionar(idProtocolo);
-
                 }else {
                     menuVolver();
                     break;
@@ -243,9 +245,37 @@ void MenuProtocolo::ejecutarOpcion(){
             system("pause");
             break;
         case 7:
-            //Cargar resultados;
-        case 8:
             std::cout << getNombreMenu() << ": " << _opciones[6] << "\t(Ingrese 0 para SALIR)\n";
+            std::cout << "==============================\n";
+
+            mProtocolo.mostrarTodos();
+
+            if (mProtocolo.comprobar()) {
+                std::cout << "Ingrese el ID a observar: ";
+                std::cin >> idProtocolo;
+
+                if (idProtocolo==0) {
+                    menuVolver();
+                    break;
+                }
+
+                if (mProtocolo.comprobar(idProtocolo)) {
+                    rlutil::cls();
+                    std::cout << getNombreMenu() << ": " << _opciones[4] << "\t(Ingrese 0 para SALIR)\n";
+                    std::cout << "==============================\n";
+
+                    mProtocolo.mostrar(mProtocolo.seleccionar(idProtocolo));
+
+                    if (mAnalisisProtocolo.comprobar(idProtocolo)) {
+                        mAnalisisProtocolo.mostrarTodos(idProtocolo);
+                    }
+                }
+            }
+            std::cout << std::endl;
+            pausa();
+            break;
+        case 8:
+            std::cout << getNombreMenu() << ": " << _opciones[7] << "\t(Ingrese 0 para SALIR)\n";
             std::cout << "==============================\n";
 
             mProtocolo.mostrarTodos();

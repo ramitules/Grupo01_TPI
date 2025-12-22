@@ -33,6 +33,7 @@ class ManagerPaciente{
         void ordenadosObraSocial();
 
         void busquedaDNI();
+        void busquedaNombreCompleto();
         void busquedaObraSocial();
 
         ArchivoPaciente getRepositorio();

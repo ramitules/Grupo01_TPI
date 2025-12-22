@@ -3,9 +3,10 @@
 #include <iostream>
 
 
-ConsultasPacientes::ConsultasPacientes(): Menu(2, "Menu Consultas"){
-    std::string opciones[2] = {
+ConsultasPacientes::ConsultasPacientes(): Menu(3, "Menu Consultas"){
+    std::string opciones[3] = {
         "Busqueda por DNI",
+        "Busqueda por nombre completo",
         "Busqueda por obra social"
     };
 
@@ -21,7 +22,8 @@ void ConsultasPacientes::ejecutarOpcion(){
     ManagerPaciente mPaciente;
 
     if (_opcionSeleccionada == 1) { return mPaciente.busquedaDNI(); }
-    if (_opcionSeleccionada == 2) { return mPaciente.busquedaObraSocial(); }
+    if (_opcionSeleccionada == 2) { return mPaciente.busquedaNombreCompleto(); }
+    if (_opcionSeleccionada == 3) { return mPaciente.busquedaObraSocial(); }
 }
 
 void ConsultasPacientes::mostrarOpciones(){

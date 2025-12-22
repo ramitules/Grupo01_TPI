@@ -336,104 +336,100 @@ void ManagerPaciente::ordenadosObraSocial() {
 }
 
 void ManagerPaciente::busquedaDNI(){
-    const int CANTIDAD = _repo.cantidadRegistros();
-    Paciente *pacientes = _repo.leerTodos();
-    bool* indices = new bool[CANTIDAD];
+    int dni = -1;
 
-    // Busqueda personalizada por DNI o por nombre
-    int opc = 0;
-
-    std::cout << "Como desea buscar el paciente?\n";
-    std::cout << "1. Por DNI\n";
-    std::cout << "2. Por nombre completo\n";
-
-    do{
-        std::cout << "Opcion: ";
-        std::cin >> opc;
-    } while (opc != 1 && opc != 2);
-
-    std::cin.ignore(100, '\n');
-
-    int totalPacientes = 0, iAux = 0;
-    // Busqueda por DNI
-    if (opc == 1) {
-        
-        int dni = 0;
-
-        std::cout << "Ingrese el DNI del paciente: ";
+    while (true) {
+        std::cout << "Ingrese el DNI del Paciente: ";
         std::cin >> dni;
 
-        buscando();
-
-        for (int i = 0; i < CANTIDAD; i ++) {
-            if (pacientes[i].getEliminado()) {
-                continue;
-            }
-            if (pacientes[i].getDNI() == dni) {
-                indices[i] = true;
-                totalPacientes ++;
-            }
+        if (dni = 0) {
+            return;
         }
-    }
-    // Busqueda por nombre completo
-    if (opc == 2) {
-        std::string nombreCompleto;
-        std::string nombreIngresado;
-        
-        std::cout << "Ingrese el nombre y apellido del paciente, separados por espacio: ";
-        std::getline(std::cin, nombreIngresado);
 
-        buscando();
-        
-        for (int i = 0; i < CANTIDAD; i ++) {
-            if (pacientes[i].getEliminado()) {
-                continue;
-            }
-
-            nombreCompleto = "";
-            nombreCompleto.append(pacientes[i].getNombre());
-            nombreCompleto.append(" ");
-            nombreCompleto.append(pacientes[i].getApellido());
-
-            if (nombreCompleto.compare(nombreIngresado) == 0) {
-                indices[i] = true;
-                totalPacientes ++;
-            }
+        if (dni > 1000000 && dni < 100000000){
+            break;
         }
+
+        std::cout << "Intente nuevamente. Asegurese que sea un numero entre un millon y cien millones.\n";
     }
 
-    // Mostrar
-    if (totalPacientes > 0) {
-        std::cout << "-- Se encontraron los siguientes pacientes --\n";
-        Paciente *pacientesEncontrados = new Paciente[totalPacientes];
+    buscando();
 
-        for (int i = 0; i < CANTIDAD; i ++) {
-            if (indices[i]) {
-                pacientesEncontrados[iAux] = pacientes[i];
-                iAux ++;
-            }
-        }
-
-        mostrarVarios(pacientesEncontrados, totalPacientes);
-        std::cout << "\n\n";
-        delete[] pacientesEncontrados;
+    Paciente paciente = seleccionar(dni);
+    if (paciente.getEliminado() || paciente.getDNI()==0) {
+        std::cout << "No existe el paciente ingresado" ;
     } else {
-        std::cout << "No se han encontrado pacientes en la base de datos.\n";
+        mostrarUno(paciente);
     }
 
-    std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    pausa();
+}
+
+void ManagerPaciente::busquedaNombreCompleto() {
+    std::cin.ignore(100, '\n');
+
+    const int CANTIDAD = _repo.cantidadRegistros();
+    Paciente* pacientes = _repo.leerTodos();
+    bool* indices = new bool[CANTIDAD]{};
+
+    int totalPacientesEncontrados = 0, iAux = 0;
+
+    std::string nombreCompleto;
+    std::string nombreIngresado;
+
+    std::cout << "Ingrese el nombre y apellido del paciente, separados por espacio: ";
+    std::getline(std::cin, nombreIngresado);
+
+    buscando();
+
+    for (int i = 0; i < CANTIDAD; i ++) {
+        if (pacientes[i].getEliminado()) {
+            continue;
+        }
+
+        nombreCompleto = "";
+        nombreCompleto.append(pacientes[i].getNombre());
+        nombreCompleto.append(" ");
+        nombreCompleto.append(pacientes[i].getApellido());
+
+            if (nombreCompleto == nombreIngresado) {
+                indices[i] = true;
+                totalPacientesEncontrados ++;
+            }
+        }
+
+        // Mostrar
+        if (totalPacientesEncontrados > 0) {
+            std::cout << "\n-- Se encontraron los siguientes pacientes --\n";
+            Paciente *pacientesEncontrados = new Paciente[totalPacientesEncontrados];
+
+            for (int i = 0; i < CANTIDAD; i ++) {
+                if (indices[i]) {
+                    pacientesEncontrados[iAux] = pacientes[i];
+                    iAux ++;
+                }
+            }
+
+            mostrarVarios(pacientesEncontrados, totalPacientesEncontrados);
+            std::cout << "\n";
+            delete[] pacientesEncontrados;
+        } else {
+            std::cout << "\nNo se han encontrado pacientes en la base de datos.\n\n";
+        }
+
+    pausa();
 
     delete[] pacientes;
     delete[] indices;
 }
+
 
 void ManagerPaciente::busquedaObraSocial(){
     std::cin.ignore(100, '\n');
 
     const int CANTIDAD = _repo.cantidadRegistros();
     Paciente *pacientes = _repo.leerTodos();
-    bool* indices = new bool[CANTIDAD];
+    bool* indices = new bool[CANTIDAD]{};
 
     ManagerObraSocial mObraSocial;
     mObraSocial.mostrarTodos(true);
@@ -459,7 +455,7 @@ void ManagerPaciente::busquedaObraSocial(){
 
     // Mostrar
     if (totalPacientes > 0) {
-        std::cout << "-- Se encontraron los siguientes pacientes --\n";
+        std::cout << "\n-- Se encontraron los siguientes pacientes --\n";
         Paciente *pacientesEncontrados = new Paciente[totalPacientes];
 
         for (int i = 0; i < CANTIDAD; i ++) {
@@ -470,14 +466,13 @@ void ManagerPaciente::busquedaObraSocial(){
         }
 
         mostrarVarios(pacientesEncontrados, totalPacientes);
-        std::cout << "\n\n";
+        std::cout << "\n";
         delete[] pacientesEncontrados;
     } else {
-        std::cout << "No se han encontrado pacientes de la obra social " << idObraSocial << " en la base de datos.\n";
+        std::cout << "\nNo se han encontrado pacientes de la obra social " << idObraSocial << " en la base de datos.\n";
     }
 
-    std::cout << "Presione ENTER para continuar";
-    rlutil::anykey();
+    pausa();
 
     delete[] pacientes;
     delete[] indices;

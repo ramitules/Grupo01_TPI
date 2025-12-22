@@ -8,4 +8,9 @@ class ConsultasAnalisis: public Menu {
 
         void ejecutarOpcion() override;
         void mostrarOpciones() override;
+
+        void busquedaxTipo();
+        void busquedaxPaciente();
+        void busquedaxObraSocial();
+
 };

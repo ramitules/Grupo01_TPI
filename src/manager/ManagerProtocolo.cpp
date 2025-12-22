@@ -90,6 +90,28 @@ void ManagerProtocolo::mostrar(Protocolo protocolo) {
     }
 }
 
+void ManagerProtocolo::mostrarVarios(Protocolo *protocolo, int cantidad){
+
+    std::cout << "\nID\tTurno\tEstado\t\tSala\tEnfermero\tDatos\n\n" ;
+
+    for(int i=0; i<cantidad; i++){
+        //if (regProtocolo.getEliminado()!=true) {
+
+        std::cout << protocolo[i].getId() << "\t" ;
+        std::cout << protocolo[i].getIdTurno() << "\t";
+        (protocolo[i].getEstado()) ? std::cout << "Finalizado\t" : std::cout << "Pendiente\t";
+        if (protocolo[i].getSala() == 0) {
+            std::cout << protocolo[i].getSala() << "\t";
+            std::cout << "[Sin asignar]\t";
+        } else {
+            std::cout << protocolo[i].getSala() << "\t";
+            std::cout << protocolo[i].getEnfermero().getNombre() << " " << protocolo[i].getEnfermero().getApellido() << "\t" ;
+        }
+        (protocolo[i].getEliminado())? std::cout << "Eliminado\n" : std::cout << "Existente\n";
+    }
+    std::cout << std::endl;
+}
+
 bool ManagerProtocolo::mostrarTodos(){
     Protocolo regProtocolo;
     int cantidadProtocolo = _repo.cantidadRegistros();

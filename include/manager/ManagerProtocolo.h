@@ -21,6 +21,7 @@ class ManagerProtocolo{
         bool asignar(Protocolo protocolo);
         bool resultados(Protocolo protocolo);
         void mostrar(Protocolo protocolo);
+        void mostrarVarios(Protocolo* protocolo, const int cantidad);
         bool mostrarTodos();
         bool finalizar(Protocolo protocolo);
         bool eliminar(Protocolo protocolo);

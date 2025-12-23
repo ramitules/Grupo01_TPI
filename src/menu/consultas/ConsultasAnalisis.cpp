@@ -10,6 +10,7 @@
 #include "manager/ManagerTipoAnalisis.h"
 #include "manager/ManagerTurno.h"
 #include "manager/ManagerObraSocial.h"
+#include "utils/ManagerInput.h"
 #include "utils/funcFrontend.h"
 #include "utils/rlutil.h"
 
@@ -146,34 +147,33 @@ void ConsultasAnalisis::busquedaxTipo() {
 void ConsultasAnalisis::busquedaxPaciente() {
     ManagerPaciente mPaciente;
     Paciente paciente;
+    ManagerInput mInput;
+
+    std::cout << "Si conoce el DNI del paciente, ingreselo a continuacion (0 = listar todos | -1 = salir):\n\n";
 
     int dni = 0;
+    bool listado = false;
 
-    std::cout << "Si conoce el DNI del paciente, ingreselo a continuacion (0 = listar todos | -1 = salir): ";
-    std::cin >> dni;
+    while (true) {
+        dni = mInput.ingresarDni();
 
-    if (dni == 0) {
-        // Mostrar todos los pacientes por pantalla
-        mPaciente.mostrarTodos();
+        if (dni == 0 && listado == false) {
+            mPaciente.mostrarTodos();
+            std::cout << std::endl;
+            listado = true;
+            continue;
+        }
 
-        while (true) {
-            std::cout << "Ingrese el DNI del paciente, o 0 para cancelar: ";
-            std::cin >> dni;
+        if (dni == 0 && listado == true){
+            return;
+        }
 
-            if (dni == 0) {
-                return;
-            }
-
-            paciente = mPaciente.seleccionar(dni);
-
-            if (paciente.getDNI() != 0) {
-                break;
-            } else {
-                std::cout << "El DNI ingresado no existe. Intente nuevamente\n";
-                continue;
-            }
+        if (mPaciente.comprobar(dni)) {
+            break;
         }
     }
+
+    paciente = mPaciente.seleccionar(dni);
 
     buscando();
 
@@ -186,6 +186,11 @@ void ConsultasAnalisis::busquedaxPaciente() {
     int cantidadEncontrados = 0;
 
     if (pacienteEncontrado == nullptr) {
+        std::cout << "No hay suficiente memoria";
+        exit(1000);
+    }
+
+    if (archivoTurnos == nullptr) {
         std::cout << "No hay suficiente memoria";
         exit(1000);
     }
@@ -284,6 +289,11 @@ void ConsultasAnalisis::busquedaxObraSocial() {
     bool* listarPacientes = new bool[cantidadPacientes]{};
     int contadorPacientes = 0;
 
+    if (listarPacientes == nullptr) {
+        std::cout << "No hay suficiente memoria";
+        exit(1000);
+    }
+
     if (archivoPacientes == nullptr && cantidadPacientes > 0) {
         std::cout << "No hay suficiente memoria";
         exit(1000);
@@ -307,6 +317,11 @@ void ConsultasAnalisis::busquedaxObraSocial() {
     int auxIndice = 0 ;
     Paciente* listadoPacientes = new Paciente[contadorPacientes]();
 
+    if (listadoPacientes == nullptr) {
+        std::cout << "No hay suficiente memoria";
+        exit(1000);
+    }
+
     for (int i = 0; i < cantidadPacientes; i++) {
         if (listarPacientes[i]) {
             listadoPacientes[auxIndice] = archivoPacientes[i];
@@ -324,6 +339,11 @@ void ConsultasAnalisis::busquedaxObraSocial() {
     bool* listarTurnos = new bool[cantidadTurnos]{};
     int contadorTurnos = 0;
 
+    if (listarTurnos == nullptr) {
+        std::cout << "No hay suficiente memoria";
+        exit(1000);
+    }
+
     for (int i = 0; i < cantidadTurnos; i++) {
         if (archivoTurnos[i].getEliminado()) {
             continue;
@@ -339,6 +359,11 @@ void ConsultasAnalisis::busquedaxObraSocial() {
     Turno* listadoTurnos = new Turno[contadorTurnos]();
     auxIndice = 0 ;
     int idTurno = 0;
+
+    if (listadoTurnos == nullptr) {
+        std::cout << "No hay suficiente memoria";
+        exit(1000);
+    }
 
     for (int i = 0; i < cantidadTurnos; i++) {
         if (listarTurnos[i]) {
@@ -357,6 +382,11 @@ void ConsultasAnalisis::busquedaxObraSocial() {
     bool* listarProtocolos = new bool[cantidadProtocolos]{};
     int contadorProtocolos = 0;
 
+    if (listarProtocolos == nullptr) {
+        std::cout << "No hay suficiente memoria";
+        exit(1000);
+    }
+
     for (int i = 0; i < cantidadProtocolos; i++) {
         if (archivoProtocolo[i].getEliminado() == true || archivoProtocolo[i].getEstado() != true) {
             continue;
@@ -371,6 +401,11 @@ void ConsultasAnalisis::busquedaxObraSocial() {
 
     Protocolo* listadoProtocolos = new Protocolo[contadorProtocolos]();
     auxIndice = 0 ;
+
+    if (listadoProtocolos == nullptr) {
+        std::cout << "No hay suficiente memoria";
+        exit(1000);
+    }
 
     for (int i = 0; i < cantidadProtocolos; i++) {
         if (listarProtocolos[i]) {

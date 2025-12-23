@@ -9,63 +9,56 @@
 
 ManagerProtocolo::ManagerProtocolo(){};
 
-//VALIDACION: Comprueba que exista el ID
-
 bool ManagerProtocolo::comprobar(int idProtocolo) {
-
     Protocolo regProtocolo;
-    int cantidadProtocolo = _repo.cantidadRegistros();
+    int posProtocolo = _repo.getPos(idProtocolo);
 
-    if (cantidadProtocolo == 0) {
-        std::cout << "\nRegistro vacio.\n" << std::endl;
+    if (posProtocolo == -1) {
+        std::cout << "\n\tATENCION: No existe el PROTOCOLO\n";
         return false;
     }
 
-    if (idProtocolo == -1) { // valor por defecto: no se ingresó parametro
-        return true;
-    }
+    regProtocolo = _repo.leer(posProtocolo);
 
-    regProtocolo = _repo.leer(idProtocolo-1);
-
-    if (idProtocolo==regProtocolo.getId() && regProtocolo.getEliminado()==0) {
-        //std::cout << "Protocolo encontrado";
-        return true;
-    }
-    else {
-        std::cout << "\nATENCION: ID Protocolo no existente.\n" ;
+    if (regProtocolo.getEliminado()) {
+        std::cout << "\n\tATENCION: PROTOCOLO Eliminado\n";
         return false;
     }
+
+    return true;
 }
 
-//RETORNA EL OBJETO CON EL ID SELECCIONADO
-
 Protocolo ManagerProtocolo::seleccionar(int idProtocolo) {
-    Protocolo regProtocolo;
 
-    regProtocolo = _repo.leer(idProtocolo-1);
-    return regProtocolo;
+    int posicion = _repo.getPos(idProtocolo);
+    Protocolo protocolo = _repo.leer(idProtocolo-1);
+    return protocolo;
 }
 
 Protocolo ManagerProtocolo::seleccionarxTurno(int idTurno) {
     int cantidadRegistros = _repo.cantidadRegistros();
+    Protocolo* aProtocolo = new Protocolo[cantidadRegistros];
     Protocolo regProtocolo;
 
+    aProtocolo = _repo.leerTodos();
+
     for (int i = 0; i < cantidadRegistros; i++) {
-        if (_repo.leer(i).getEliminado()) {
+        if (aProtocolo[i].getEliminado()) {
             continue;
         }
-        if (_repo.leer(i).getIdTurno() == idTurno) {
-            regProtocolo = _repo.leer(i);
-            return regProtocolo;
+        if (aProtocolo[i].getIdTurno() == idTurno) {
+            regProtocolo = aProtocolo[i];
         }
     }
+
+    delete []aProtocolo;
     return regProtocolo;
 }
 
 void ManagerProtocolo::mostrar(Protocolo protocolo) {
     ManagerAnalisisProtocolo mAnalisisProtocolo;
 
-    std::cout << "\nID\tTurno\tEstado\t\tSala\tEnfermero\tDatos\n" ;
+    std::cout << "\nID\tTurno\tEstado\t\tSala\tEnfermero\n" ;
     std::cout << protocolo.getId() << "\t" ;
     std::cout << protocolo.getIdTurno() << "\t";
     (protocolo.getEstado()) ? std::cout << "Finalizado\t" : std::cout << "Pendiente\t";
@@ -75,12 +68,10 @@ void ManagerProtocolo::mostrar(Protocolo protocolo) {
         std::cout << "[Sin asignar]\t";
     } else {
         std::cout << protocolo.getSala() << "\t";
-        std::cout << protocolo.getEnfermero().getNombre() << " " << protocolo.getEnfermero().getApellido() << "\t" ;
+        std::cout << protocolo.getEnfermero().getNombre() << " " << protocolo.getEnfermero().getApellido() << "\n" ;
     }
-
-    (protocolo.getEliminado())? std::cout << "Eliminado\n" : std::cout << "Existente\n";
     if (protocolo.getEstado()) {
-        std::cout << "\nObservaciones: " << protocolo.getObservaciones() << "\n";
+        std::cout << "\nOBSERVACIONES: " << protocolo.getObservaciones() << "\n";
     }
     if (protocolo.getAnalisis()) {
         std::cout << "\nESTUDIOS CARGADOS EN EL PROTOCOLO\n";
@@ -92,7 +83,7 @@ void ManagerProtocolo::mostrar(Protocolo protocolo) {
 
 void ManagerProtocolo::mostrarVarios(Protocolo *protocolo, int cantidad){
 
-    std::cout << "\nID\tTurno\tEstado\t\tSala\tEnfermero\tDatos\n\n" ;
+    std::cout << "\nID\tTurno\tEstado\t\tSala\tEnfermero\n\n" ;
 
     for(int i=0; i<cantidad; i++){
 
@@ -109,8 +100,7 @@ void ManagerProtocolo::mostrarVarios(Protocolo *protocolo, int cantidad){
         } else {
             std::cout << protocolo[i].getSala() << "\t";
             std::cout << protocolo[i].getEnfermero().getNombre() << " " << protocolo[i].getEnfermero().getApellido() << "\n" ;
-        }
-        (protocolo[i].getEliminado())? std::cout << "Eliminado\n" : std::cout << "Existente\n";
+        };
     }
     std::cout << std::endl;
 }
@@ -173,7 +163,7 @@ bool ManagerProtocolo::iniciar(Protocolo &protocolo) {
     Protocolo auxProtocolo = protocolo;
 
     if (mProtocolo.chequearTurno(protocolo)) {
-        std::cout << "\nATENCION: El turno ingresado ya tiene un Protocolo iniciado\n";
+        std::cout << "\n\tATENCION: El turno ingresado ya tiene un Protocolo iniciado\n";
         menuVolver();
         return false;
     }
@@ -186,7 +176,7 @@ bool ManagerProtocolo::iniciar(Protocolo &protocolo) {
         protocolo.setId(idProtocoloNuevo);
         return true;
     } else {
-        std::cout << "\nATENCION: Ocurrio un error al intentar iniciar el protocolo.\n";
+        std::cout << "\n\tATENCION: Ocurrio un error al intentar iniciar el protocolo.\n";
         return false;
     }
 }

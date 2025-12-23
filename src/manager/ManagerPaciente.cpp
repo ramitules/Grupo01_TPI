@@ -3,6 +3,7 @@
 #include "manager/ManagerObraSocial.h"
 #include "utils/ManagerFecha.h"
 #include "utils/rlutil.h"
+#include "utils/ManagerInput.h"
 #include "utils/funcFrontend.h"
 #include <algorithm>
 #include <iomanip>
@@ -10,11 +11,34 @@
 
 ManagerPaciente::ManagerPaciente(){};
 
-Paciente ManagerPaciente::seleccionar(int dniPaciente) {
-    int posicionPaciente = _repo.getPos(dniPaciente);
-    Paciente regPaciente = _repo.leer(posicionPaciente);
+bool ManagerPaciente::comprobar(int dniPaciente) {
 
-    return regPaciente;
+    int posPaciente = _repo.getPos(dniPaciente);
+
+    if (dniPaciente == -1) {
+        std::cout << "\n\tATENCION: No existe el Paciente\n";
+        return false;
+    }
+
+    Paciente paciente;
+    paciente = _repo.leer(posPaciente);
+
+    if (paciente.getEliminado()) {
+        std::cout << "\n\tATENCION: Paciente eliminado\n";
+        return false;
+    }
+
+    return true;
+}
+
+
+Paciente ManagerPaciente::seleccionar(int dniPaciente) {
+    Paciente paciente;
+
+    int posicion = _repo.getPos(dniPaciente);
+    paciente  = _repo.leer(posicion);
+
+    return paciente;
 }
 
 bool ManagerPaciente::cargar(int dniPaciente){
@@ -336,31 +360,39 @@ void ManagerPaciente::ordenadosObraSocial() {
 }
 
 void ManagerPaciente::busquedaDNI(){
-    int dni = -1;
+    ManagerPaciente mPaciente;
+    Paciente paciente;
+    ManagerInput mInput;
+
+    std::cout << "Si conoce el DNI del paciente, ingreselo a continuacion (0 = listar todos | -1 = salir):\n\n";
+
+    int dni = 0;
+    bool listado = false;
 
     while (true) {
-        std::cout << "Ingrese el DNI del Paciente: ";
-        std::cin >> dni;
+        dni = mInput.ingresarDni();
 
-        if (dni = 0) {
+        if (dni == 0 && listado == false) {
+            mPaciente.mostrarTodos();
+            std::cout << std::endl;
+            listado = true;
+            continue;
+        }
+
+        if (dni == 0 && listado == true){
             return;
         }
 
-        if (dni > 1000000 && dni < 100000000){
+        if (mPaciente.comprobar(dni)) {
             break;
         }
-
-        std::cout << "Intente nuevamente. Asegurese que sea un numero entre un millon y cien millones.\n";
     }
+
+    paciente = mPaciente.seleccionar(dni);
 
     buscando();
 
-    Paciente paciente = seleccionar(dni);
-    if (paciente.getEliminado() || paciente.getDNI()==0) {
-        std::cout << "No existe el paciente ingresado" ;
-    } else {
-        mostrarUno(paciente);
-    }
+    mostrarUno(paciente);
 
     pausa();
 }

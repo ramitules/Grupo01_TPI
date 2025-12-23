@@ -10,8 +10,10 @@ class ManagerTurno{
     public:
         ManagerTurno();
 
+        bool comprobar(int idTurno);
         Turno seleccionar(int idTurno);
-        bool cargar();
+
+        void cargar();
         void mostrarUno(Turno turno);
         void mostrarVarios(Turno* turnos, const int cantidad);
         /// @return linea separadora para cabeceras y limites superior/inferior
@@ -21,6 +23,7 @@ class ManagerTurno{
         bool actualizar(Turno turno);
         bool actualizarImporte(AnalisisProtocolo analisisProtocolo);
 
+        Protocolo buscarProtocolo (int idTurno);
 
         // Ordena todos los turnos existentes y los muestra por pantalla
         void ordenadosFecha();
@@ -33,6 +36,6 @@ class ManagerTurno{
 
         void actualizarImportes();
         void actualizarImportesSeleccionados();
-        
+
         ArchivoTurno getRepositorio();
 };

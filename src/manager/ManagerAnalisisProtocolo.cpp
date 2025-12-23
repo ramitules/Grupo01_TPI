@@ -22,10 +22,6 @@ bool ManagerAnalisisProtocolo::comprobar(int idProtocolo, int idTipoAnalisis) {
         return false;
     }
 
-    if (idProtocolo == -1) { // valor por defecto: no se ingresó parametro
-        return true;
-    }
-
     for (int i=0; i<cantidadAnalisisProtocolo; i++) {
         regAnalisisProtocolo = _repo.leer(i);
 
@@ -76,7 +72,6 @@ bool ManagerAnalisisProtocolo::cargar(int idProtocolo) {
             analisisCargados = true;
             continue;
         }
-
 
         //Comprobar que no este cargado
 
@@ -198,6 +193,42 @@ void ManagerAnalisisProtocolo::mostrarTodos(int idProtocolo) {
         std::cout << "\n\tDISPONIBLE PARA RETIRAR: ";
         std::cout << fechaResultados.to_str() << std::endl;
     }
+}
+
+AnalisisProtocolo* ManagerAnalisisProtocolo::seleccionarAnalisis(int idProtocolo) {
+    AnalisisProtocolo* aAnalisisProtocolo;
+    AnalisisProtocolo* regAnalisisProtocolo;
+    int cantidadRegistros = _repo.cantidadRegistros();
+
+    aAnalisisProtocolo = new AnalisisProtocolo[cantidadRegistros];
+
+    int cantidadProtocolos = 0;
+
+    for (int i = 0; i < cantidadRegistros; i++) {
+        if (aAnalisisProtocolo[i].getEliminado()) {
+            continue;
+        }
+        if (aAnalisisProtocolo[i].getIdProtocolo() == idProtocolo) {
+            cantidadProtocolos++;
+        }
+    }
+
+    regAnalisisProtocolo = new AnalisisProtocolo[cantidadProtocolos];
+    int indiceAux;
+
+    for (int i = 0; i < cantidadProtocolos; i++) {
+        if (aAnalisisProtocolo[i].getEliminado()) {
+            continue;
+        }
+        if (aAnalisisProtocolo[i].getIdProtocolo() == idProtocolo) {
+            regAnalisisProtocolo[indiceAux] = aAnalisisProtocolo[i];
+            cantidadProtocolos++;
+        }
+    }
+
+    delete[] aAnalisisProtocolo;
+
+    return regAnalisisProtocolo;
 }
 
 ArchivoAnalisisProtocolo ManagerAnalisisProtocolo::getRepositorio(){

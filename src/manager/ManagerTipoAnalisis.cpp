@@ -1,6 +1,6 @@
 #include "manager/ManagerTipoAnalisis.h"
 #include "TipoAnalisis.h"
-#include "utils/IngresarDatos.h"
+#include "utils/ManagerInput.h"
 #include <string>
 #include <cstring>
 #include <iomanip> //chequear uso
@@ -59,7 +59,7 @@ void ManagerTipoAnalisis::mostrarTodos(){
     TipoAnalisis regTipoAnalisis;
     int cantidadTipoAnalisis = _repo.cantidadRegistros();
 
-    std::cout << "ID\tTipo\t\tTiempo estimado\tPrecio\t\tDatos\n\n";
+    std::cout << "ID\tTipo\t\tTiempo estimado\tPrecio\n\n" ;
 
     for(int i=0; i<cantidadTipoAnalisis; i++) {
         regTipoAnalisis = _repo.leer(i);
@@ -67,11 +67,11 @@ void ManagerTipoAnalisis::mostrarTodos(){
             continue;
         }
 
-            std::cout << regTipoAnalisis.getID() << "\t";
-            std::cout << regTipoAnalisis.getNombreAnalisis() << "\t";
-            std::cout << regTipoAnalisis.getTiempoResultado() << " dias\t";
-            std::cout << "\t$ " << regTipoAnalisis.getPrecio() << "\t\t";
-            (regTipoAnalisis.getEliminado())? std::cout << "Eliminado\n" : std::cout << "Existente\n";
+        std::cout << regTipoAnalisis.getID() << "\t";
+        std::cout << regTipoAnalisis.getNombreAnalisis() << "\t";
+        std::cout << regTipoAnalisis.getTiempoResultado() << " dias\t";
+        std::cout << "\t$ " << regTipoAnalisis.getPrecio() << "\n";
+
     }
 }
 
@@ -82,7 +82,7 @@ bool ManagerTipoAnalisis::ingresarDatos(TipoAnalisis &tipoAnalisis, bool nuevoId
     int tiempoResultado = 0;
     char confirmar;
 
-    IngresarDatos ingresar;
+    ManagerInput mInput;
 
     if (nuevoId==true) {
         idTipoAnalisis = _repo.cantidadRegistros()+1;
@@ -92,15 +92,15 @@ bool ManagerTipoAnalisis::ingresarDatos(TipoAnalisis &tipoAnalisis, bool nuevoId
 
     std::cin.ignore(100, '\n');
 
-    if (!ingresar.nombre(nombre)) {
+    if (!mInput.ingresarNombre(nombre)) {
         return false;
         //Carga cancelada
     }
-    if (!ingresar.tiempoResultado(tiempoResultado)){
+    if (!mInput.ingresarTiempoResultado(tiempoResultado)){
         return false;
         //Carga cancelada
     }
-    if (!ingresar.precio(precio)){
+    if (!mInput.ingresarPrecio(precio)){
         return false;
         //Carga cancelada
     }

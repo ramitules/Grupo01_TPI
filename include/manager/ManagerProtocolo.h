@@ -2,6 +2,7 @@
 #include "archivo/ArchivoProtocolo.h"
 #include "Protocolo.h"
 #include "Turno.h"
+#include <AnalisisProtocolo.h>
 
 
 class ManagerProtocolo{
@@ -15,16 +16,20 @@ class ManagerProtocolo{
         bool comprobar(int idProtocolo = -1);
         Protocolo seleccionar(int idProtocolo);
         Protocolo seleccionarxTurno(int idTurno);
+
+
         bool iniciar(Protocolo &protocolo);
         bool chequearTurno(Protocolo protocolo);
         bool cargarAnalisis(Protocolo protocolo);
         bool asignar(Protocolo protocolo);
         bool resultados(Protocolo protocolo);
+        bool finalizar(Protocolo protocolo);
+        bool eliminar(Protocolo protocolo);
+
         void mostrar(Protocolo protocolo);
         void mostrarVarios(Protocolo* protocolo, const int cantidad);
         bool mostrarTodos();
-        bool finalizar(Protocolo protocolo);
-        bool eliminar(Protocolo protocolo);
+
 
         ArchivoProtocolo getRepositorio();
 };

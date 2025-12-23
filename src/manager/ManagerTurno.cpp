@@ -4,6 +4,7 @@
 #include "manager/ManagerTurno.h"
 #include "utils/ManagerFecha.h"
 #include "utils/ManagerHora.h"
+#include "utils/ManagerInput.h"
 #include "utils/rlutil.h"
 #include "Protocolo.h"
 #include "Turno.h"
@@ -12,22 +13,44 @@
 #include <algorithm>
 #include <iomanip>
 
-
 ManagerTurno::ManagerTurno(){};
 
-Turno ManagerTurno::seleccionar(int idTurno) {
+bool ManagerTurno::comprobar(int idTurno) {
     Turno regTurno;
+    int posTurno = _repo.getPos(idTurno);
+
+    if (posTurno == -1) {
+        std::cout << "\n\tATENCION: No existe el TURNO\n";
+        return false;
+    }
 
     regTurno = _repo.leer(idTurno-1);
-    return regTurno;
+
+    if (regTurno.getEliminado()) {
+        std::cout << "\n\tATENCION: TURNO eliminado\n";
+        return false;
+    }
+
+    return true;
 }
 
-bool ManagerTurno::cargar(){
+Turno ManagerTurno::seleccionar(int idTurno) {
+
+    int posicion = _repo.getPos(idTurno);
+    Turno turno = _repo.leer(posicion);
+
+    return turno;
+}
+
+void ManagerTurno::cargar(){
     std::cin.ignore(100, '\n');
 
     ManagerPaciente mPaciente;
     ManagerFecha mFecha;
     ManagerHora mHora;
+    ManagerInput mInput;
+    ManagerProtocolo mProtocolo;
+    ManagerAnalisisProtocolo mAnalisisProtocolo;
 
     int proximoID = _repo.cantidadRegistros() + 1;
     int dniPaciente;
@@ -38,34 +61,35 @@ bool ManagerTurno::cargar(){
     char opc = 'n';
 
     // Carga de paciente. Comienza con DNI
-    while (true) {
-        std::cout << "Ingrese el DNI del paciente (0 - listar todos): ";
-        std::cin >> dniPaciente;
 
-        if (dniPaciente == 0) {
-            mPaciente.mostrarTodos();
-            std::cout << "Ingrese el DNI del paciente: ";
-            std::cin >> dniPaciente;
-        }
+    std::cout << "Menu Turno\n==============================\n";
+    std::cout << "Ingrese el DNI del paciente (0 - listar todos):\n\n";
 
-        if (dniPaciente >= 1000000 && dniPaciente <= 99999999) {
-            break;
-        }
+    dniPaciente = mInput.ingresarDni();
 
-        std::cout << "Intente nuevamente. Asegurese que sea un numero de 8 digitos (1M - 100M).\n";
+    if (dniPaciente == 0) {
+        rlutil::cls();
+        std::cout << "Menu Turno\n==============================\n\n";
+        mPaciente.mostrarTodos();
+        std::cout << std::endl;
     }
 
-    // Chequear si el paciente ya existe en la base de datos
-    const int CANT_PACIENTES = mPaciente.getRepositorio().cantidadRegistros();
+    dniPaciente = mInput.ingresarDni();
 
-    for (int i = 0; i < CANT_PACIENTES; i ++) {
-        if (mPaciente.getRepositorio().leer(i).getDNI() == dniPaciente) {
-            pacienteExiste = true;
-        }
+    if (dniPaciente == 0) {
+        menuVolver();
+        return;
     }
 
-    // Dar la posibilidad de cargar todos los datos del paciente si no existe
-    if (!pacienteExiste) {
+    ///COMPROBAR DNI: Si no existe se da la posibilidad de cargar;
+
+    pacienteExiste = mPaciente.comprobar(dniPaciente);
+
+    Paciente paciente;
+
+    if (pacienteExiste) {
+        paciente = mPaciente.seleccionar(dniPaciente);
+    } else {
         std::cout << "Paciente inexistente. Desea cargar sus datos ahora? s/n: ";
         std::cin >> opc;
 
@@ -74,55 +98,126 @@ bool ManagerTurno::cargar(){
                 std::cout << "No se pudo cargar el paciente. El turno no sera guardado.\n";
                 std::cout << "Presione ENTER para continuar\n";
                 std::cin.get();
-                return false;
+                return;
             }
         } else {
-            Paciente paciente;
-            paciente.setDNI(dniPaciente);
-            mPaciente.getRepositorio().guardar(paciente);
+            menuVolver();
         }
     }
 
-    std::cout << "\nEl paciente se atendera ahora? s/n: ";
-    std::cin >> opc;
+    rlutil::cls();
+    std::cout << "Menu Turno\n==============================\n";
+    std::cout << "\nPaciente " << paciente.getNombre() << " " << paciente.getApellido() << std::endl;
 
-    if (opc == 's') {
-        ManagerProtocolo mProtocolo;
-        Protocolo protocolo;
-        protocolo.setIdTurno(proximoID);
+    while (true) {
+        std::cout << "\nSe atendera ahora? s/n: ";
+        std::cin >> opc;
 
-        mProtocolo.iniciar(protocolo);
+        Fecha fechaAtencion;
+        Hora horaAtencion;
+
+        if (opc == 's') {
+            break;
+        } else if (opc == 'n') {
+            std::cout << std::endl;
+
+            std::cout << "INGRESE la fecha de atención\n";
+
+            while (true) {
+                fechaAtencion = mFecha.cargar();
+                Fecha actual;
+                if (fechaAtencion < actual) {
+                    std::cout << "\n\tATENCION: Ingrese una fecha actual \n" << std::endl;
+                    continue;
+                }
+                break;
+            }
+            horaAtencion = mHora.cargar();
+            break;
+        }
+    }
+
+    // GUARDAR EL TURNO
+
+    Turno turno(proximoID, dniPaciente, fechaAtencion, horaAtencion);
+
+    if (_repo.guardar(turno)) {
+        rlutil::cls();
+        std::cout << "\nCONFIRMADO: Turno guardado con el ID " << turno.getID() ;
+        std::cout << std::endl;
+        mostrarUno(turno);
     } else {
-        std::cin.ignore(100, '\n');
+        std::cout << "\nOcurrio un error al intentar guardar el turno. ";
+        std::cin.get();
+        return;
+    }
 
+    while (true) {
+        std::cout << "\nDesea iniciar el PROTOCOLO ahora? (s/n) ";
+        std::cin >> opc;
+
+        if (opc != 's' && opc != 'n') {
+            std::cout << "\tIngrese una opción valida: \n";
+            continue;
+        } else {
+            break;
+        }
+    }
+
+    if (opc == 'n') {
+        return;
+    }
+
+    //PASO INICIAR EL PROTOCOLO y CARGAR ESTUDIOS
+
+    Protocolo protocolo;
+    protocolo.setIdTurno(proximoID);
+
+    if (mProtocolo.iniciar(protocolo)) {
+        std::cout << "\nPROTOCOLO INICIADO. \n" << std::endl;
+        mProtocolo.mostrar(protocolo);
+        std::cout << std::endl;
+        pausa();
+    } else {
+        std::cout << "\nPROTOCOLO CANCELADO.";
+        return;
+    }
+
+    if (mProtocolo.cargarAnalisis(protocolo)) {
+        pausa();
+        rlutil::cls();
+        std::cout << "\nATENCION: Los estudios se han cargardo al PROTOCOLO\n";
+        mProtocolo.mostrar(protocolo);
+    } else {
+        std::cout << "\nERROR: los estudios no se ha cargado al PROTOCOLO\n";
+        pausa();
+        return;
+    }
+
+    // PASO ASIGNAR PROTOCOLO: Solo si la fecha es la del dia.
+
+    Fecha fechaActual;
+
+    if (fechaAtencion == fechaActual) {
         while (true) {
-            fechaAtencion = mFecha.cargar();
-            Fecha actual;
-            if (fechaAtencion < actual) {
-                std::cout << "\n\tATENCION: Ingrese una fecha actual \n" << std::endl;
+            std::cout << "\nCONSULTA: Desea asignar el PROTOCOLO ahora? (s/n) ";
+            std::cin >> opc;
+
+            if (opc != 's' && opc != 'n') {
+                std::cout << "\tIngrese una opcion valida: \n";
                 continue;
             }
             break;
         }
 
-        horaAtencion = mHora.cargar();
+        if (opc == 'n') {
+            return;
+        }
+    }
+    else {
+        return;
     }
 
-    //opc = 'n';
-
-    Turno turno(proximoID, dniPaciente, fechaAtencion, horaAtencion, importe);
-    bool guardadoOK = _repo.guardar(turno);
-
-    if (guardadoOK) {
-        std::cout << "\nCONFIRMADO: El turno se ha iniciado correctamente con el ID " << turno.getID() << "\n" << std::endl;
-        pausa();
-
-        return true;
-    } else {
-        std::cout << "\nOcurrio un error al intentar guardar el turno. ";
-        std::cin.get();
-        return false;
-    }
 }
 
 std::string ManagerTurno::mostrarCabecera(const int anchoPaciente, const int anchoFecha, const int anchoImporte, const int anchoObraSocial, const int anchoEstado) {
@@ -298,6 +393,8 @@ void ManagerTurno::ordenadosFecha(){
 
     // Mostrar
     mostrarVarios(turnos, CANTIDAD);
+    std::cout << "Presione ENTER para continuar";
+    std::cin.get();
 
     // Finalizar
     delete[] turnos;
@@ -354,6 +451,9 @@ void ManagerTurno::agrupadosPaciente(){
         mostrarVarios(turnosPaciente, totalPacientes);
         std::cout << "\n\n";
 
+        std::cout << "Presione ENTER para continuar";
+        std::cin.get();
+
         // Reiniciar variables
         totalPacientes = 0;
         iAux = 0;
@@ -361,12 +461,13 @@ void ManagerTurno::agrupadosPaciente(){
         delete[] turnosPaciente;
     }
 
+
+
     delete[] turnos;
     delete[] indicesVisitados;
     delete[] indicesPacientes;
 
-    std::cout << "Presione ENTER para continuar";
-    std::cin.get();
+
 }
 
 void ManagerTurno::busquedaFecha(){
@@ -554,6 +655,7 @@ void ManagerTurno::busquedaPaciente(){
             }
         }
     }
+
     // Mostrar
     if (totalTurnos > 0) {
         std::cout << "-- Se encontraron los siguientes turnos para el paciente seleccionado --\n";
@@ -567,6 +669,7 @@ void ManagerTurno::busquedaPaciente(){
         }
 
         mostrarVarios(turnosPaciente, totalTurnos);
+        pausa();
         std::cout << "\n\n";
         delete[] turnosPaciente;
     } else {

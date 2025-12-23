@@ -9,6 +9,7 @@ class ManagerPaciente{
     public:
         ManagerPaciente();
 
+        bool comprobar(int dniPaciente);
         Paciente seleccionar(int dniPaciente);
         bool cargar(int dniPaciente = 0);
         void mostrarUno(Paciente paciente);

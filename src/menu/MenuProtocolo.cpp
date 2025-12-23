@@ -24,7 +24,7 @@ MenuProtocolo::MenuProtocolo(): Menu(8, "Menu Protocolo"){
     setSalir(false);
 }
 
-void MenuProtocolo::ejecutarOpcion(){
+void MenuProtocolo::ejecutarOpcion() {
     ManagerProtocolo mProtocolo;
     ManagerAnalisisProtocolo mAnalisisProtocolo;
     ManagerTurno mTurno;
@@ -80,16 +80,11 @@ void MenuProtocolo::ejecutarOpcion(){
 
             pausa();
             break;
-        case 2:
+        case 2: // Cargar Estudios
             std::cout << getNombreMenu() << ": " << _opciones[1] << "\t(Ingrese 0 para SALIR)\n";
             std::cout << "==============================\n";
 
-            if (mProtocolo.comprobar()) {
-                mProtocolo.mostrarTodos();
-            }else {
-                menuVolver();
-                break;
-            }
+            mProtocolo.mostrarTodos();
 
             std::cout << "ID del Protocolo donde cargar los estudios: ";
             std::cin >> idProtocolo;
@@ -118,8 +113,6 @@ void MenuProtocolo::ejecutarOpcion(){
             std::cout << getNombreMenu() << ": " << _opciones[1] << "\t(Ingrese 0 para SALIR)\n";
             std::cout << "==============================\n";
 
-            mProtocolo.mostrar(protocolo);
-
             if (protocolo.getAnalisis()) {
                 std::cout << "\nATENCION: El protocolo ingresado ya tiene analisis cargados.\n\n\tDesea continuar agregando...? s/n ";
                 std::cin >> confirmar;
@@ -130,10 +123,9 @@ void MenuProtocolo::ejecutarOpcion(){
                 }
             }
 
-            std::cout << "\nCONFIRMADO: Se agregaran estudios al protocolo. \n" << std::endl ;
             pausa();
 
-            rlutil::cls();
+            ///CARGAR ANALISIS
 
             std::cout << getNombreMenu() << ": " << _opciones[1] << "\t(Ingrese 0 para SALIR)\n";
             std::cout << "==============================\n";
@@ -147,64 +139,61 @@ void MenuProtocolo::ejecutarOpcion(){
                 menuVolver();
                 break;
             }
-        break;
-        case 3:
+            break;
+
+        case 3: /// Asignar Protocolo
             std::cout << getNombreMenu() << ": " << _opciones[2] << "\t(Ingrese 0 para SALIR)\n";
             std::cout << "==============================\n";
 
-            if (mProtocolo.comprobar()) {
-                mProtocolo.mostrarTodos();
+            mProtocolo.mostrarTodos();
 
-                std::cout << "Ingrese el ID a asignar: ";
-                std::cin >> idProtocolo;
+            std::cout << "Ingrese el ID a asignar: ";
+            std::cin >> idProtocolo;
 
-                if (idProtocolo<=0) {
-                    menuVolver();
-                    break;
-                }
+            if (idProtocolo<=0) {
+                menuVolver();
+                break;
+            }
 
-                if (mProtocolo.comprobar(idProtocolo)) {
-                    protocolo = mProtocolo.seleccionar(idProtocolo);
-                }else {
-                    menuVolver();
-                    break;
-                }
+            if (mProtocolo.comprobar(idProtocolo)) {
+                protocolo = mProtocolo.seleccionar(idProtocolo);
+            }else {
+                menuVolver();
+                break;
+            }
 
-                if (mProtocolo.asignar(protocolo)){
-                    std::cout << "\nASIGNACION EXITOSA. ";
-                    pausa();
-                } else {
-                    std::cout << "\nASIGNACION CANCELADA. ";
-                    pausa();
-                }
+            if (mProtocolo.asignar(protocolo)){
+                std::cout << "\nASIGNACION EXITOSA. ";
+                pausa();
+            } else {
+                std::cout << "\nASIGNACION CANCELADA. ";
+                pausa();
             }
             break;
+
         case 4:
             std::cout << getNombreMenu() << ": " << _opciones[3] << "\t(Ingrese 0 para SALIR)\n";
             std::cout << "==============================\n";
 
             mProtocolo.mostrarTodos();
 
-            if (mProtocolo.comprobar()) {
-                std::cout << "Ingrese el ID a finalizar: ";
-                std::cin >> idProtocolo;
+            std::cout << "Ingrese el ID a finalizar: ";
+            std::cin >> idProtocolo;
 
-                if (idProtocolo==0) {
-                    menuVolver();
-                    break;
-                }
+            if (idProtocolo==0) {
+                menuVolver();
+                break;
+            }
 
-                if (mProtocolo.comprobar(idProtocolo)) {
-                    protocolo = mProtocolo.seleccionar(idProtocolo);
+            if (mProtocolo.comprobar(idProtocolo)) {
+                protocolo = mProtocolo.seleccionar(idProtocolo);
 
-                    rlutil::cls();
+                rlutil::cls();
 
-                    std::cout << getNombreMenu() << ": " << _opciones[3] << "\t(Ingrese 0 para SALIR)\n";
-                    std::cout << "==============================\n";
+                std::cout << getNombreMenu() << ": " << _opciones[3] << "\t(Ingrese 0 para SALIR)\n";
+                std::cout << "==============================\n";
 
-
-                    mProtocolo.finalizar(protocolo);
-                }
+                mProtocolo.finalizar(protocolo);
             }
             menuVolver();
             break;
@@ -214,101 +203,94 @@ void MenuProtocolo::ejecutarOpcion(){
 
             mProtocolo.mostrarTodos();
 
-            if (mProtocolo.comprobar()) {
-                std::cout << "Ingrese el ID a observar: ";
-                std::cin >> idProtocolo;
+            std::cout << "Ingrese el ID a observar: ";
+            std::cin >> idProtocolo;
 
-                if (idProtocolo==0) {
-                    menuVolver();
-                    break;
-                }
-
-                if (mProtocolo.comprobar(idProtocolo)) {
-                    rlutil::cls();
-                    std::cout << getNombreMenu() << ": " << _opciones[4] << "\t(Ingrese 0 para SALIR)\n";
-                    std::cout << "==============================\n";
-
-                    mProtocolo.mostrar(mProtocolo.seleccionar(idProtocolo));
-
-                    if (mAnalisisProtocolo.comprobar(idProtocolo)) {
-                        mAnalisisProtocolo.mostrarTodos(idProtocolo);
-                    }
-                }
+            if (idProtocolo==0) {
+                menuVolver();
+                break;
             }
+
+            if (mProtocolo.comprobar(idProtocolo)) {
+                rlutil::cls();
+                std::cout << getNombreMenu() << ": " << _opciones[4] << "\t(Ingrese 0 para SALIR)\n";
+                std::cout << "==============================\n";
+
+                mProtocolo.mostrar(mProtocolo.seleccionar(idProtocolo));
+            }
+
             std::cout << std::endl;
             pausa();
             break;
+
         case 6:
             std::cout << getNombreMenu() << ": " << _opciones[5] << "\t(Ingrese 0 para SALIR)\n";
             std::cout << "==============================\n";
             mProtocolo.mostrarTodos();
             system("pause");
             break;
+
         case 7:
             std::cout << getNombreMenu() << ": " << _opciones[6] << "\t(Ingrese 0 para SALIR)\n";
             std::cout << "==============================\n";
 
             mProtocolo.mostrarTodos();
 
-            if (mProtocolo.comprobar()) {
-                std::cout << "Ingrese el ID a observar: ";
-                std::cin >> idProtocolo;
+            std::cout << "Ingrese el ID a observar: ";
+            std::cin >> idProtocolo;
 
-                if (idProtocolo==0) {
-                    menuVolver();
-                    break;
-                }
+            if (idProtocolo==0) {
+                menuVolver();
+                break;
+            }
 
-                if (mProtocolo.comprobar(idProtocolo)) {
-                    rlutil::cls();
-                    std::cout << getNombreMenu() << ": " << _opciones[4] << "\t(Ingrese 0 para SALIR)\n";
-                    std::cout << "==============================\n";
+            if (mProtocolo.comprobar(idProtocolo)) {
+                rlutil::cls();
+                std::cout << getNombreMenu() << ": " << _opciones[4] << "\t(Ingrese 0 para SALIR)\n";
+                std::cout << "==============================\n";
 
-                    mProtocolo.mostrar(mProtocolo.seleccionar(idProtocolo));
+                mProtocolo.mostrar(mProtocolo.seleccionar(idProtocolo));
 
-                    if (mAnalisisProtocolo.comprobar(idProtocolo)) {
-                        mAnalisisProtocolo.mostrarTodos(idProtocolo);
-                    }
-                }
+                mAnalisisProtocolo.mostrarTodos(idProtocolo);
             }
             std::cout << std::endl;
             pausa();
             break;
+
         case 8:
             std::cout << getNombreMenu() << ": " << _opciones[7] << "\t(Ingrese 0 para SALIR)\n";
             std::cout << "==============================\n";
 
             mProtocolo.mostrarTodos();
 
-            if (mProtocolo.comprobar()) {
-                std::cout << "\nIngrese el ID a Eliminar: ";
-                std::cin >> idProtocolo;
+            std::cout << "\nIngrese el ID a Eliminar: ";
+            std::cin >> idProtocolo;
 
-                if (idProtocolo==0) {
-                    menuVolver();
-                    break;
-                }
-
-                if (mProtocolo.comprobar(idProtocolo)) {
-
-                    protocolo = mProtocolo.seleccionar(idProtocolo);
-                    mProtocolo.mostrar(protocolo);
-                }else {
-                    std::cout << std::endl ;
-                    menuVolver();
-                    break;
-                }
-
-                if (mProtocolo.eliminar(protocolo)){
-                    std::cout << "\nELIMINACION EXITOSA.";
-                } else {
-                    std::cout << "\nELIMINACION CANCELADA.";
-                }
-                pausa();
+            if (idProtocolo==0) {
+                menuVolver();
                 break;
             }
-        default:
-            std::cout << "Intente nuevamente\n";
+
+            if (mProtocolo.comprobar(idProtocolo)) {
+
+                protocolo = mProtocolo.seleccionar(idProtocolo);
+                mProtocolo.mostrar(protocolo);
+            }else {
+                std::cout << std::endl ;
+                menuVolver();
+                break;
+            }
+
+            if (mProtocolo.eliminar(protocolo)){
+                std::cout << "\nELIMINACION EXITOSA.";
+            } else {
+                std::cout << "\nELIMINACION CANCELADA.";
+            }
+            pausa();
             break;
-    }
+
+                default:
+                    std::cout << "Intente nuevamente\n";
+                    break;
+            }
 }

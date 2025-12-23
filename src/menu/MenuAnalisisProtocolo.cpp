@@ -44,12 +44,11 @@ void MenuAnalisisProtocolo::ejecutarOpcion(){
             std::cout << getNombreMenu() << ": " << _opciones[1] << "\n";
             std::cout << "==============================\n";
 
-            if (mAnalisisProtocolo.comprobar()) {
-                std::cout << "Ingrese ID del Protocolo a cargar: ";
-                std::cin >> idProtocolo;
+            std::cout << "Ingrese ID del Protocolo a cargar: ";
+            std::cin >> idProtocolo;
 
-                mAnalisisProtocolo.mostrarTodos(idProtocolo);
-            }
+            mAnalisisProtocolo.mostrarTodos(idProtocolo);
+
 
             system("pause");
             break;

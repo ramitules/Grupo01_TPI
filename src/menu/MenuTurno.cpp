@@ -23,12 +23,12 @@ void MenuTurno::ejecutarOpcion(){
 
     ManagerTurno mTurno;
 
-    if (_opcionSeleccionada == 1) {
+    if (_opcionSeleccionada == 1) { // Crear nuevo turno
         mTurno.cargar();
         return;
     }
 
-    if (_opcionSeleccionada == 4) {
+    if (_opcionSeleccionada == 4) { //Mostrar todos
         mTurno.mostrarTodos();
         std::cout << "Presione ENTER para continuar";
         rlutil::anykey();

@@ -10,6 +10,7 @@
 #include <map>
 #include <iomanip>
 #include "manager/ManagerObraSocial.h"
+#include "manager/ManagerProtocolo.h"
 
 
 MenuInformes::MenuInformes(): Menu(5, "Menu Informes"){
@@ -227,8 +228,12 @@ void MenuInformes::informePacientesPorObraSocial() {
         contadoresPorOS[i] = 0;
     }
 
+    ManagerProtocolo mProtocolo;
+
     for (int i = 0; i < cantidadTurnos; i++) {
         if (turnos[i].getEliminado()) continue;
+
+        if ((mProtocolo.seleccionarxTurno(turnos[i].getID()).getEstado()) == false) continue;
 
         if (turnos[i].getFechaAtencion().getAnio() == anio && 
             turnos[i].getFechaAtencion().getMes() == mes) {
@@ -333,8 +338,17 @@ void MenuInformes::informeFacturacionMensualPorObraSocial() {
     std::map<std::string, float> facturacionPorObraSocial;
     float totalGeneral = 0;
 
+    bool turnoFinalizado = false;
+    ManagerProtocolo mProtocolo;
+    Protocolo auxProtocolo;
+
     for (int i = 0; i < cantidadTurnos; i++) {
         if (turnos[i].getEliminado()) continue;
+
+        auxProtocolo = mProtocolo.seleccionarxTurno(turnos[i].getID());
+        turnoFinalizado = auxProtocolo.getEstado();
+
+        if (turnoFinalizado == false) continue;
 
         if (turnos[i].getFechaAtencion().getMes() == mes && turnos[i].getFechaAtencion().getAnio() == anio) {
             int posPaciente = archivoPaciente.getPos(turnos[i].getDniPaciente());
@@ -395,9 +409,17 @@ void MenuInformes::informeFacturacionMensualTotal() {
 
     float totalGeneral = 0;
     int cantidadTurnosMes = 0;
+    bool turnoFinalizado = false;
+    ManagerProtocolo mProtocolo;
+    Protocolo auxProtocolo;
 
     for (int i = 0; i < cantidadTurnos; i++) {
         if (turnos[i].getEliminado()) continue;
+
+        auxProtocolo = mProtocolo.seleccionarxTurno(turnos[i].getID());
+        turnoFinalizado = auxProtocolo.getEstado();
+
+        if (turnoFinalizado == false) continue;
 
         if (turnos[i].getFechaAtencion().getMes() == mes && turnos[i].getFechaAtencion().getAnio() == anio) {
             totalGeneral += turnos[i].getImporte();

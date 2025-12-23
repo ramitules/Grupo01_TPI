@@ -72,8 +72,7 @@ set(SOURCES
     src/utils/ManagerHora.cpp
     src/utils/funcFrontend.cpp
     src/utils/funcBackend.cpp
-        src/utils/IngresarDatos.cpp
-        include/utils/IngresarDatos.h
+        src/utils/ManagerInput.cpp
 )
 
 # Crear ejecutable

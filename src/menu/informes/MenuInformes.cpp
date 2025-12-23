@@ -56,12 +56,27 @@ void MenuInformes::informeAnalisisPorObraSocial() {
     int mes, anio, idObraSocial;
     Fecha fechaActual;
 
-    std::cout << "Ingrese el anio (0 para el actual): ";
-    std::cin >> anio;
-    if (anio == 0) anio = fechaActual.getAnio();
+    while (true) {
+        std::cout << "Ingrese el anio (0 para el actual): ";
+        std::cin >> anio;
+        if (anio == 0) anio = fechaActual.getAnio();
+        if (anio < 1900 || anio > fechaActual.getAnio()) {
+            std::cout << "Anio no valido. Intente de nuevo.\n";
+            continue;
+        }
+        break;
+    }
 
-    std::cout << "Ingrese el mes (0 para todo el anio): ";
-    std::cin >> mes;
+    while (true) {
+        std::cout << "Ingrese el mes (0 para todo el anio): ";
+        std::cin >> mes;
+
+        if (mes < 0 || mes > 12) {
+            std::cout << "Mes no valido. Intente de nuevo.\n";
+            continue;
+        }
+        break;
+    }
 
     ManagerObraSocial managerObraSocial;
     std::cout << "\nSeleccione una Obra Social:\n";
@@ -192,12 +207,27 @@ void MenuInformes::informePacientesPorObraSocial() {
     int mes, anio;
     Fecha fechaActual;
 
-    std::cout << "Ingrese el anio (0 para el actual): ";
-    std::cin >> anio;
-    if (anio == 0) anio = fechaActual.getAnio();
+    while (true) {
+        std::cout << "Ingrese el anio (0 para el actual): ";
+        std::cin >> anio;
+        if (anio == 0) anio = fechaActual.getAnio();
+        if (anio < 1900 || anio > fechaActual.getAnio()) {
+            std::cout << "Anio no valido. Intente de nuevo.\n";
+            continue;
+        }
+        break;
+    }
 
-    std::cout << "Ingrese el mes: ";
-    std::cin >> mes;
+    while (true) {
+        std::cout << "Ingrese el mes (0 para todo el anio): ";
+        std::cin >> mes;
+
+        if (mes <= 0 || mes > 12) {
+            std::cout << "Mes no valido. Intente de nuevo.\n";
+            continue;
+        }
+        break;
+    }
 
     ArchivoTurno archivoTurno;
     int cantidadTurnos = archivoTurno.cantidadRegistros();
@@ -317,11 +347,27 @@ void MenuInformes::informePacientesPorObraSocial() {
 
 void MenuInformes::informeFacturacionMensualPorObraSocial() {
     int mes, anio;
-    
-    std::cout << "Ingrese el mes (1-12): ";
-    std::cin >> mes;
-    std::cout << "Ingrese el anio: ";
-    std::cin >> anio;
+
+    while (true) {
+        std::cout << "Ingrese el mes (1-12): ";
+        std::cin >> mes;
+
+        if (mes <= 0 || mes > 12) {
+            std::cout << "Mes no valido. Intente de nuevo.\n";
+            continue;
+        }
+        break;
+    }
+
+    while (true) {
+        std::cout << "Ingrese el anio: ";
+        std::cin >> anio;
+        if (anio < 1900 || anio > 2030) {
+            std::cout << "Anio no valido. Intente de nuevo.\n";
+            continue;
+        }
+        break;
+    }
 
     ArchivoTurno archivoTurno;
     ArchivoPaciente archivoPaciente;
@@ -388,14 +434,29 @@ void MenuInformes::informeFacturacionMensualPorObraSocial() {
 void MenuInformes::informeFacturacionMensualTotal() {
     Fecha fechaActual;
     int mes, anio;
-    
-    std::cout << "Ingrese el mes (0 para actual: " << fechaActual.getMes() << "): ";
-    std::cin >> mes;
-    if (mes == 0) mes = fechaActual.getMes();
 
-    std::cout << "Ingrese el anio (0 para actual: " << fechaActual.getAnio() << "): ";
-    std::cin >> anio;
-    if (anio == 0) anio = fechaActual.getAnio();
+    while (true) {
+        std::cout << "Ingrese el mes (0 para el actual): ";
+        std::cin >> mes;
+
+        if (mes == 0) mes = fechaActual.getMes();
+        if (mes < 0 || mes > 12) {
+            std::cout << "Mes no valido. Intente de nuevo.\n";
+            continue;
+        }
+        break;
+    }
+
+    while (true) {
+        std::cout << "Ingrese el anio (0 para el actual): ";
+        std::cin >> anio;
+        if (anio == 0) anio = fechaActual.getAnio();
+        if (anio < 1900 || anio > fechaActual.getAnio()) {
+            std::cout << "Anio no valido. Intente de nuevo.\n";
+            continue;
+        }
+        break;
+    }
 
     ArchivoTurno archivoTurno;
     int cantidadTurnos = archivoTurno.cantidadRegistros();
@@ -449,12 +510,28 @@ void MenuInformes::informeAnalisisPorTipo() {
     int mes, anio;
     Fecha fechaActual;
 
-    std::cout << "Ingrese el anio (0 para el actual): ";
-    std::cin >> anio;
-    if (anio == 0) anio = fechaActual.getAnio();
+    while (true) {
+        std::cout << "Ingrese el mes (1-12, 0 para el actual): ";
+        std::cin >> mes;
 
-    std::cout << "Ingrese el mes (0 para todo el anio): ";
-    std::cin >> mes;
+        if (mes == 0) mes = fechaActual.getMes();
+        if (mes < 0 || mes > 12) {
+            std::cout << "Mes no valido. Intente de nuevo.\n";
+            continue;
+        }
+        break;
+    }
+
+    while (true) {
+        std::cout << "Ingrese el anio (0 para el actual): ";
+        std::cin >> anio;
+        if (anio == 0) anio = fechaActual.getAnio();
+        if (anio < 1900 || anio > fechaActual.getAnio()) {
+            std::cout << "Anio no valido. Intente de nuevo.\n";
+            continue;
+        }
+        break;
+    }
 
     ArchivoTurno archivoTurno;
     int cantidadTurnos = archivoTurno.cantidadRegistros();
